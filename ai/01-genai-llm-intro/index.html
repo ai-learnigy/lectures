@@ -349,7 +349,7 @@ background:var(--net);border:0;border-radius:10px;padding:7px 13px;cursor:pointe
 #studybtn:hover{opacity:1}#studybtn kbd{font:600 11px var(--mono);background:rgba(255,255,255,.22);border-radius:5px;padding:1px 6px}
 body[data-study] #help{right:190px}</style></head>
 <body data-study="1">
-<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a><button id="studybtn" type="button" title="კონსპექტი ცალკე ფანჯარაში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>
+<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a><button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>
 <div id="stage"><div id="deck">
 <style>
 .mono{font-family:var(--mono)}
@@ -418,6 +418,8 @@ body[data-study] #help{right:190px}</style></head>
 .layer small{display:block;font:500 15px var(--mono);color:var(--muted)}
 .term .ok{color:#4ade80}
 .term .body{font-size:18px;line-height:1.65}
+.ask{--a:var(--pink);font-size:22px;color:var(--ink)}
+.ask b{color:var(--pink)}
 .calc{font:600 21px/1.8 var(--mono);color:var(--ink2)}
 .calc b{color:var(--ink)}
 .calc .r{color:var(--mvc);font-weight:800}
@@ -446,8 +448,8 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">დღის თემა</div>
   <h2><span class="grad">შესავალი Generative AI-სა და LLM API-ებში</span></h2>
   <div class="grid2" style="grid-template-columns:1fr 1fr;align-items:start;gap:40px">
-    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🤔</span>რატომ გჭირდებათ</h3><p class="small">RestaurantApi მზადაა: მენიუ, კალათა, შეკვეთა, ჯავშანი. მაგრამ ყველა endpoint ზუსტ მონაცემს ელოდება, კლიენტი კი წერს „რამე მსუბუქი მინდა, ხორცის გარეშე, ორისთვის“ — ასეთ ტექსტს if/else ვერ გაიგებს. დღეს ვიგებთ, რა არის ენობრივი მოდელი, როგორ წერს პასუხს შიგნიდან, რა ღირს ის — და ვაკეთებთ პირველ გამოძახებას ჩვენივე API-დან.</p></div>
-    <div class="card accent" style="--a:var(--mvc)"><h3><span class="ico">🎯</span>ლექციის ბოლოს შეძლებთ</h3><ul class="clean small"><li class="step">ახსნა, როგორ ქმნის LLM ტექსტს: ტოკენები, next-token prediction, context window</li><li class="step">Temperature-ის, Top-P-ის და Max Tokens-ის შერჩევა ამოცანის მიხედვით</li><li class="step">პროვაიდერის არჩევა და თვის ხარჯის დათვლა ტოკენებით</li><li class="step">LLM-ის გამოძახება C#-იდან <code class="i">IChatClient</code>-ით და ტექსტის, ტოკენებისა და <code class="i">FinishReason</code>-ის წაკითხვა</li></ul></div>
+    <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🤔</span>რატომ გჭირდებათ</h3><p class="small">RestaurantApi მზადაა: მენიუ, კალათა, შეკვეთა, ჯავშანი. მაგრამ ყველა endpoint ზუსტ მონაცემს ელოდება, კლიენტი კი წერს „რამე მსუბუქი მინდა, ხორცის გარეშე, ორისთვის“ — ასეთ ტექსტს if/else ვერ გაიგებს. დღეს ვიგებთ, რა არის ენობრივი მოდელი, როგორ წერს პასუხს შიგნიდან, რა ღირს ის — და ვაკეთებთ პირველ გამოძახებას ჩვენივე API-დან.</p></div>
+    <div class="card accent" style="--a:var(--mvc)"><h3><span class="ico">🎯</span>ლექციის ბოლოს შეძლებთ</h3><ul class="clean small"><li>ახსნა, როგორ ქმნის LLM ტექსტს: ტოკენები, next-token prediction, context window</li><li>Temperature-ის, Top-P-ის და Max Tokens-ის შერჩევა ამოცანის მიხედვით</li><li>პროვაიდერის არჩევა და თვის ხარჯის დათვლა ტოკენებით</li><li>LLM-ის გამოძახება C#-იდან <code class="i">IChatClient</code>-ით და ტექსტის, ტოკენებისა და <code class="i">FinishReason</code>-ის წაკითხვა</li></ul></div>
   </div>
   
 </section>
@@ -458,14 +460,15 @@ body[data-study] #help{right:190px}</style></head>
   <h2><span class="mono">RestaurantApi</span> — რა გვაქვს უკვე</h2>
   <div class="grid2" style="grid-template-columns:1.1fr 1fr;gap:40px;align-items:start">
     <div class="col" style="gap:10px">
-      <div class="mrow step"><span class="e">📋</span><span><b>მენიუ</b> — კერძები, კატეგორიები, ფასები</span></div>
-      <div class="mrow step"><span class="e">🛒</span><span><b>კალათა</b> — დამატება, წაშლა, რაოდენობა</span></div>
-      <div class="mrow step"><span class="e">🧾</span><span><b>შეკვეთა</b> — კალათიდან შეკვეთის გაფორმება</span></div>
-      <div class="mrow step"><span class="e">📅</span><span><b>ჯავშანი</b> — მაგიდა, თარიღი, სტუმრების რაოდენობა</span></div>
+      <div class="mrow"><span class="e">📋</span><span><b>მენიუ</b> — კერძები, კატეგორიები, ფასები</span></div>
+      <div class="mrow"><span class="e">🛒</span><span><b>კალათა</b> — დამატება, წაშლა, რაოდენობა</span></div>
+      <div class="mrow"><span class="e">🧾</span><span><b>შეკვეთა</b> — კალათიდან შეკვეთის გაფორმება</span></div>
+      <div class="mrow"><span class="e">📅</span><span><b>ჯავშანი</b> — მაგიდა, თარიღი, სტუმრების რაოდენობა</span></div>
     </div>
     <div class="col" style="gap:18px">
+      <div class="callout ask">🙋 კლიენტი ჩატში წერს „2 ხაჭაპური მინდა“. რომელ endpoint-ს და <b>რა მონაცემით</b> გამოიძახებთ?</div>
       <div class="card accent step" style="--a:var(--red)"><h3><span class="ico">🤔</span>მაგრამ…</h3><p class="small">ყველა endpoint ელოდება <b>ზუსტ მონაცემს</b>: <code class="i">dishId</code>, <code class="i">quantity</code>, <code class="i">date</code>. ადამიანი კი <b>ასე არ ლაპარაკობს</b>.</p></div>
-      <div class="callout step" style="--a:var(--net)">ამ მოდულში იმავე პროექტს <b>AI-ს დავამატებთ</b> — ახალს არ ვიწყებთ</div>
+      <div class="callout step" data-with style="--a:var(--net)">ამ მოდულში იმავე პროექტს <b>AI-ს დავამატებთ</b> — ახალს არ ვიწყებთ</div>
     </div>
   </div>
   
@@ -476,18 +479,18 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">მოდულის რუკა · 24 ლექცია</div>
   <h2>სად მივდივართ: <span class="c-net">AI მიმტანი</span> ჩვენს API-ში</h2>
   <div class="grid2" style="grid-template-columns:1fr 1fr;gap:34px;align-items:start;margin-top:10px">
-    <div class="card accent step" style="--a:var(--net)">
+    <div class="card accent" style="--a:var(--net)">
       <h3><span class="ico">🧠</span>ნაწილი 1 · საფუძვლები და RAG</h3>
       <div class="lec mt"><span class="on">01 LLM</span><span>02 Prompt</span><span>03 M.E.AI</span><span>04 Tools</span><span>05 Pipeline</span><span>06 Streaming</span><span>07 Context</span><span>08 Resilience</span><span>09 Embeddings</span><span>10 pgvector</span><span>11 RAG</span><span>12 RAG+</span></div>
       <p class="small mt">AI პასუხობს მენიუზე, <b>ჩვენი მონაცემებით</b></p>
     </div>
-    <div class="card accent step" style="--a:var(--asp)">
+    <div class="card accent" style="--a:var(--asp)">
       <h3><span class="ico">🤖</span>ნაწილი 2 · აგენტები</h3>
       <div class="lec mt"><span>13 Agents</span><span>14 Agent FW</span><span>15 Custom Tools</span><span>16 MCP</span><span>17 Workflows</span><span>18 Multi-Agent</span><span>19 Safety</span><span>20 Evals</span><span>21–22 პროექტი</span><span>24 დაცვა</span></div>
       <p class="small mt">AI <b>თვითონ მოქმედებს</b>: კალათა, შეკვეთა, ჯავშანი</p>
     </div>
   </div>
-  <div class="callout step mt2" style="--a:var(--mvc);font-size:24px">ბოლოს: კლიენტი წერს ჩვეულებრივი ენით → აგენტი <b>ეძებს მენიუში</b>, <b>ამატებს კალათაში</b>, <b>ჯავშნის მაგიდას</b> — ჩვენივე endpoint-ებით</div>
+  <div class="callout mt2" style="--a:var(--mvc);font-size:24px">ბოლოს: კლიენტი წერს ჩვეულებრივი ენით → აგენტი <b>ეძებს მენიუში</b>, <b>ამატებს კალათაში</b>, <b>ჯავშნის მაგიდას</b> — ჩვენივე endpoint-ებით</div>
   
 </section>
 
@@ -497,13 +500,13 @@ body[data-study] #help{right:190px}</style></head>
   <h2>5 გაჩერება</h2>
   <svg viewBox="0 0 1420 400" width="1420" height="400">
     <path class="autodraw" style="--d:.2s" d="M90 200 C260 60 400 340 560 200 S860 60 990 200 S1240 340 1340 200" stroke="#cfc6b6" stroke-width="4" fill="none" stroke-dasharray="10 10"/>
-    <g class="step zoom" style="transform-origin:90px 200px"><circle cx="90" cy="200" r="46" fill="#ede7fd" stroke="#dc2626" stroke-width="3"/><text x="90" y="216" text-anchor="middle" font-size="40">🤔</text><text x="90" y="290" text-anchor="middle" class="tw b" font-size="21">რატომ AI?</text><text x="90" y="316" text-anchor="middle" class="tm" font-size="16">რას ვერ აკეთებს if/else</text></g>
-    <g class="step zoom" style="transform-origin:330px 190px"><circle cx="330" cy="190" r="46" fill="#f3effe" stroke="#6d28d9" stroke-width="3"/><text x="330" y="206" text-anchor="middle" font-size="40">🧩</text><text x="330" y="112" text-anchor="middle" class="tw b" font-size="21">როგორ მუშაობს</text><text x="330" y="86" text-anchor="middle" class="tm" font-size="16">ტოკენი · შემდეგი ტოკენი · context</text></g>
-    <g class="step zoom" style="transform-origin:560px 200px"><circle cx="560" cy="200" r="46" fill="#fef5e4" stroke="#d97706" stroke-width="3"/><text x="560" y="216" text-anchor="middle" font-size="40">🎛️</text><text x="560" y="290" text-anchor="middle" class="tw b" font-size="21">პარამეტრები</text><text x="560" y="316" text-anchor="middle" class="tm" font-size="16">Temperature · Top-P · Max Tokens</text></g>
-    <g class="step zoom" style="transform-origin:800px 140px"><circle cx="800" cy="135" r="46" fill="#eaf8ef" stroke="#16a34a" stroke-width="3"/><text x="800" y="151" text-anchor="middle" font-size="40">💸</text><text x="800" y="58" text-anchor="middle" class="tw b" font-size="21">პროვაიდერები და ფასი</text><text x="800" y="32" text-anchor="middle" class="tm" font-size="16">ვინ, სად, რამდენად</text></g>
-    <g class="step zoom" style="transform-origin:1340px 200px"><circle cx="1340" cy="200" r="52" fill="#eaf2fe" stroke="#2563eb" stroke-width="4" class="pulse"/><text x="1340" y="218" text-anchor="middle" font-size="44">⌨️</text><text x="1340" y="292" text-anchor="middle" class="ta b" font-size="21">პირველი გამოძახება</text><text x="1340" y="318" text-anchor="middle" class="tm" font-size="16">IChatClient · RestaurantApi</text></g>
+    <g class="zoom" style="transform-origin:90px 200px"><circle cx="90" cy="200" r="46" fill="#ede7fd" stroke="#dc2626" stroke-width="3"/><text x="90" y="216" text-anchor="middle" font-size="40">🤔</text><text x="90" y="290" text-anchor="middle" class="tw b" font-size="21">რატომ AI?</text><text x="90" y="316" text-anchor="middle" class="tm" font-size="16">რას ვერ აკეთებს if/else</text></g>
+    <g class="zoom" style="transform-origin:330px 190px"><circle cx="330" cy="190" r="46" fill="#f3effe" stroke="#6d28d9" stroke-width="3"/><text x="330" y="206" text-anchor="middle" font-size="40">🧩</text><text x="330" y="112" text-anchor="middle" class="tw b" font-size="21">როგორ მუშაობს</text><text x="330" y="86" text-anchor="middle" class="tm" font-size="16">ტოკენი · შემდეგი ტოკენი · context</text></g>
+    <g class="zoom" style="transform-origin:560px 200px"><circle cx="560" cy="200" r="46" fill="#fef5e4" stroke="#d97706" stroke-width="3"/><text x="560" y="216" text-anchor="middle" font-size="40">🎛️</text><text x="560" y="290" text-anchor="middle" class="tw b" font-size="21">პარამეტრები</text><text x="560" y="316" text-anchor="middle" class="tm" font-size="16">Temperature · Top-P · Max Tokens</text></g>
+    <g class="zoom" style="transform-origin:800px 140px"><circle cx="800" cy="135" r="46" fill="#eaf8ef" stroke="#16a34a" stroke-width="3"/><text x="800" y="151" text-anchor="middle" font-size="40">💸</text><text x="800" y="58" text-anchor="middle" class="tw b" font-size="21">პროვაიდერები და ფასი</text><text x="800" y="32" text-anchor="middle" class="tm" font-size="16">ვინ, სად, რამდენად</text></g>
+    <g class="zoom" style="transform-origin:1340px 200px"><circle cx="1340" cy="200" r="52" fill="#eaf2fe" stroke="#2563eb" stroke-width="4" class="pulse"/><text x="1340" y="218" text-anchor="middle" font-size="44">⌨️</text><text x="1340" y="292" text-anchor="middle" class="ta b" font-size="21">პირველი გამოძახება</text><text x="1340" y="318" text-anchor="middle" class="tm" font-size="16">IChatClient · RestaurantApi</text></g>
   </svg>
-  <div class="callout step" style="--a:var(--pink);font-size:22px">🎮 გზაში <b>3 თამაში</b> გელით — ზოგ კითხვაზე <b>თქვენ</b> იქნებით მოდელი</div>
+  <div class="callout" style="--a:var(--pink);font-size:22px">🎮 გზაში <b>3 თამაში</b> გელით — ზოგ კითხვაზე <b>თქვენ</b> იქნებით მოდელი</div>
   
 </section>
 
@@ -523,12 +526,12 @@ body[data-study] #help{right:190px}</style></head>
   <h2>კლიენტები რესტორნის ჩატში წერენ…</h2>
   <div class="grid2" style="grid-template-columns:1fr 1fr;gap:40px;align-items:start">
     <div class="col" style="gap:16px">
-      <div class="bubble step"><span class="who">ნინო</span>რამე მსუბუქი, ხორცის გარეშე, ორისთვის, 40 ლარამდე</div>
-      <div class="bubble step"><span class="who">გიორგი</span>ხვალ 8-ზე ოთხნი ვიქნებით, ბავშვიც გვყავს, ფანჯარასთან თუ შეიძლება</div>
-      <div class="bubble step"><span class="who">ლუკა</span>ის წითელსოუსიანი რაღაც მინდა, წინა კვირას რომ ავიღე, ოღონდ ნაკლებად ცხარე</div>
+      <div class="bubble"><span class="who">ნინო</span>რამე მსუბუქი, ხორცის გარეშე, ორისთვის, 40 ლარამდე</div>
+      <div class="bubble"><span class="who">გიორგი</span>ხვალ 8-ზე ოთხნი ვიქნებით, ბავშვიც გვყავს, ფანჯარასთან თუ შეიძლება</div>
+      <div class="bubble"><span class="who">ლუკა</span>ის წითელსოუსიანი რაღაც მინდა, წინა კვირას რომ ავიღე, ოღონდ ნაკლებად ცხარე</div>
     </div>
     <div class="col" style="gap:18px">
-      <div class="card accent step" style="--a:var(--pink)"><h3><span class="ico">🗣️</span>2 წუთი · წყვილებში</h3><p class="small">როგორ დაწერდით ამას <b>if/else</b>-ით და ჩვენი endpoint-ებით? რომელ endpoint-ს გამოიძახებდით და რა პარამეტრებით?</p></div>
+      <div class="card accent" style="--a:var(--pink)"><h3><span class="ico">🗣️</span>2 წუთი · წყვილებში</h3><p class="small">როგორ დაწერდით ამას <b>if/else</b>-ით და ჩვენი endpoint-ებით? რომელ endpoint-ს გამოიძახებდით და რა პარამეტრებით?</p></div>
       <div class="problem step">„მსუბუქი“? „ხვალ 8-ზე“? „ის წითელსოუსიანი“? — <b>წესი ვერ დაიწერება</b></div>
     </div>
   </div>
@@ -538,17 +541,18 @@ body[data-study] #help{right:190px}</style></head>
 <section class="slide" data-section="1 · რატომ AI">
   <div class="kicker">ორი სამყარო</div>
   <h2>ჩვეულებრივი კოდი vs <span class="c-net">ენობრივი მოდელი</span></h2>
+  <div class="callout ask">🙋 რით განსხვავდება C# მეთოდი LLM-ისგან? დაასახელეთ <b>3 განსხვავება</b></div>
   <div class="grid2" style="grid-template-columns:1fr 1fr;gap:36px;align-items:start">
     <div class="card accent step" style="--a:var(--api)">
       <h3><span class="ico">⚙️</span>C# კოდი</h3>
       <ul class="clean small"><li>შეყვანა: <b>ზუსტი</b> (<code class="i">dishId</code>, <code class="i">date</code>)</li><li>წესები <b>ჩვენ</b> ვწერთ</li><li>ერთი შეყვანა → <b>ყოველთვის ერთი</b> შედეგი</li><li>შეცდომა = bug, ვპოულობთ და ვასწორებთ</li></ul>
     </div>
-    <div class="card accent step" style="--a:var(--net)">
+    <div class="card accent step" data-with style="--a:var(--net)">
       <h3><span class="ico">🧠</span>LLM</h3>
       <ul class="clean small"><li>შეყვანა: <b>ნებისმიერი ტექსტი</b></li><li>„წესები“ ნასწავლია ტექსტიდან</li><li>ერთი შეყვანა → <b>შეიძლება სხვადასხვა</b> შედეგი</li><li>შეცდომა = <b>დამაჯერებელი სიცრუე</b></li></ul>
     </div>
   </div>
-  <div class="callout step mt2" style="--a:var(--mvc);font-size:24px">ერთს მეორე არ ცვლის: LLM <b>ესმის</b> ადამიანს, C# კოდი <b>ზუსტად ასრულებს</b>. ჩვენი საქმე — მათი <b>შეერთებაა</b></div>
+  <div class="callout step mt2" data-with style="--a:var(--mvc);font-size:24px">ერთს მეორე არ ცვლის: LLM <b>ესმის</b> ადამიანს, C# კოდი <b>ზუსტად ასრულებს</b>. ჩვენი საქმე — მათი <b>შეერთებაა</b></div>
   
 </section>
 
@@ -564,10 +568,10 @@ body[data-study] #help{right:190px}</style></head>
       <div class="in" style="--a:var(--net);left:240px;top:250px;width:160px;height:140px;--d:.9s;align-items:center"><span style="margin:0;font-size:28px">LLM</span></div>
     </div>
     <div class="col" style="gap:12px">
-      <div class="callout step" style="--a:var(--api)"><b>ML</b> — სისტემა წესებს <b>მაგალითებიდან</b> სწავლობს</div>
-      <div class="callout step" style="--a:var(--core)"><b>Deep Learning</b> — ML ნეირონული ქსელებით</div>
-      <div class="callout step" style="--a:var(--asp)"><b>GenAI</b> — ახალ კონტენტს <b>ქმნის</b>: ტექსტი, სურათი, ხმა</div>
-      <div class="callout step" style="--a:var(--net)"><b>LLM</b> — დიდი ენობრივი მოდელი: ტექსტი შედის, <b>ტექსტი გამოდის</b></div>
+      <div class="callout" style="--a:var(--api)"><b>ML</b> — სისტემა წესებს <b>მაგალითებიდან</b> სწავლობს</div>
+      <div class="callout" style="--a:var(--core)"><b>Deep Learning</b> — ML ნეირონული ქსელებით</div>
+      <div class="callout" style="--a:var(--asp)"><b>GenAI</b> — ახალ კონტენტს <b>ქმნის</b>: ტექსტი, სურათი, ხმა</div>
+      <div class="callout" style="--a:var(--net)"><b>LLM</b> — დიდი ენობრივი მოდელი: ტექსტი შედის, <b>ტექსტი გამოდის</b></div>
     </div>
   </div>
   
@@ -578,8 +582,8 @@ body[data-study] #help{right:190px}</style></head>
   <h2>ჩვენთვის LLM = <span class="c-api">კიდევ ერთი HTTP API</span></h2>
   <div class="grid2" style="grid-template-columns:1.15fr 1fr;gap:26px;align-items:start">
     <div class="col" style="gap:12px">
-      <div class="rq step" style="--a:#49cc90"><span class="mth" style="--a:#49cc90">POST</span><span class="url">localhost:11434/v1/chat/completions</span></div>
-      <div class="rs step" data-with style="--a:var(--api)"><div class="h">Request body</div><pre class="json">{
+      <div class="rq" style="--a:#49cc90"><span class="mth" style="--a:#49cc90">POST</span><span class="url">localhost:11434/v1/chat/completions</span></div>
+      <div class="rs" style="--a:var(--api)"><div class="h">Request body</div><pre class="json">{
   <span class="k">"model"</span>: <span class="s">"llama3.2"</span>,
   <span class="k">"messages"</span>: [
     { <span class="k">"role"</span>: <span class="s">"user"</span>,
@@ -590,6 +594,7 @@ body[data-study] #help{right:190px}</style></head>
 }</pre></div>
     </div>
     <div class="col" style="gap:12px">
+      <div class="callout ask">🙋 რას დააბრუნებს სერვერი? რა ველებს ელით პასუხში?</div>
       <div class="rs step" style="--a:var(--mvc)"><div class="h">200 OK · Response body</div><pre class="json">{
   <span class="k">"choices"</span>: [{
     <span class="k">"message"</span>: { <span class="k">"role"</span>: <span class="s">"assistant"</span>,
@@ -599,7 +604,7 @@ body[data-study] #help{right:190px}</style></head>
   <span class="hl"><span class="k">"usage"</span>: { <span class="k">"prompt_tokens"</span>: <span class="n">31</span>,
              <span class="k">"completion_tokens"</span>: <span class="n">48</span> }</span>
 }</pre></div>
-      <div class="callout step" style="--a:var(--asp)">JSON შედის, JSON გამოდის. ახალი მხოლოდ სიტყვებია: <b>tokens</b>, <b>temperature</b>, <b>finish_reason</b></div>
+      <div class="callout step" data-with style="--a:var(--asp)">JSON შედის, JSON გამოდის. ახალი მხოლოდ სიტყვებია: <b>tokens</b>, <b>temperature</b>, <b>finish_reason</b></div>
     </div>
   </div>
   
@@ -620,21 +625,22 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">ტოკენი</div>
   <h2>მოდელი სიტყვებს კი არა — <span class="c-asp">ტოკენებს</span> კითხულობს</h2>
   <div class="col" style="gap:22px;margin-top:6px">
-    <div class="step">
+    <div >
       <p class="small" style="margin-bottom:10px">🇬🇧 <b>Book a table for two</b></p>
       <div class="toks"><span class="tk">Book<small>12768</small></span><span class="tk"> a<small>261</small></span><span class="tk"> table<small>3293</small></span><span class="tk"> for<small>395</small></span><span class="tk"> two<small>1920</small></span></div>
     </div>
+    <div class="callout ask">🙋 ინგლისური 5 ტოკენია. ქართულად <b>რამდენი</b> იქნება?</div>
     <div class="step">
       <p class="small" style="margin-bottom:10px">🇬🇪 <b>დაჯავშნე მაგიდა ორისთვის</b></p>
       <div class="toks"><span class="tk">და<small>…</small></span><span class="tk">ჯავ<small>…</small></span><span class="tk">შნ<small>…</small></span><span class="tk">ე<small>…</small></span><span class="tk"> მა<small>…</small></span><span class="tk">გი<small>…</small></span><span class="tk">და<small>…</small></span><span class="tk"> ორ<small>…</small></span><span class="tk">ის<small>…</small></span><span class="tk">თვ<small>…</small></span><span class="tk">ის<small>…</small></span></div>
     </div>
-    <div class="grid3 step" style="gap:18px">
+    <div class="grid3 step" data-with style="gap:18px">
       <div class="callout" style="--a:var(--asp)">ტოკენი = <b>ტექსტის ნაჭერი</b>: სიტყვა, მარცვალი ან ასო</div>
       <div class="callout" style="--a:var(--net)">თითოს თავისი <b>ნომერი (ID)</b> აქვს — მოდელი რიცხვებს ხედავს</div>
       <div class="callout" style="--a:var(--red)">ფასი, ლიმიტი, სიჩქარე — ყველაფერი <b>ტოკენებით</b> ითვლება</div>
     </div>
   </div>
-  <p class="tiny step" style="margin-top:14px;color:var(--muted)">დაყოფა და ID-ები საილუსტრაციოა — ზუსტი სურათი მოდელის tokenizer-ზეა დამოკიდებული</p>
+  <p class="tiny" style="margin-top:14px;color:var(--muted)">დაყოფა და ID-ები საილუსტრაციოა — ზუსტი სურათი მოდელის tokenizer-ზეა დამოკიდებული</p>
   
 </section>
 
@@ -645,31 +651,31 @@ body[data-study] #help{right:190px}</style></head>
     <div class="card accent" style="--a:var(--api)"><h3><span class="ico">🇬🇧</span>ინგლისური</h3><p style="font-size:24px">I'd like to book a table for four people tomorrow at 8 pm.</p></div>
     <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🇬🇪</span>ქართული</h3><p style="font-size:24px">მინდა ხვალ საღამოს 8 საათზე ოთხი ადამიანისთვის მაგიდა დავჯავშნო.</p></div>
   </div>
-  <div class="row step mt2" style="gap:14px;justify-content:center">
+  <div class="row mt2" style="gap:14px;justify-content:center">
     <span class="pill on" style="--a:var(--mvc);font-size:20px">✋ 15-მდე</span><span class="pill on" style="--a:var(--api);font-size:20px">✋ 15–30</span><span class="pill on" style="--a:var(--asp);font-size:20px">✋ 30–60</span><span class="pill on" style="--a:var(--red);font-size:20px">✋ 60+</span>
   </div>
-  <div class="callout step mt" style="--a:var(--pink);font-size:22px">ხელი ასწიეთ ორივე წინადადებაზე → ლექტორი ამოწმებს <b class="mono">tiktokenizer.vercel.app</b>-ზე</div>
+  <div class="callout mt" style="--a:var(--pink);font-size:22px">ხელი ასწიეთ ორივე წინადადებაზე → ლექტორი ამოწმებს <b class="mono">tiktokenizer.vercel.app</b>-ზე</div>
   <div class="callout step mt" style="--a:var(--red);font-size:22px">ერთი და იგივე აზრი ქართულად <b>ბევრად მეტი ტოკენია</b> → <b>უფრო ძვირი</b>, <b>უფრო ნელი</b> და context-ში <b>ნაკლები ეტევა</b></div>
   
 </section>
 
 <section class="slide" data-section="2 · როგორ მუშაობს">
-  <div class="kicker">next-token prediction</div>
+  <div class="kicker">next-token prediction · 🙋 რომელს აირჩევს?</div>
   <h2>LLM-ის მთელი საიდუმლო: <span class="grad">შემდეგი ტოკენი</span></h2>
   <svg viewBox="0 0 1420 520" width="1420" height="520">
     <g class="in"><rect x="10" y="60" width="430" height="120" rx="18" class="box"/><text x="225" y="104" text-anchor="middle" class="tm" font-size="17">შეყვანა (ტოკენები)</text><text x="225" y="148" text-anchor="middle" class="tw b mono" font-size="24">Book a table for</text></g>
-    <g class="step fade"><path d="M440 120 H540" stroke="#6d28d9" stroke-width="3" class="flow"/>
+    <g class="fade"><path d="M440 120 H540" stroke="#6d28d9" stroke-width="3" class="flow"/>
       <rect x="540" y="40" width="260" height="160" rx="22" fill="#f3effe" stroke="#6d28d9" stroke-width="3"/><text x="670" y="112" text-anchor="middle" font-size="46">🧠</text><text x="670" y="168" text-anchor="middle" class="tn b" font-size="22">LLM</text></g>
-    <g class="step fade"><path d="M800 120 H880" stroke="#d97706" stroke-width="3" class="flow"/>
+    <g class="fade"><path d="M800 120 H880" stroke="#d97706" stroke-width="3" class="flow"/>
       <rect x="880" y="10" width="520" height="230" rx="18" fill="#fef5e4" stroke="#d97706" stroke-width="2"/><text x="900" y="44" class="to b" font-size="18">ალბათობები შემდეგი ტოკენისთვის</text>
       <text x="1010" y="86" text-anchor="end" class="tw mono b" font-size="20">two</text><rect x="1024" y="70" width="300" height="22" rx="6" fill="#16a34a"/><text x="1336" y="88" class="tw mono" font-size="16">62%</text>
       <text x="1010" y="126" text-anchor="end" class="tw mono b" font-size="20">four</text><rect x="1024" y="110" width="110" height="22" rx="6" fill="#d97706"/><text x="1146" y="128" class="tw mono" font-size="16">21%</text>
       <text x="1010" y="166" text-anchor="end" class="tw mono b" font-size="20">tonight</text><rect x="1024" y="150" width="50" height="22" rx="6" fill="#d97706"/><text x="1086" y="168" class="tw mono" font-size="16">9%</text>
       <text x="1010" y="206" text-anchor="end" class="tw mono b" font-size="20">pizza</text><rect x="1024" y="190" width="6" height="22" rx="3" fill="#dc2626"/><text x="1042" y="208" class="tw mono" font-size="16">0.1%</text></g>
     <g class="step fade"><rect x="880" y="290" width="520" height="80" rx="16" fill="#eaf8ef" stroke="#16a34a" stroke-width="2"/><text x="1140" y="340" text-anchor="middle" class="tg b" font-size="22">② ირჩევს ერთს → „ two“</text></g>
-    <g class="step fade"><path d="M880 330 C600 330 300 330 225 190" stroke="#16a34a" stroke-width="3" fill="none" class="flow"/>
+    <g class="step fade" data-with><path d="M880 330 C600 330 300 330 225 190" stroke="#16a34a" stroke-width="3" fill="none" class="flow"/>
       <rect x="10" y="400" width="680" height="100" rx="16" class="box"/><text x="40" y="440" class="tg b" font-size="21">③ უმატებს და იმეორებს</text><text x="40" y="478" class="tw mono" font-size="20">Book a table for two → … → [END]</text></g>
-    <g class="step fade"><text x="1140" y="440" text-anchor="middle" class="tw" font-size="22">ერთი ტოკენი = <tspan class="tn b">მოდელის ერთი სრული გაშვება</tspan></text><text x="1140" y="476" text-anchor="middle" class="tm" font-size="18">ამიტომ არის გრძელი პასუხი ნელი და ძვირი</text></g>
+    <g class="step fade" data-with><text x="1140" y="440" text-anchor="middle" class="tw" font-size="22">ერთი ტოკენი = <tspan class="tn b">მოდელის ერთი სრული გაშვება</tspan></text><text x="1140" y="476" text-anchor="middle" class="tm" font-size="18">ამიტომ არის გრძელი პასუხი ნელი და ძვირი</text></g>
   </svg>
   
 </section>
@@ -680,10 +686,10 @@ body[data-study] #help{right:190px}</style></head>
   <div class="grid2" style="grid-template-columns:1fr 1fr;gap:40px;align-items:center">
     <div class="col" style="gap:22px">
       <p class="sentence">ხვალ საღამოს მინდა მაგიდა <span class="blank">&nbsp;?&nbsp;</span></p>
-      <div class="callout step" style="--a:var(--pink)">დაწერეთ <b>ერთი სიტყვა</b> ფურცელზე ან ჩატში. 10 წამი ⏱️</div>
+      <div class="callout" style="--a:var(--pink)">დაწერეთ <b>ერთი სიტყვა</b> ფურცელზე ან ჩატში. 10 წამი ⏱️</div>
       <div class="callout step" style="--a:var(--net)">თქვენი პასუხები ერთად = <b>ალბათობების განაწილება</b>. ასე „ხედავს“ მოდელი</div>
     </div>
-    <div class="step">
+    <div class="step" data-with>
       <div class="pb pick"><span class="w">დავჯავშნო</span><span class="track"><span class="bar" style="--p:88%"></span></span><span class="v">44%</span></div>
       <div class="pb"><span class="w">ოთხისთვის</span><span class="track"><span class="bar" style="--p:46%;--a:var(--asp)"></span></span><span class="v">23%</span></div>
       <div class="pb"><span class="w">ფანჯარასთან</span><span class="track"><span class="bar" style="--p:28%;--a:var(--asp)"></span></span><span class="v">14%</span></div>
@@ -702,7 +708,7 @@ body[data-study] #help{right:190px}</style></head>
   <div class="grid2" style="grid-template-columns:1fr 1fr;gap:40px;align-items:center">
     <div class="col" style="gap:22px">
       <p class="sentence" style="font-size:28px"><span style="color:var(--muted)">ვეგეტარიანელი ვარ და ხორცს არ ვჭამ.</span><br>ხვალ საღამოს მინდა მაგიდა და <span class="blank">&nbsp;?&nbsp;</span></p>
-      <div class="callout step" style="--a:var(--pink)">ახლა რას დაწერთ? 10 წამი ⏱️</div>
+      <div class="callout" style="--a:var(--pink)">ახლა რას დაწერთ? 10 წამი ⏱️</div>
     </div>
     <div class="step">
       <div class="pb pick"><span class="w">სალათი</span><span class="track"><span class="bar" style="--p:62%"></span></span><span class="v">31%</span></div>
@@ -712,7 +718,7 @@ body[data-study] #help{right:190px}</style></head>
       <div class="pb"><span class="w">მწვადი</span><span class="track"><span class="bar" style="--p:2%;--a:var(--red)"></span></span><span class="v">0.5%</span></div>
     </div>
   </div>
-  <div class="callout step mt2" style="--a:var(--net);font-size:24px">მოდელი ყოველთვის <b>მთელ ტექსტს</b> ხედავს. რასაც ჩვენ ვაწვდით, ის ცვლის ალბათობებს — ესაა <b>prompt engineering</b>-ის საფუძველი (ლექცია 2)</div>
+  <div class="callout step mt2" data-with style="--a:var(--net);font-size:24px">მოდელი ყოველთვის <b>მთელ ტექსტს</b> ხედავს. რასაც ჩვენ ვაწვდით, ის ცვლის ალბათობებს — ესაა <b>prompt engineering</b>-ის საფუძველი (ლექცია 2)</div>
   
 </section>
 
@@ -720,15 +726,15 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">ვარჯიში და მისი შედეგები</div>
   <h2>საიდან „იცის“ — და <span class="c-red">როდის იტყუება</span></h2>
   <div class="grid3" style="gap:20px;margin-top:6px">
-    <div class="card accent step" style="--a:var(--api)"><div class="big-emoji">📚</div><h3 class="mt">1 · Pre-training</h3><p>ინტერნეტის ტექსტზე ისწავლა <b>შემდეგი ტოკენი</b>. შედეგი: „ტექსტის გამგრძელებელი“</p></div>
-    <div class="card accent step" style="--a:var(--net)"><div class="big-emoji">🧑‍🏫</div><h3 class="mt">2 · Fine-tuning</h3><p>დიალოგებზე ისწავლა <b>ასისტენტის</b> ქცევა: კითხვაზე პასუხი, ინსტრუქციის შესრულება</p></div>
-    <div class="card accent step" style="--a:var(--asp)"><div class="big-emoji">📅</div><h3 class="mt">Knowledge cutoff</h3><p>ვარჯიშის შემდეგ <b>ახალს არაფერს იგებს</b>. ჩვენს მენიუს საერთოდ არ იცნობს</p></div>
+    <div class="card accent" style="--a:var(--api)"><div class="big-emoji">📚</div><h3 class="mt">1 · Pre-training</h3><p>ინტერნეტის ტექსტზე ისწავლა <b>შემდეგი ტოკენი</b>. შედეგი: „ტექსტის გამგრძელებელი“</p></div>
+    <div class="card accent" style="--a:var(--net)"><div class="big-emoji">🧑‍🏫</div><h3 class="mt">2 · Fine-tuning</h3><p>დიალოგებზე ისწავლა <b>ასისტენტის</b> ქცევა: კითხვაზე პასუხი, ინსტრუქციის შესრულება</p></div>
+    <div class="card accent" style="--a:var(--asp)"><div class="big-emoji">📅</div><h3 class="mt">Knowledge cutoff</h3><p>ვარჯიშის შემდეგ <b>ახალს არაფერს იგებს</b>. ჩვენს მენიუს საერთოდ არ იცნობს</p></div>
   </div>
-  <div class="grid2 step mt2" style="grid-template-columns:1fr 1fr;gap:20px;align-items:center">
-    <div class="bubble"><span class="who">user</span>რა ღირს ხინკალი RestaurantApi-ში?</div>
-    <div class="bubble me" style="border-color:#fca5a5;background:#fef2f2"><span class="who">LLM 😇</span>ხინკალი ჩვენთან 1.20 ₾ ღირს, მინიმუმ 5 ცალი.</div>
+  <div class="grid2 mt2" style="grid-template-columns:1fr 1fr;gap:20px;align-items:center">
+    <div class="bubble"><span class="who">user · 🙋 რას უპასუხებს მოდელი?</span>რა ღირს ხინკალი RestaurantApi-ში?</div>
+    <div class="bubble me step" style="border-color:#fca5a5;background:#fef2f2"><span class="who">LLM 😇</span>ხინკალი ჩვენთან 1.20 ₾ ღირს, მინიმუმ 5 ცალი.</div>
   </div>
-  <div class="callout step mt" style="--a:var(--red);font-size:22px"><b>Hallucination</b>: მოდელი წერს <b>დამაჯერებელს</b>, არა <b>ჭეშმარიტს</b>. გამოსავალი — ჩვენი მონაცემი მივაწოდოთ (Tools · RAG)</div>
+  <div class="callout step mt" data-with style="--a:var(--red);font-size:22px"><b>Hallucination</b>: მოდელი წერს <b>დამაჯერებელს</b>, არა <b>ჭეშმარიტს</b>. გამოსავალი — ჩვენი მონაცემი მივაწოდოთ (Tools · RAG)</div>
   
 </section>
 
@@ -745,8 +751,8 @@ body[data-study] #help{right:190px}</style></head>
   </div>
   <div style="display:flex;justify-content:space-between;font:600 15px var(--mono);color:var(--muted);margin-top:8px"><span>0</span><span>ლიმიტი: ათიათასობით — მილიონამდე ტოკენი (მოდელზეა დამოკიდებული) →</span></div>
   <div class="grid2 mt2" style="grid-template-columns:1fr 1fr;gap:26px;align-items:start">
-    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">📏</span>Context window</h3><p class="small">ერთ მოთხოვნაში <b>შემავალი + გამომავალი</b> ტოკენების მაქსიმუმი. ზედმეტს მოდელი ვერ „ნახავს“</p></div>
-    <div class="card accent step" style="--a:var(--red)"><h3><span class="ico">🐟</span>მოდელს მეხსიერება არ აქვს</h3><p class="small">ყოველი მოთხოვნა <b>ცალკეა</b> (stateless). „ისტორია“ = ჩვენ ყოველ ჯერზე <b>თავიდან ვუგზავნით</b></p></div>
+    <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">📏</span>Context window</h3><p class="small">ერთ მოთხოვნაში <b>შემავალი + გამომავალი</b> ტოკენების მაქსიმუმი. ზედმეტს მოდელი ვერ „ნახავს“</p></div>
+    <div class="col" style="gap:12px"><div class="callout ask">🙋 ChatGPT-ს „ახსოვს“ წინა შეტყობინება. <b>მოდელს</b> ახსოვს?</div><div class="card accent step" style="--a:var(--red)"><h3><span class="ico">🐟</span>მოდელს მეხსიერება არ აქვს</h3><p class="small">ყოველი მოთხოვნა <b>ცალკეა</b> (stateless). „ისტორია“ = ჩვენ ყოველ ჯერზე <b>თავიდან ვუგზავნით</b></p></div></div>
   </div>
   
 </section>
@@ -784,14 +790,15 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">Temperature</div>
   <h2>Temperature — <span class="c-asp">რამდენად „გაბედულად“</span> ირჩევს</h2>
   <div class="grid3" style="gap:30px;margin-top:20px">
-    <div class="tempcol step" style="--a:var(--api)"><div class="t">0</div><div class="d">ყოველთვის ყველაზე სავარაუდო</div>
+    <div class="tempcol" style="--a:var(--api)"><div class="t">0</div><div class="d">ყოველთვის ყველაზე სავარაუდო</div>
       <div class="vbars"><i style="--h:200px" data-l="დავჯ."></i><i style="--h:6px;opacity:.4" data-l="ოთხ."></i><i style="--h:3px;opacity:.4" data-l="ფანჯ."></i><i style="--h:2px;opacity:.4" data-l="8-ზე"></i><i style="--h:1px;opacity:.4" data-l="ბან."></i></div></div>
-    <div class="tempcol step" style="--a:var(--mvc)"><div class="t">0.7</div><div class="d">ბუნებრივი, ოდნავ მრავალფეროვანი</div>
+    <div class="tempcol" style="--a:var(--mvc)"><div class="t">0.7</div><div class="d">ბუნებრივი, ოდნავ მრავალფეროვანი</div>
       <div class="vbars"><i style="--h:150px" data-l="დავჯ."></i><i style="--h:80px" data-l="ოთხ."></i><i style="--h:50px" data-l="ფანჯ."></i><i style="--h:36px" data-l="8-ზე"></i><i style="--h:2px" data-l="ბან."></i></div></div>
-    <div class="tempcol step" style="--a:var(--red)"><div class="t">1.5</div><div class="d">„ბრტყელი“ — სუსტი ვარიანტებიც შანსს იღებს</div>
+    <div class="tempcol" style="--a:var(--red)"><div class="t">1.5</div><div class="d">„ბრტყელი“ — სუსტი ვარიანტებიც შანსს იღებს</div>
       <div class="vbars"><i style="--h:100px" data-l="დავჯ."></i><i style="--h:84px" data-l="ოთხ."></i><i style="--h:74px" data-l="ფანჯ."></i><i style="--h:66px" data-l="8-ზე"></i><i style="--h:30px" data-l="ბან."></i></div></div>
   </div>
-  <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:20px;margin-top:56px">
+  <div style="margin-top:56px"><div class="callout ask">🙋 ამოიღე თარიღი ტექსტიდან · მოიფიქრე კერძის სახელი — <b>რომელს რომელი</b> Temperature?</div></div>
+  <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:20px;margin-top:14px">
     <div class="callout" style="--a:var(--api)">დაბალი → <b>პროგნოზირებადი</b>: კლასიფიკაცია, JSON, მონაცემის ამოღება</div>
     <div class="callout" style="--a:var(--asp)">მაღალი → <b>კრეატიული</b>, მაგრამ მეტი შეცდომა და „სისულელე“</div>
   </div>
@@ -811,8 +818,8 @@ body[data-study] #help{right:190px}</style></head>
       <div class="pb cut"><span class="w">ბანანი</span><span class="track"><span class="bar" style="--p:1%;--a:var(--red)"></span></span><span class="v">✂</span></div>
     </div>
     <div class="col" style="gap:18px">
-      <div class="card accent step" style="--a:var(--net)"><h3><span class="ico">✂️</span>Top-P = 0.9</h3><p class="small">ვიღებთ ყველაზე სავარაუდო ტოკენებს, სანამ ჯამი <b>90%</b>-ს არ მიაღწევს. დანარჩენი — <b>გარეთ</b></p></div>
-      <div class="callout step" style="--a:var(--asp)">ჩვეულებრივ ვცვლით <b>ან Temperature-ს, ან Top-P-ს</b> — ორივეს ერთად არა</div>
+      <div class="card accent" style="--a:var(--net)"><h3><span class="ico">✂️</span>Top-P = 0.9</h3><p class="small">ვიღებთ ყველაზე სავარაუდო ტოკენებს, სანამ ჯამი <b>90%</b>-ს არ მიაღწევს. დანარჩენი — <b>გარეთ</b></p></div>
+      <div class="callout" style="--a:var(--asp)">ჩვეულებრივ ვცვლით <b>ან Temperature-ს, ან Top-P-ს</b> — ორივეს ერთად არა</div>
     </div>
   </div>
   
@@ -823,14 +830,15 @@ body[data-study] #help{right:190px}</style></head>
   <h2>Max Tokens — <span class="c-red">სად გაჩერდეს</span></h2>
   <div class="grid2" style="grid-template-columns:1.1fr 1fr;gap:36px;align-items:start">
     <div class="col" style="gap:16px">
-      <div class="bubble step"><span class="who">user · max_tokens = 15</span>აღწერე ჩვენი ფირმის ხაჭაპური</div>
-      <div class="bubble me step"><span class="who">assistant</span>აჭარული ხაჭაპური ნავის ფორმის ცომია, რომელსაც შუაში ყველი, კვერცხი და</div>
+      <div class="bubble"><span class="who">user · max_tokens = 15</span>აღწერე ჩვენი ფირმის ხაჭაპური</div>
+      <div class="bubble me"><span class="who">assistant</span>აჭარული ხაჭაპური ნავის ფორმის ცომია, რომელსაც შუაში ყველი, კვერცხი და</div>
+      <div class="callout ask" style="font-size:19px">🙋 რატომ მოიჭრა? რა ეწერება <b>finish_reason</b>-ში?</div>
       <div class="rs step" style="--a:var(--red)"><div class="h">response</div><pre class="json"><span class="k">"finish_reason"</span>: <span class="s">"length"</span>   <span style="color:var(--red)">← მოიჭრა!</span></pre></div>
     </div>
     <div class="col" style="gap:16px">
-      <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🛑</span>რას აკეთებს</h3><p class="small">ზღუდავს <b>პასუხის</b> ტოკენებს. მიაღწია — წერა წყდება <b>სიტყვის შუაშიც</b></p></div>
-      <div class="card accent step" style="--a:var(--mvc)"><h3><span class="ico">🛡️</span>რატომ გვჭირდება</h3><p class="small"><b>ხარჯის</b> და <b>დროის</b> ზღვარი: მოდელი „არ გაიტაცებს“ 3000-ტოკენიან პასუხზე</p></div>
-      <div class="callout step" style="--a:var(--red)">ყოველთვის ვამოწმებთ: <code class="i">finish_reason</code> = <b>stop</b> თუ <b>length</b>?</div>
+      <div class="card accent step" data-with style="--a:var(--asp)"><h3><span class="ico">🛑</span>რას აკეთებს</h3><p class="small">ზღუდავს <b>პასუხის</b> ტოკენებს. მიაღწია — წერა წყდება <b>სიტყვის შუაშიც</b></p></div>
+      <div class="card accent step" data-with style="--a:var(--mvc)"><h3><span class="ico">🛡️</span>რატომ გვჭირდება</h3><p class="small"><b>ხარჯის</b> და <b>დროის</b> ზღვარი: მოდელი „არ გაიტაცებს“ 3000-ტოკენიან პასუხზე</p></div>
+      <div class="callout step" data-with style="--a:var(--red)">ყოველთვის ვამოწმებთ: <code class="i">finish_reason</code> = <b>stop</b> თუ <b>length</b>?</div>
     </div>
   </div>
   
@@ -839,14 +847,15 @@ body[data-study] #help{right:190px}</style></head>
 <section class="slide" data-section="3 · პარამეტრები">
   <div class="kicker">რა როდის · RestaurantApi</div>
   <h2>ერთი პროექტი — <span class="grad">სხვადასხვა პარამეტრი</span></h2>
+  <div class="callout ask">🙋 თქვენ აირჩიეთ: რა Temperature და Max Tokens თითოეულ ამოცანას?</div>
   <table class="t" style="margin-top:10px">
     <tr><th>ამოცანა</th><th>Temperature</th><th>Max Tokens</th><th>რატომ</th></tr>
-    <tr class="step fade"><td>შეტყობინების ტიპი: შეკვეთა / ჯავშანი / კითხვა</td><td class="mono">0</td><td class="mono">~10</td><td>ერთი სწორი პასუხია, მოკლე</td></tr>
-    <tr class="step fade"><td>„ხვალ 8-ზე ოთხნი“ → თარიღი, დრო, რაოდენობა</td><td class="mono">0</td><td class="mono">~100</td><td>მონაცემის ამოღება — ზუსტად</td></tr>
-    <tr class="step fade"><td>ჩატი კლიენტთან, რეკომენდაცია</td><td class="mono">0.5–0.8</td><td class="mono">~300</td><td>ბუნებრივი, მაგრამ არა „ფანტაზია“</td></tr>
-    <tr class="step fade"><td>ახალი კერძის აღწერა მენიუსთვის</td><td class="mono">0.9–1.2</td><td class="mono">~200</td><td>კრეატიული ტექსტი, ვარიანტები</td></tr>
+    <tr><td>შეტყობინების ტიპი: შეკვეთა / ჯავშანი / კითხვა</td><td class="mono"><span class="step fade">0</span></td><td class="mono"><span class="step fade" data-with>~10</span></td><td><span class="step fade" data-with>ერთი სწორი პასუხია, მოკლე</span></td></tr>
+    <tr><td>„ხვალ 8-ზე ოთხნი“ → თარიღი, დრო, რაოდენობა</td><td class="mono"><span class="step fade" data-with>0</span></td><td class="mono"><span class="step fade" data-with>~100</span></td><td><span class="step fade" data-with>მონაცემის ამოღება — ზუსტად</span></td></tr>
+    <tr><td>ჩატი კლიენტთან, რეკომენდაცია</td><td class="mono"><span class="step fade" data-with>0.5–0.8</span></td><td class="mono"><span class="step fade" data-with>~300</span></td><td><span class="step fade" data-with>ბუნებრივი, მაგრამ არა „ფანტაზია“</span></td></tr>
+    <tr><td>ახალი კერძის აღწერა მენიუსთვის</td><td class="mono"><span class="step fade" data-with>0.9–1.2</span></td><td class="mono"><span class="step fade" data-with>~200</span></td><td><span class="step fade" data-with>კრეატიული ტექსტი, ვარიანტები</span></td></tr>
   </table>
-  <div class="callout step mt" style="--a:var(--net);font-size:22px">პარამეტრი <b>მოთხოვნას</b> ეკუთვნის და არა პროექტს — ყოველ გამოძახებაზე თავისას ვირჩევთ</div>
+  <div class="callout mt" style="--a:var(--net);font-size:22px">პარამეტრი <b>მოთხოვნას</b> ეკუთვნის და არა პროექტს — ყოველ გამოძახებაზე თავისას ვირჩევთ</div>
   
 </section>
 
@@ -854,22 +863,23 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">reasoning მოდელები</div>
   <h2>მოდელები, რომლებიც <span class="c-net">ჯერ ფიქრობენ</span></h2>
   <div class="col" style="gap:18px;margin-top:10px">
-    <div class="flowrow step" style="display:flex;gap:14px;align-items:center">
+    <div class="flowrow" style="display:flex;gap:14px;align-items:center">
       <span class="pill on" style="--a:var(--api);font-size:18px;min-width:200px;justify-content:center">ჩვეულებრივი</span>
       <div class="bubble" style="flex:none;font-size:20px">კითხვა</div><span style="font:800 28px var(--mono);color:var(--muted)">→</span>
       <div class="bubble me" style="flex:none;font-size:20px;margin-left:0">პასუხი</div>
     </div>
-    <div class="flowrow step" style="display:flex;gap:14px;align-items:center">
+    <div class="flowrow" style="display:flex;gap:14px;align-items:center">
       <span class="pill on" style="--a:var(--net);font-size:18px;min-width:200px;justify-content:center">reasoning</span>
       <div class="bubble" style="flex:none;font-size:20px">კითხვა</div><span style="font:800 28px var(--mono);color:var(--muted)">→</span>
       <div class="toks sm" style="flex:1;padding:10px 14px;border:2px dashed var(--net);border-radius:14px;background:color-mix(in srgb,var(--net) 5%,#fff)"><span class="tk">ჯერ…</span><span class="tk">8 სტუმარი</span><span class="tk">2 მაგიდა?</span><span class="tk">შევამოწმო…</span><span class="tk">არა, ჯობია…</span><span class="tk">…</span></div>
       <span style="font:800 28px var(--mono);color:var(--muted)">→</span><div class="bubble me" style="flex:none;font-size:20px;margin-left:0">პასუხი</div>
     </div>
   </div>
-  <div class="grid3 mt2" style="gap:18px">
-    <div class="card accent step" style="--a:var(--mvc)"><h3><span class="ico">✅</span>კარგია</h3><p>რამდენიმე ნაბიჯიანი ამოცანა: გეგმა, გამოთვლა, რთული წესები</p></div>
-    <div class="card accent step" style="--a:var(--red)"><h3><span class="ico">💸</span>ფასი</h3><p>„ფიქრის“ ტოკენებს <b>ვიხდით</b> (როგორც output), ხშირად ვერც ვხედავთ</p></div>
-    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🐢</span>სიჩქარე</h3><p>პასუხამდე წამები გადის. „რა ღირს ხინკალი?“ — <b>ზედმეტია</b></p></div>
+  <div class="callout ask mt2">🙋 რესტორნის რომელ ამოცანას <b>დასჭირდება</b> reasoning მოდელი, რომელს — არა?</div>
+  <div class="grid3 step mt" style="gap:18px">
+    <div class="card accent" style="--a:var(--mvc)"><h3><span class="ico">✅</span>კარგია</h3><p>რამდენიმე ნაბიჯიანი ამოცანა: გეგმა, გამოთვლა, რთული წესები</p></div>
+    <div class="card accent" style="--a:var(--red)"><h3><span class="ico">💸</span>ფასი</h3><p>„ფიქრის“ ტოკენებს <b>ვიხდით</b> (როგორც output), ხშირად ვერც ვხედავთ</p></div>
+    <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🐢</span>სიჩქარე</h3><p>პასუხამდე წამები გადის. „რა ღირს ხინკალი?“ — <b>ზედმეტია</b></p></div>
   </div>
   
 </section>
@@ -898,14 +908,15 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">პროვაიდერები</div>
   <h2>ვისი მოდელი, <span class="c-api">ვისი სერვერი</span></h2>
   <div class="grid3" style="gap:18px;margin-top:10px">
-    <div class="prov step" style="--a:#16a34a"><span class="nm">OpenAI</span><span class="md">GPT · reasoning მოდელები</span><span class="ds">ყველაზე ფართოდ გავრცელებული API; მისი ფორმატი „სტანდარტად“ იქცა</span></div>
-    <div class="prov step" style="--a:#d97706"><span class="nm">Anthropic</span><span class="md">Claude</span><span class="ds">ძლიერია კოდში, გრძელ ტექსტში და აგენტურ ამოცანებში</span></div>
-    <div class="prov step" style="--a:#2563eb"><span class="nm">Google</span><span class="md">Gemini</span><span class="ds">დიდი context window, მულტიმოდალური; აქვს უფასო ლიმიტი</span></div>
-    <div class="prov step" style="--a:#db2777"><span class="nm">Groq</span><span class="md">ღია მოდელები (Llama, Qwen…)</span><span class="ds">საკუთარი ჩიპები — <b>ძალიან სწრაფი</b>; უფასო ლიმიტი სწავლისთვის</span></div>
-    <div class="prov step" style="--a:#6d28d9"><span class="nm">Ollama 💻</span><span class="md">ღია მოდელები ლოკალურად</span><span class="ds">შენს კომპიუტერზე, <b>უფასოდ</b>, ინტერნეტის გარეშე</span></div>
-    <div class="prov step" style="--a:#7b8096"><span class="nm">და სხვები</span><span class="md">Azure OpenAI · Mistral · DeepSeek…</span><span class="ds">თითქმის ყველა OpenAI-compatible API-ს გვთავაზობს</span></div>
+    <div class="prov" style="--a:#16a34a"><span class="nm">OpenAI</span><span class="md">GPT · reasoning მოდელები</span><span class="ds">ყველაზე ფართოდ გავრცელებული API; მისი ფორმატი „სტანდარტად“ იქცა</span></div>
+    <div class="prov" style="--a:#d97706"><span class="nm">Anthropic</span><span class="md">Claude</span><span class="ds">ძლიერია კოდში, გრძელ ტექსტში და აგენტურ ამოცანებში</span></div>
+    <div class="prov" style="--a:#2563eb"><span class="nm">Google</span><span class="md">Gemini</span><span class="ds">დიდი context window, მულტიმოდალური; აქვს უფასო ლიმიტი</span></div>
+    <div class="prov" style="--a:#db2777"><span class="nm">Groq</span><span class="md">ღია მოდელები (Llama, Qwen…)</span><span class="ds">საკუთარი ჩიპები — <b>ძალიან სწრაფი</b>; უფასო ლიმიტი სწავლისთვის</span></div>
+    <div class="prov" style="--a:#6d28d9"><span class="nm">Ollama 💻</span><span class="md">ღია მოდელები ლოკალურად</span><span class="ds">შენს კომპიუტერზე, <b>უფასოდ</b>, ინტერნეტის გარეშე</span></div>
+    <div class="prov" style="--a:#7b8096"><span class="nm">და სხვები</span><span class="md">Azure OpenAI · Mistral · DeepSeek…</span><span class="ds">თითქმის ყველა OpenAI-compatible API-ს გვთავაზობს</span></div>
   </div>
-  <div class="callout step mt" style="--a:var(--net);font-size:22px">ჩვენი კოდისთვის ეს <b>ერთ ხაზზე</b> დავა — ამას მე-5 ნაწილში ვნახავთ</div>
+  <div class="callout ask mt">🙋 რომელი გამოგიყენებიათ? რით განსხვავდებოდა?</div>
+  <div class="callout mt" style="--a:var(--net);font-size:22px">ჩვენი კოდისთვის ეს <b>ერთ ხაზზე</b> დავა — ამას მე-5 ნაწილში ვნახავთ</div>
   
 </section>
 
@@ -914,12 +925,13 @@ body[data-study] #help{right:190px}</style></head>
   <h2>☁️ Cloud API თუ 💻 <span class="c-net">Ollama?</span></h2>
   <table class="t" style="margin-top:10px">
     <tr><th></th><th>☁️ Cloud (OpenAI, Claude, Gemini, Groq)</th><th>💻 ლოკალური (Ollama)</th></tr>
-    <tr class="step fade"><td>ფასი</td><td>ვიხდით <b>ტოკენზე</b></td><td><b>უფასო</b> — ვიხდით კომპიუტერით და დენით</td></tr>
-    <tr class="step fade"><td>ხარისხი</td><td><b>ყველაზე ძლიერი</b> მოდელები</td><td>პატარა მოდელები — სუსტი, განსაკუთრებით <b>ქართულად</b></td></tr>
-    <tr class="step fade"><td>სიჩქარე</td><td>სწრაფი, მაგრამ ქსელზეა დამოკიდებული</td><td>შენს GPU/CPU-ზეა დამოკიდებული</td></tr>
-    <tr class="step fade"><td>მონაცემი</td><td>მიდის <b>პროვაიდერთან</b></td><td><b>არ ტოვებს</b> კომპიუტერს</td></tr>
-    <tr class="step fade"><td>სწავლისთვის</td><td>API key, ლიმიტები</td><td>key არ სჭირდება — <b>იდეალურია ექსპერიმენტისთვის</b></td></tr>
+    <tr class="fade"><td>ფასი</td><td>ვიხდით <b>ტოკენზე</b></td><td><b>უფასო</b> — ვიხდით კომპიუტერით და დენით</td></tr>
+    <tr class="fade"><td>ხარისხი</td><td><b>ყველაზე ძლიერი</b> მოდელები</td><td>პატარა მოდელები — სუსტი, განსაკუთრებით <b>ქართულად</b></td></tr>
+    <tr class="fade"><td>სიჩქარე</td><td>სწრაფი, მაგრამ ქსელზეა დამოკიდებული</td><td>შენს GPU/CPU-ზეა დამოკიდებული</td></tr>
+    <tr class="fade"><td>მონაცემი</td><td>მიდის <b>პროვაიდერთან</b></td><td><b>არ ტოვებს</b> კომპიუტერს</td></tr>
+    <tr class="fade"><td>სწავლისთვის</td><td>API key, ლიმიტები</td><td>key არ სჭირდება — <b>იდეალურია ექსპერიმენტისთვის</b></td></tr>
   </table>
+  <div class="callout ask mt">🙋 რესტორნის ასისტენტისთვის რომელს აირჩევდით და <b>რატომ</b>?</div>
   <div class="callout step mt" style="--a:var(--mvc);font-size:22px">ჩვენი გეგმა: <b>ვსწავლობთ Ollama-ზე</b>, ხარისხს ვამოწმებთ <b>ღრუბელში</b> — კოდი ორივესთვის ერთია</div>
   
 </section>
@@ -928,16 +940,16 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">ფასი</div>
   <h2>ვიხდით <span class="c-asp">ტოკენზე</span> — და არა თანაბრად</h2>
   <div class="grid3" style="gap:20px;margin-top:10px">
-    <div class="card accent step" style="--a:var(--api)"><div class="big-emoji">📥</div><h3 class="mt">Input</h3><p>რასაც ვაგზავნით: system, ისტორია, მონაცემი, კითხვა. <b>იაფია</b></p></div>
-    <div class="card accent step" style="--a:var(--red)"><div class="big-emoji">📤</div><h3 class="mt">Output</h3><p>რასაც მოდელი წერს. <b>რამდენჯერმე ძვირია</b> input-ზე. reasoning ტოკენებიც აქ ითვლება</p></div>
-    <div class="card accent step" style="--a:var(--mvc)"><div class="big-emoji">♻️</div><h3 class="mt">Cached input</h3><p>იგივე დასაწყისი ხშირად? ზოგი პროვაიდერი <b>ფასდაკლებას</b> აკეთებს</p></div>
+    <div class="card accent" style="--a:var(--api)"><div class="big-emoji">📥</div><h3 class="mt">Input</h3><p>რასაც ვაგზავნით: system, ისტორია, მონაცემი, კითხვა. <b>იაფია</b></p></div>
+    <div class="card accent" style="--a:var(--red)"><div class="big-emoji">📤</div><h3 class="mt">Output</h3><p>რასაც მოდელი წერს. <b>რამდენჯერმე ძვირია</b> input-ზე. reasoning ტოკენებიც აქ ითვლება</p></div>
+    <div class="card accent" style="--a:var(--mvc)"><div class="big-emoji">♻️</div><h3 class="mt">Cached input</h3><p>იგივე დასაწყისი ხშირად? ზოგი პროვაიდერი <b>ფასდაკლებას</b> აკეთებს</p></div>
   </div>
-  <table class="t step mt2">
+  <table class="t mt2">
     <tr><th>საილუსტრაციო კლასი</th><th>Input · 1M ტოკენი</th><th>Output · 1M ტოკენი</th></tr>
     <tr><td>⚡ A · პატარა, სწრაფი</td><td class="mono">$0.15</td><td class="mono">$0.60</td></tr>
     <tr><td>🧠 B · დიდი, ძლიერი</td><td class="mono">$3.00</td><td class="mono">$15.00</td></tr>
   </table>
-  <p class="tiny step" data-with style="margin-top:8px;color:var(--muted)">ფასები მიახლოებითი რიგია და იცვლება — რეალური ფასი ყოველთვის პროვაიდერის pricing გვერდზე</p>
+  <p class="tiny" style="margin-top:8px;color:var(--muted)">ფასები მიახლოებითი რიგია და იცვლება — რეალური ფასი ყოველთვის პროვაიდერის pricing გვერდზე</p>
   
 </section>
 
@@ -954,8 +966,8 @@ body[data-study] #help{right:190px}</style></head>
     </div>
     <div class="col" style="gap:12px">
       <div class="card step" style="padding:18px 22px"><div class="calc">input: 300 × 2 000 × 30 = <b>18M</b><br>output: 300 × 300 × 30 = <b>2.7M</b></div></div>
-      <div class="card accent step" style="--a:var(--api);padding:18px 22px"><div class="calc">⚡ A: 18 × 0.15 + 2.7 × 0.60 = <span class="r">≈ $4.3 / თვე</span></div></div>
-      <div class="card accent step" style="--a:var(--red);padding:18px 22px"><div class="calc">🧠 B: 18 × 3 + 2.7 × 15 = <span class="r" style="color:var(--red)">≈ $94.5 / თვე</span></div></div>
+      <div class="card accent step" data-with style="--a:var(--api);padding:18px 22px"><div class="calc">⚡ A: 18 × 0.15 + 2.7 × 0.60 = <span class="r">≈ $4.3 / თვე</span></div></div>
+      <div class="card accent step" data-with style="--a:var(--red);padding:18px 22px"><div class="calc">🧠 B: 18 × 3 + 2.7 × 15 = <span class="r" style="color:var(--red)">≈ $94.5 / თვე</span></div></div>
       <div class="callout step" style="--a:var(--asp)">🤔 და თუ ქართულის გამო ტოკენები <b>2-ჯერ მეტია</b>? თუ საუბრის ისტორია ყოველ ჯერზე <b>იზრდება</b>?</div>
     </div>
   </div>
@@ -985,8 +997,9 @@ body[data-study] #help{right:190px}</style></head>
 <section class="slide" data-section="5 · პირველი გამოძახება">
   <div class="kicker">ნაცნობი იდეა</div>
   <h2><code class="i" style="font-size:.9em">IChatClient</code> — LLM-ის <span class="c-api">„DbContext“</span></h2>
-  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-top:10px">
-    <div class="found step">
+  <div class="callout ask">🙋 EF Core-ში SQL Server-იდან PostgreSQL-ზე გადასვლისას <b>რა იცვლება</b> კოდში?</div>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-top:14px">
+    <div class="found">
       <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>LINQ: _db.Dishes.Where(…)</small></div>
       <div class="layer" style="--a:var(--asp)">DbContext · EF Core<small>ერთი API</small></div>
       <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">SqlServer<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Npgsql<small>provider</small></div></div>
@@ -997,7 +1010,7 @@ body[data-study] #help{right:190px}</style></head>
       <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">OllamaSharp<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Google.GenAI<small>provider</small></div></div>
     </div>
   </div>
-  <div class="callout step mt2" style="--a:var(--mvc);font-size:23px">ბაზის შეცვლისას LINQ არ იცვლება. პროვაიდერის შეცვლისას — <b>ჩვენი AI კოდი არ იცვლება</b></div>
+  <div class="callout step mt2" data-with style="--a:var(--mvc);font-size:23px">ბაზის შეცვლისას LINQ არ იცვლება. პროვაიდერის შეცვლისას — <b>ჩვენი AI კოდი არ იცვლება</b></div>
   
 </section>
 
@@ -1005,12 +1018,12 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">🧑‍💻 მომზადება · Ollama</div>
   <h2>მოდელი <span class="c-net">ჩვენს კომპიუტერზე</span></h2>
   <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
-    <div class="term step"><div class="bar"><i></i><i></i><i></i><span>Terminal</span></div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i><span>Terminal</span></div>
       <div class="body"><div class="cmd">ollama pull llama3.2</div><div class="out">pulling manifest… success  (~2 GB)</div><div class="cmd">ollama list</div><div class="out">NAME              SIZE</div><div class="out">llama3.2:latest   2.0 GB</div><div class="cmd">ollama run llama3.2 "Say hi to a restaurant guest"</div><div class="ok">Welcome! We're so glad you're here…</div></div></div>
     <div class="col" style="gap:16px">
-      <div class="card accent step" style="--a:var(--net)"><h3><span class="ico">1</span>ollama.com → Download</h3><p class="small">Windows / macOS / Linux. ეშვება ფონურად</p></div>
-      <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">2</span>მოდელის ჩამოტვირთვა</h3><p class="small"><code class="i">ollama pull llama3.2</code> — 3B, ~2 GB</p></div>
-      <div class="callout step" style="--a:var(--api)">API უსმენს: <b class="mono">http://localhost:11434</b></div>
+      <div class="card accent" style="--a:var(--net)"><h3><span class="ico">1</span>ollama.com → Download</h3><p class="small">Windows / macOS / Linux. ეშვება ფონურად</p></div>
+      <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">2</span>მოდელის ჩამოტვირთვა</h3><p class="small"><code class="i">ollama pull llama3.2</code> — 3B, ~2 GB</p></div>
+      <div class="callout" style="--a:var(--api)">API უსმენს: <b class="mono">http://localhost:11434</b></div>
     </div>
   </div>
   
@@ -1020,10 +1033,10 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">🧑‍💻 NuGet · RestaurantApi</div>
   <h2>ორი package</h2>
   <div class="col" style="gap:16px;max-width:1100px;margin-top:10px">
-    <div class="nuget step"><div class="logo">M.E.AI</div><div><div class="nm">Microsoft.Extensions.AI</div><div class="ds">IChatClient, ChatOptions, ChatResponse — ერთი API ყველა მოდელისთვის</div></div></div>
-    <div class="nuget step"><div class="logo" style="background:linear-gradient(135deg,#0d9488,#2563eb)">OLM</div><div><div class="nm">OllamaSharp</div><div class="ds">provider: <code class="i">OllamaApiClient</code> თვითონ არის <code class="i">IChatClient</code></div></div></div>
+    <div class="nuget"><div class="logo">M.E.AI</div><div><div class="nm">Microsoft.Extensions.AI</div><div class="ds">IChatClient, ChatOptions, ChatResponse — ერთი API ყველა მოდელისთვის</div></div></div>
+    <div class="nuget"><div class="logo" style="background:linear-gradient(135deg,#0d9488,#2563eb)">OLM</div><div><div class="nm">OllamaSharp</div><div class="ds">provider: <code class="i">OllamaApiClient</code> თვითონ არის <code class="i">IChatClient</code></div></div></div>
   </div>
-  <div class="callout step mt2" style="--a:var(--net)">Visual Studio → პროექტზე მარჯვენა ღილაკი → <b>Manage NuGet Packages</b> → Browse → ორივე → Install</div>
+  <div class="callout mt2" style="--a:var(--net)">Visual Studio → პროექტზე მარჯვენა ღილაკი → <b>Manage NuGet Packages</b> → Browse → ორივე → Install</div>
   
 </section>
 
@@ -1049,7 +1062,7 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">Swagger · შედეგი</div>
   <h2>პირველი პასუხი — <span class="c-mvc">ჩვენი API-დან</span></h2>
   <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
-    <div class="swr c-post step">
+    <div class="swr c-post">
       <div class="rh"><span class="m">POST</span><span class="p">/api/ai-lab/ask</span></div>
       <div class="lab">Request body</div>
       <pre class="rb">{ <span class="k">"prompt"</span>: <span class="s">"Suggest one light vegetarian dish. One sentence."</span> }</pre>
@@ -1062,9 +1075,9 @@ body[data-study] #help{right:190px}</style></head>
 }</pre>
     </div>
     <div class="col" style="gap:16px">
-      <div class="callout step" style="--a:var(--asp)">ჩვენ 8 სიტყვა დავწერეთ — input კი <b>35</b> ტოკენია. რატომ? 🤔</div>
+      <div class="callout ask">🙋 ჩვენ 8 სიტყვა დავწერეთ — input კი <b>35</b> ტოკენია. რატომ?</div>
       <div class="callout step" style="--a:var(--net)">მოდელს ჩვენი ტექსტის გარდა <b>შაბლონი</b> და <b>role</b> ნიშნებიც მიდის</div>
-      <div class="callout step" style="--a:var(--red)">ახლა იგივე <b>ქართულად</b> ჰკითხეთ — ნახეთ ტოკენები და <b>ხარისხი</b></div>
+      <div class="callout" style="--a:var(--red)">ახლა იგივე <b>ქართულად</b> ჰკითხეთ — ნახეთ ტოკენები და <b>ხარისხი</b></div>
     </div>
   </div>
   
@@ -1077,11 +1090,8 @@ body[data-study] #help{right:190px}</style></head>
     <pre class="code sm" id="c2"><span class="ttl">Controllers/AiLabController.cs · Ask</span><code><span class="ln"><span class="na">[HttpPost("ask")]</span></span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IActionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Ask</span><span class="p">(</span><span class="n">AskRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ChatOptions</span></span><span class="ln"><span class="w">    </span><span class="p">{</span></span><span class="ln"><span class="w">        </span><span class="n">Temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">Temperature</span><span class="p">,</span></span><span class="ln"><span class="w">        </span><span class="n">MaxOutputTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">MaxOutputTokens</span></span><span class="ln"><span class="w">    </span><span class="p">}</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">    </span><span class="n">ChatResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">_chat</span><span class="p">.</span><span class="n">GetResponseAsync</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Prompt</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">InputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">OutputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">FinishReason</span><span class="o">?.</span><span class="n">Value</span><span class="p">)</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
     <div class="col" style="gap:14px">
       <pre class="code sm"><span class="ttl">Dtos/AiLab/AskDtos.cs</span><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskRequest</span><span class="p">(</span></span><span class="ln"><span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">Prompt</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">float?</span><span class="w"> </span><span class="n">Temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">int?</span><span class="w"> </span><span class="n">MaxOutputTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">      </span></span></code></pre>
-      <i class="codestep" data-for="c2" data-lines="4-8"></i>
-      <div class="callout step" data-with style="--a:var(--asp)"><b>null</b> = „მოდელის ნაგულისხმევი“</div>
-      <i class="codestep" data-for="c2" data-lines="10-11"></i>
-      <div class="callout step" data-with style="--a:var(--net)">options — <b>ამ მოთხოვნას</b> ეკუთვნის</div>
-      <i class="codestep" data-for="c2" data-lines="all"></i>
+      <div class="callout" style="--a:var(--asp)"><b>null</b> = „მოდელის ნაგულისხმევი“</div>
+      <div class="callout" style="--a:var(--net)">options — <b>ამ მოთხოვნას</b> ეკუთვნის</div>
     </div>
   </div>
   
@@ -1091,12 +1101,12 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker"><span class="game">🔮 ჯერ გამოიცანით — მერე გავუშვებთ</span></div>
   <h2>4 ექსპერიმენტი</h2>
   <div class="grid2" style="grid-template-columns:1fr 1fr;gap:20px;margin-top:6px">
-    <div class="card accent step" style="--a:var(--api)"><h3><span class="ico">🎲</span>1 · Temperature</h3><p class="small">„სახელი მოუფიქრე ახალ ქართულ კერძს“ — 3-ჯერ <code class="i">0</code>-ით, 3-ჯერ <code class="i">1.5</code>-ით. <b>რა განსხვავება იქნება?</b></p></div>
-    <div class="card accent step" style="--a:var(--red)"><h3><span class="ico">✂️</span>2 · Max Tokens</h3><p class="small">„აღწერე ხაჭაპური“ + <code class="i">maxOutputTokens: 15</code>. <b>რას დააბრუნებს finishReason?</b></p></div>
-    <div class="card accent step" style="--a:var(--net)"><h3><span class="ico">🐟</span>3 · Stateless</h3><p class="small">ჯერ: „ჩემი სახელია ნინო“. მერე, <b>ცალკე</b> მოთხოვნით: „რა მქვია?“ <b>გაიხსენებს?</b></p></div>
-    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🇬🇪</span>4 · ენა</h3><p class="small">ერთი და იგივე კითხვა ინგლისურად და ქართულად. <b>რამდენჯერ მეტი იქნება inputTokens?</b></p></div>
+    <div class="card accent" style="--a:var(--api)"><h3><span class="ico">🎲</span>1 · Temperature</h3><p class="small">„სახელი მოუფიქრე ახალ ქართულ კერძს“ — 3-ჯერ <code class="i">0</code>-ით, 3-ჯერ <code class="i">1.5</code>-ით. <b>რა განსხვავება იქნება?</b></p></div>
+    <div class="card accent" style="--a:var(--red)"><h3><span class="ico">✂️</span>2 · Max Tokens</h3><p class="small">„აღწერე ხაჭაპური“ + <code class="i">maxOutputTokens: 15</code>. <b>რას დააბრუნებს finishReason?</b></p></div>
+    <div class="card accent" style="--a:var(--net)"><h3><span class="ico">🐟</span>3 · Stateless</h3><p class="small">ჯერ: „ჩემი სახელია ნინო“. მერე, <b>ცალკე</b> მოთხოვნით: „რა მქვია?“ <b>გაიხსენებს?</b></p></div>
+    <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🇬🇪</span>4 · ენა</h3><p class="small">ერთი და იგივე კითხვა ინგლისურად და ქართულად. <b>რამდენჯერ მეტი იქნება inputTokens?</b></p></div>
   </div>
-  <div class="callout step mt" style="--a:var(--pink);font-size:22px">თითო ექსპერიმენტზე: ჯერ <b>ხელის აწევა / პროგნოზი</b> → მერე Swagger → ვინ გამოიცნო?</div>
+  <div class="callout mt" style="--a:var(--pink);font-size:22px">თითო ექსპერიმენტზე: ჯერ <b>ხელის აწევა / პროგნოზი</b> → მერე Swagger → ვინ გამოიცნო?</div>
   
 </section>
 
@@ -1106,14 +1116,11 @@ body[data-study] #help{right:190px}</style></head>
   <div class="grid2" style="grid-template-columns:1.35fr 1fr;align-items:start;gap:26px">
     <pre class="code sm" id="c3"><span class="ttl">Controllers/AiLabController.cs</span><code><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Google.GenAI</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="c1">// იყო: new OllamaApiClient(…, "llama3.2")</span></span><span class="ln"><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">Client</span><span class="p">(</span><span class="p">)</span><span class="w">                   </span><span class="c1">// GEMINI_API_KEY</span></span><span class="ln"><span class="w">        </span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="s">"gemini-3.8-flash"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="c1">// Ask(...) — ერთი ასოც არ შეცვლილა</span></span><span class="ln"><span class="w">    </span></span></code></pre>
     <div class="col" style="gap:14px">
-      <div class="nuget step"><div class="logo" style="background:linear-gradient(135deg,#2563eb,#16a34a)">G</div><div><div class="nm">Google.GenAI</div><div class="ds">Google-ის ოფიციალური .NET SDK — აქვს <code class="i">IChatClient</code></div></div></div>
-      <i class="codestep" data-for="c3" data-lines="5"></i>
-      <div class="callout step" data-with style="--a:var(--api)"><b>new Client()</b> key-ს თვითონ კითხულობს <b>GEMINI_API_KEY</b> გარემოს ცვლადიდან</div>
-      <i class="codestep" data-for="c3" data-lines="6"></i>
-      <div class="callout step" data-with style="--a:var(--net)"><b>.AsIChatClient()</b> — ისევ ჩვენი ნაცნობი interface</div>
-      <i class="codestep" data-for="c3" data-lines="8"></i>
-      <div class="callout step" data-with style="--a:var(--mvc)">იგივე 4 ექსპერიმენტი — და <b>შეადარეთ ქართული</b> 🇬🇪</div>
-      <div class="problem step" style="font-size:19px">API key — <b>არასდროს კოდში და Git-ში</b></div>
+      <div class="nuget"><div class="logo" style="background:linear-gradient(135deg,#2563eb,#16a34a)">G</div><div><div class="nm">Google.GenAI</div><div class="ds">Google-ის ოფიციალური .NET SDK — აქვს <code class="i">IChatClient</code></div></div></div>
+      <div class="callout" style="--a:var(--api)"><b>new Client()</b> key-ს თვითონ კითხულობს <b>GEMINI_API_KEY</b> გარემოს ცვლადიდან</div>
+      <div class="callout" style="--a:var(--net)"><b>.AsIChatClient()</b> — ისევ ჩვენი ნაცნობი interface</div>
+      <div class="callout" style="--a:var(--mvc)">იგივე 4 ექსპერიმენტი — და <b>შეადარეთ ქართული</b> 🇬🇪</div>
+      <div class="problem" style="font-size:19px">API key — <b>არასდროს კოდში და Git-ში</b></div>
     </div>
   </div>
   
@@ -1125,7 +1132,7 @@ body[data-study] #help{right:190px}</style></head>
   <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
     <pre class="code sm"><span class="ttl">AiLabController.cs</span><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AiLabController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="nf">OllamaApiClient</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"http://localhost:11434"</span><span class="p">)</span><span class="p">,</span><span class="w"> </span><span class="s">"llama3.2"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span><span class="err">…</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
     <div class="col" style="gap:14px">
-      <div class="callout" style="--a:var(--pink)">გაიხსენეთ DI-ის ლექცია. <b>1 წუთი</b> — მეზობელთან ერთად</div>
+      <div class="callout ask">🙋 გაიხსენეთ DI-ის ლექცია. <b>1 წუთი</b> — მეზობელთან ერთად</div>
       <div class="problem step">Controller <b>თვითონ ქმნის</b> დამოკიდებულებას — <code class="i">new</code></div>
       <div class="problem step" data-with>მისამართი და მოდელი — <b>კოდში ჩაწერილი</b></div>
       <div class="problem step" data-with>ყოველ მოთხოვნაზე <b>ახალი client</b></div>
@@ -1139,7 +1146,7 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">🧑‍💻 თქვენ აკეთებთ · კლასში</div>
   <h2>AI ლაბორატორია — შენს პროექტში</h2>
   <div class="grid2" style="grid-template-columns:1.5fr 1fr;align-items:start">
-    <div class="card accent step" style="--a:var(--mvc)">
+    <div class="card accent" style="--a:var(--mvc)">
       <h3><span class="ico">📝</span>დავალება · შენი API პროექტი</h3>
       <ul class="clean small">
 <li>NuGet: <strong>Microsoft.Extensions.AI</strong> და <strong>OllamaSharp</strong></li>
@@ -1150,12 +1157,12 @@ body[data-study] #help{right:190px}</style></head>
 </ul>
       <p class="tiny" style="margin-top:14px">✓ მზადაა, როცა: პასუხს ტექსტთან ერთად ტოკენები და finishReason ახლავს, ცხრილში 4 შედეგი და შენი დასკვნა წერია</p>
     </div>
-    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3><ul class="clean small">
+    <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3><ul class="clean small">
 <li><code class="i">AskResponse</code>-ს დაამატე <code class="i">ElapsedMs</code> (<code class="i">Stopwatch</code>) — რამდენი გრძელდება პირველი და მეორე მოთხოვნა?</li>
 <li>შეადარე <code class="i">llama3.2:1b</code> და <code class="i">llama3.2</code> (3B) ერთსა და იმავე ქართულ კითხვაზე: სიჩქარე და ხარისხი</li>
 </ul></div>
   </div>
-  <div class="callout step mt" style="--a:var(--api)">წესი: <b>ჯერ ცდი თვითონ</b> → გვერდით მჯდომს ჰკითხე → მერე მე</div>
+  <div class="callout mt" style="--a:var(--api)">წესი: <b>ჯერ ცდი თვითონ</b> → გვერდით მჯდომს ჰკითხე → მერე მე</div>
   
 </section>
 
@@ -1163,11 +1170,11 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">ყურადღება</div>
   <h2>ხშირი <span class="c-red">შეცდომები</span></h2>
   <div class="col" style="gap:14px">
-    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem"><code class="i">HttpRequestException</code>: connection refused</div><div class="solve">Ollama არ არის გაშვებული → გახსენი Ollama / <code class="i">ollama serve</code></div></div>
-    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">404 · model "llama3.2" not found</div><div class="solve">მოდელი არ არის ჩამოტვირთული → <code class="i">ollama pull llama3.2</code></div></div>
-    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">პირველი პასუხი 20+ წამი</div><div class="solve">მოდელი მეხსიერებაში იტვირთება — მეორე მოთხოვნა სწრაფია</div></div>
-    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">ქართული პასუხი შეცდომებით</div><div class="solve">პატარა მოდელია — შეადარე ღრუბლოვანს. ეს <b>ბაგი არ არის</b></div></div>
-    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">API key not valid (Gemini)</div><div class="solve">key არ ჩანს → <code class="i">setx</code>-ის შემდეგ <b>Visual Studio გადატვირთე</b></div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem"><code class="i">HttpRequestException</code>: connection refused</div><div class="solve">Ollama არ არის გაშვებული → გახსენი Ollama / <code class="i">ollama serve</code></div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">404 · model "llama3.2" not found</div><div class="solve">მოდელი არ არის ჩამოტვირთული → <code class="i">ollama pull llama3.2</code></div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">პირველი პასუხი 20+ წამი</div><div class="solve">მოდელი მეხსიერებაში იტვირთება — მეორე მოთხოვნა სწრაფია</div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">ქართული პასუხი შეცდომებით</div><div class="solve">პატარა მოდელია — შეადარე ღრუბლოვანს. ეს <b>ბაგი არ არის</b></div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">API key not valid (Gemini)</div><div class="solve">key არ ჩანს → <code class="i">setx</code>-ის შემდეგ <b>Visual Studio გადატვირთე</b></div></div>
   </div>
   
 </section>
@@ -1184,7 +1191,7 @@ body[data-study] #help{right:190px}</style></head>
   <h2 class="in" style="--d:.1s">LLM = <span class="grad">შემდეგი ტოკენი</span> · ჩვენთვის — <span class="grad">კიდევ ერთი API</span></h2>
   <div class="grid2" style="grid-template-columns:1fr 1.1fr;gap:40px;align-items:start">
     <div class="col" style="gap:18px">
-      <div class="card accent step" style="--a:var(--mvc)"><h3><span class="ico">🧠</span>დაიმახსოვრე</h3><ul class="clean small">
+      <div class="card accent" style="--a:var(--mvc)"><h3><span class="ico">🧠</span>დაიმახსოვრე</h3><ul class="clean small">
         <li><b>ტოკენი</b> — ფასის, ლიმიტის და სიჩქარის ერთეული; ქართული — ძვირი</li>
         <li><b>next-token</b> — სავარაუდო, არა ჭეშმარიტი → ფასი/ჯავშანი მხოლოდ ბაზიდან</li>
         <li><b>stateless</b> — ისტორიას ჩვენ ვაგზავნით</li>
@@ -1192,9 +1199,9 @@ body[data-study] #help{right:190px}</style></head>
         <li><b>IChatClient</b> — ერთი კოდი, ნებისმიერი პროვაიდერი</li></ul></div>
     </div>
     <div class="col" style="gap:18px">
-      <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">⏭️</span>შემდეგი ლექცია · Prompt Engineering</h3>
+      <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">⏭️</span>შემდეგი ლექცია · Prompt Engineering</h3>
         <p class="small">დღეს მოდელს უბრალო ტექსტი გავუგზავნეთ და უბრალო ტექსტი მივიღეთ. მაგრამ კალათაში დასამატებლად <code class="i">dishId</code> და <code class="i">quantity</code> გვჭირდება — <b>C# ობიექტი</b>, არა წინადადება.</p></div>
-      <div class="callout step" style="--a:var(--net)">როგორ ვაიძულოთ მოდელი, რომ ყოველ ჯერზე ერთნაირი ფორმით უპასუხოს? 🤔</div>
+      <div class="callout" style="--a:var(--net)">როგორ ვაიძულოთ მოდელი, რომ ყოველ ჯერზე ერთნაირი ფორმით უპასუხოს? 🤔</div>
     </div>
   </div>
   
@@ -1204,7 +1211,7 @@ body[data-study] #help{right:190px}</style></head>
   <div class="kicker">🏠 საშინაო დავალება</div>
   <h2>ორი პროვაიდერი, ერთი endpoint — და ხარჯის გათვლა</h2>
   <div class="grid2" style="grid-template-columns:1.5fr 1fr;align-items:start">
-    <div class="card accent step" style="--a:var(--net)">
+    <div class="card accent" style="--a:var(--net)">
       <h3><span class="ico">🏠</span>შენი API პროექტის AI ლაბორატორია იზრდება</h3>
       <ul class="clean small">
 <li><code class="i">AskRequest</code> + <strong>Provider</strong> (<code class="i">ollama</code> / <code class="i">gemini</code>) · <code class="i">AskResponse</code> + <strong>Model</strong>, <strong>ElapsedMs</strong></li>
@@ -1214,12 +1221,12 @@ body[data-study] #help{right:190px}</style></head>
 </ul>
       <p class="tiny" style="margin-top:14px">✓ მზადაა, როცა: ორივე პროვაიდერი მუშაობს მხოლოდ <code>"provider"</code> ველის შეცვლით; README-ში — ცხრილი და ხარჯის ფორმულა</p>
     </div>
-    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3><ul class="clean small">
+    <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3><ul class="clean small">
 <li>ვალიდაცია: უცნობი provider ან Temperature 0–2-ის გარეთ → <code class="i">400 BadRequest</code></li>
 <li>Ollama გამორთულია → <code class="i">503</code> გასაგები შეტყობინებით და არა 500</li>
 </ul></div>
   </div>
-  <div class="callout step mt" style="--a:var(--api)">შემდეგი ლექციის დასაწყისში ამ დავალებას <b>ერთად განვიხილავთ</b></div>
+  <div class="callout mt" style="--a:var(--api)">შემდეგი ლექციის დასაწყისში ამ დავალებას <b>ერთად განვიხილავთ</b></div>
   
 </section>
 
@@ -1327,8 +1334,8 @@ body[data-study] #help{right:190px}</style></head>
     if (data.t === 'go') go(data.n);
   };
   const openStudy = () => {
-    const w = Math.min(1440, Math.max(1100, Math.round(screen.availWidth * .7))), h = screen.availHeight;
-    window.open('study.html?live#s-' + (i + 1), 'study-' + document.title, `width=${w},height=${h}`);
+    // ცალკე ჩანართში (არა popup ფანჯარაში) — სლაიდებს მაინც მიჰყვება
+    window.open('study.html?live#s-' + (i + 1), 'study-' + document.title);
   };
   document.getElementById('studybtn')?.addEventListener('click', e => { e.currentTarget.blur(); openStudy(); });
 

@@ -98,8 +98,8 @@
     if (data.t === 'go') go(data.n);
   };
   const openStudy = () => {
-    const w = Math.min(1440, Math.max(1100, Math.round(screen.availWidth * .7))), h = screen.availHeight;
-    window.open('study.html?live#s-' + (i + 1), 'study-' + document.title, `width=${w},height=${h}`);
+    // ცალკე ჩანართში (არა popup ფანჯარაში) — სლაიდებს მაინც მიჰყვება
+    window.open('study.html?live#s-' + (i + 1), 'study-' + document.title);
   };
   document.getElementById('studybtn')?.addEventListener('click', e => { e.currentTarget.blur(); openStudy(); });
 

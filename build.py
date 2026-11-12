@@ -221,10 +221,10 @@ def gen_homework_review(prev):
   <div class="kicker">🏠 საშინაოს განხილვა · ლექცია {prev["num"]}</div>
   <h2>{esc(hw["title"])}</h2>
   <div class="grid2" style="grid-template-columns:1fr 1.25fr;align-items:start;gap:30px">
-    <div class="card accent step" style="--a:var(--mvc)"><h3><span class="ico">📝</span>რა უნდა გაგეკეთებინათ</h3>{slide_md(part(hw, "მოთხოვნ"))}</div>
+    <div class="card accent" style="--a:var(--mvc)"><h3><span class="ico">📝</span>რა უნდა გაგეკეთებინათ</h3>{slide_md(part(hw, "მოთხოვნ"))}</div>
     <div class="step">{right}</div>
   </div>
-  <div class="callout step mt" style="--a:var(--api)">შეადარეთ თქვენს კოდს. რა გამოგივიდათ სხვანაირად — და რატომ?</div>
+  <div class="callout step mt" data-with style="--a:var(--api)">შეადარეთ თქვენს კოდს. რა გამოგივიდათ სხვანაირად — და რატომ?</div>
   <aside class="study">
 ## საშინაოს განხილვა
 
@@ -239,12 +239,12 @@ def gen_homework_review(prev):
 </section>'''
 
 def gen_intro(meta):
-    outs = ''.join(f'<li class="step">{md_inline(o).replace("<code>", "<code class=\"i\">")}</li>' for o in meta['outcomes'])
+    outs = ''.join(f'<li>{md_inline(o).replace("<code>", "<code class=\"i\">")}</li>' for o in meta['outcomes'])
     return f'''<section class="slide" data-section="დღის თემა">
   <div class="kicker">დღის თემა</div>
   <h2><span class="grad">{esc(meta["title"])}</span></h2>
   <div class="grid2" style="grid-template-columns:1fr 1fr;align-items:start;gap:40px">
-    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🤔</span>რატომ გჭირდებათ</h3><p class="small">{md_inline(meta["why"]).replace("<code>", "<code class=\"i\">")}</p></div>
+    <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🤔</span>რატომ გჭირდებათ</h3><p class="small">{md_inline(meta["why"]).replace("<code>", "<code class=\"i\">")}</p></div>
     <div class="card accent" style="--a:var(--mvc)"><h3><span class="ico">🎯</span>ლექციის ბოლოს შეძლებთ</h3><ul class="clean small">{outs}</ul></div>
   </div>
   <aside class="study">
@@ -262,21 +262,21 @@ def gen_task(doc, section, kicker, ico, color, footer, study_head):
     bonus = part(doc, 'ბონუს')
     done = part(doc, 'მზადაა')
     steps = part(doc, 'ნაბიჯ') or part(doc, 'მოთხოვნ')
-    right = f'<div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3>{slide_md(bonus)}</div>' if bonus else ''
+    right = f'<div class="card accent" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3>{slide_md(bonus)}</div>' if bonus else ''
     cols = '1.5fr 1fr' if bonus else '1fr'
     study_parts = '\n\n'.join(f'### {h}\n\n{b}' for h, b in doc['parts'] if 'ამოხსნ' not in h)
     return f'''<section class="slide" data-section="{section}">
   <div class="kicker">{kicker}</div>
   <h2>{esc(doc["title"])}</h2>
   <div class="grid2" style="grid-template-columns:{cols};align-items:start">
-    <div class="card accent step" style="--a:{color}">
+    <div class="card accent" style="--a:{color}">
       <h3><span class="ico">{ico}</span>{md_inline(doc["intro"]).replace("<code>", "<code class=\"i\">") if doc["intro"] else "დავალება"}</h3>
       {slide_md(steps)}
       {f'<p class="tiny" style="margin-top:14px">✓ მზადაა, როცა: {md_inline(done)}</p>' if done else ''}
     </div>
     {right}
   </div>
-  <div class="callout step mt" style="--a:var(--api)">{footer}</div>
+  <div class="callout mt" style="--a:var(--api)">{footer}</div>
   <aside class="study">
 ## {study_head}: {esc(doc["title"])}
 
@@ -374,7 +374,7 @@ def build_lecture(course, cdir, ldir, meta, prev):
 <style>{CSS}
 {HOME_CSS}</style></head>
 <body{' data-study="1"' if has_study else ''}>
-<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a>{'<button id="studybtn" type="button" title="კონსპექტი ცალკე ფანჯარაში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>' if has_study else ''}
+<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a>{'<button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>' if has_study else ''}
 <div id="stage"><div id="deck">
 {src}
 <div id="hud"><span class="sec"></span><span class="dots"></span><span class="num"></span></div><div id="bar"></div>
@@ -391,11 +391,42 @@ def build_lecture(course, cdir, ldir, meta, prev):
         shutil.copytree(ldir / 'materials', out / 'materials', dirs_exist_ok=True)
         materials = sorted(p.name for p in (ldir / 'materials').iterdir() if p.is_file())
     if has_study:
-        write_study(out, course, meta, num, title, study, materials)
+        write_study(out, course, meta, num, title, study, materials, ldir, len(slides))
     print(f'  {cdir.name}/{ldir.name}: {len(slides)} slides' + (f', study {sum(1 for s in study if s["html"])} blocks' if has_study else ''))
-    return {'num': num, 'slug': ldir.name, 'title': meta['title'], 'slides': len(slides), 'materials': materials, 'study': has_study}, []
+    return {'num': num, 'slug': ldir.name, 'title': meta['title'], 'slides': len(slides), 'materials': materials, 'study': has_study,
+            'classwork': (ldir / 'classwork.md').exists(), 'homework': (ldir / 'homework.md').exists(), 'quiz': len(meta.get('quiz', []))}, []
 
-def write_study(out, course, meta, num, deck_title, study, materials):
+def render_resources(meta, ldir, materials, n_slides, n_quiz):
+    """კონსპექტის თავში: ლექციის ყველა რესურსი ერთ ადგილას"""
+    cw, hw = md_doc(ldir / 'classwork.md'), md_doc(ldir / 'homework.md')
+    cards = [('index.html', '▶ პრეზენტაცია', f'{n_slides} სლაიდი')]
+    if cw: cards.append(('#classwork', '📝 კლასის დავალება', cw['title']))
+    if hw: cards.append(('#homework', '🏠 საშინაო დავალება', hw['title']))
+    if n_quiz: cards.append(('#quiz', '✅ შეამოწმე ცოდნა', f'{n_quiz} კითხვა · ქულით'))
+    grid = ''.join(f'<a class="rc" href="{h}"><b>{t}</b><span>{esc(d)}</span></a>' for h, t, d in cards)
+    files = ''.join(f'<a class="rf" href="materials/{esc(m)}" download>📎 {esc(m)}</a>' for m in materials)
+    links = ''.join(f'<li><a href="{esc(r["url"])}" target="_blank" rel="noopener">{esc(r["title"])}</a>'
+                    f'{" — " + md_inline(r["note"]) if r.get("note") else ""}</li>' for r in meta.get('resources', []))
+    return (f'<section class="res" id="resources"><h2>📚 ლექციის რესურსები</h2><div class="rgrid">{grid}</div>'
+            + (f'<div class="rsub">📎 მასალები ჩამოსატვირთად</div><div class="rfiles">{files}</div>' if files else '')
+            + (f'<div class="rsub">🔗 სასარგებლო ბმულები</div><ul class="rlinks">{links}</ul>' if links else '')
+            + '</section>')
+
+def render_quiz(quiz):
+    """lecture.json → quiz: [{"q", "options": [...], "answer": index, "explain", "slide"?}] → ინტერაქტიული ტესტი"""
+    if not quiz:
+        return ''
+    items = []
+    for n, x in enumerate(quiz, 1):
+        opts = ''.join(f'<button type="button" class="opt" data-i="{i}">{md_inline(o)}</button>' for i, o in enumerate(x['options']))
+        back = f' <a class="chip" href="#s-{x["slide"]}">გაიმეორე · სლაიდი {x["slide"]}</a>' if x.get('slide') else ''
+        items.append(f'<div class="qq" data-answer="{x["answer"]}"><div class="qt"><span class="qn">{n}</span>{md_inline(x["q"])}</div>'
+                     f'<div class="opts">{opts}</div><div class="qe"><span class="verdict"></span> {md_inline(x.get("explain", ""))}{back}</div></div>')
+    return (f'<h2 class="sec" id="quiz">შეამოწმე ცოდნა</h2><section class="quiz"><p class="qi">აირჩიე პასუხი — მაშინვე ნახავ, სწორია თუ არა და რატომ. '
+            f'ბოლოს გეცოდინება, რა გაიმეორო.</p><div class="qscore"><span id="qs">0</span> / {len(quiz)} სწორი · <span id="qd">0</span> / {len(quiz)} პასუხი'
+            f'<button type="button" class="btn qreset">თავიდან</button></div>{"".join(items)}<div class="qsum" id="qsum"></div></section>')
+
+def write_study(out, course, meta, num, deck_title, study, materials, ldir, n_slides):
     blocks = []   # [{slides:[n..], title, section, html}]
     pending = []
     for s in study:
@@ -409,7 +440,7 @@ def write_study(out, course, meta, num, deck_title, study, materials):
             blocks[-1]['slides'].append(s['n'])
         else:
             pending.append(s['n'])
-    body, toc, cur_sec = [], [], None
+    body, toc, cur_sec, seen = [], [], None, set()
     for b in blocks:
         if b['section'] != cur_sec:
             cur_sec = b['section']
@@ -417,15 +448,22 @@ def write_study(out, course, meta, num, deck_title, study, materials):
             toc.append(f'<a href="#{sid}">{esc(cur_sec)}</a>')
             body.append(f'<h2 class="sec" id="{sid}">{esc(cur_sec)}</h2>')
         anchors = ''.join(f'<span class="anchor" id="s-{n}"></span>' for n in b['slides'])
+        for sec_name, aid in (('პრაქტიკა', 'classwork'), ('საშინაო', 'homework')):
+            if b['section'] == sec_name and aid not in seen:
+                seen.add(aid); anchors += f'<span class="anchor" id="{aid}"></span>'
         first = b['slides'][0]
         body.append(f'<article class="blk" data-slides="{",".join(map(str, b["slides"]))}">{anchors}'
                     f'<div class="bh"><h3>{esc(b["title"])}</h3><a class="chip" href="index.html#/{first}" data-go="{first}" title="პრეზენტაციაში გახსნა">სლაიდი {first}</a></div>'
                     f'{b["html"]}</article>')
     mats = ''.join(f'<a href="materials/{esc(m)}" download>📎 {esc(m)}</a>' for m in materials)
+    quiz = meta.get('quiz', [])
+    if quiz:
+        toc.append('<a href="#quiz">✅ შეამოწმე ცოდნა</a>')
+    resources = render_resources(meta, ldir, materials, n_slides, len(quiz))
     page = (ENGINE / 'study.html').read_text()
     for k, v in {'{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num),
                  '{{DECK_TITLE_JSON}}': json.dumps(deck_title, ensure_ascii=False), '{{TOC}}': ''.join(toc),
-                 '{{BODY}}': '\n'.join(body), '{{MATERIALS}}': mats, '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS}.items():
+                 '{{BODY}}': '\n'.join(body) + render_quiz(quiz), '{{RESOURCES}}': resources, '{{MATERIALS}}': mats, '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS}.items():
         page = page.replace(k, v)
     write_page(out / 'study.html', page)
 

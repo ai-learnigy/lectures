@@ -104,6 +104,36 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 .callout>div>p:first-child{margin-top:0}.callout>div>p:last-child{margin-bottom:0}
 .callout.warn{background:#fff8eb;border-color:#f6dfb5}
 .callout.note{background:#eef5ff;border-color:#cfe0fb}
+/* resources */
+.res{margin:22px 0 8px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.res h2{font-size:20px;margin:0 0 12px}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.rc{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--bg)}
+.rc:hover{border-color:var(--accent);background:var(--accent-soft)}
+.rc b{font-size:15.5px}.rc span{font-size:13.5px;color:var(--muted);line-height:1.4}
+.rsub{font:700 12.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 6px}
+.rfiles{display:flex;flex-wrap:wrap;gap:8px}
+.rf{font:600 13.5px var(--mono);color:var(--teal);text-decoration:none;border:1px solid #bfe7e2;background:#e6f6f4;border-radius:8px;padding:4px 10px}
+.rlinks{margin:0;padding-left:20px;font-size:15.5px}.rlinks li{margin:4px 0}
+/* quiz */
+.quiz .qi{color:var(--muted);margin:4px 0 10px}
+.qscore{position:sticky;top:62px;z-index:5;display:flex;align-items:center;gap:12px;font:700 14px var(--mono);color:var(--accent);background:var(--accent-soft);border:1px solid #ddd2fb;border-radius:12px;padding:8px 14px;margin-bottom:12px}
+.qscore .btn{margin-left:auto;padding:4px 12px;font-size:13px}
+.qq{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:14px 16px;margin:12px 0}
+.qt{font-weight:700;display:flex;gap:10px}
+.qn{flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 13px/26px var(--mono);text-align:center}
+.opts{display:grid;gap:8px;margin:10px 0 4px 36px}
+.opt{text-align:left;font:15.5px/1.5 var(--sans);color:var(--ink2);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt[disabled]{cursor:default}
+.opt.right{background:#ecfdf3;border-color:#86efac;color:#166534;font-weight:600}
+.opt.wrong{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.qe{display:none;margin:8px 0 0 36px;padding:8px 12px;border-radius:10px;background:#f6f1e8;font-size:15.5px;color:var(--ink2)}
+.qq.done .qe{display:block}
+.qq.ok .verdict::before{content:"✓ სწორია.";color:var(--green);font-weight:700}
+.qq.no .verdict::before{content:"✗ არა.";color:#b91c1c;font-weight:700}
+.qsum{display:none;margin-top:14px;padding:14px 16px;border-radius:14px;border:1px solid #cfe9d6;background:#f3fbf5}
+.qsum.on{display:block}
 @media (max-width:980px){
   .wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:20px 16px 100px}
   nav.toc{position:static;margin-bottom:12px}
@@ -126,13 +156,14 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
   <a class="btn play" href="index.html">▶ პრეზენტაცია</a>
 </div>
 <div class="wrap">
-  <nav class="toc"><details id="tocd"><summary>სარჩევი</summary><div class="h">სარჩევი</div><a href="#sec-1">დღის თემა</a><a href="#sec-2">შესავალი</a><a href="#sec-3">1 · რატომ AI</a><a href="#sec-4">2 · როგორ მუშაობს</a><a href="#sec-5">3 · პარამეტრები</a><a href="#sec-6">4 · პროვაიდერები</a><a href="#sec-7">5 · პირველი გამოძახება</a><a href="#sec-8">პრაქტიკა</a><a href="#sec-9">შეჯამება</a><a href="#sec-10">საშინაო</a><div class="mats"><a href="materials/experiments.md" download>📎 experiments.md</a></div></details></nav>
+  <nav class="toc"><details id="tocd"><summary>სარჩევი</summary><div class="h">სარჩევი</div><a href="#sec-1">დღის თემა</a><a href="#sec-2">შესავალი</a><a href="#sec-3">1 · რატომ AI</a><a href="#sec-4">2 · როგორ მუშაობს</a><a href="#sec-5">3 · პარამეტრები</a><a href="#sec-6">4 · პროვაიდერები</a><a href="#sec-7">5 · პირველი გამოძახება</a><a href="#sec-8">პრაქტიკა</a><a href="#sec-9">შეჯამება</a><a href="#sec-10">საშინაო</a><a href="#quiz">✅ შეამოწმე ცოდნა</a><div class="mats"><a href="materials/experiments.md" download>📎 experiments.md</a></div></details></nav>
   <main>
     <header class="hero">
       <div class="k">📖 კონსპექტი · AI აგენტები .NET-ში · ლექცია 1</div>
       <h1>შესავალი Generative AI-სა და LLM API-ებში</h1>
       <p>წაიკითხე ლექციის შემდეგ, ან პრეზენტაციასთან ერთად: პრეზენტაციაში დააჭირე <kbd>P</kbd> და ეს გვერდი სლაიდებს გაჰყვება. კოდი და AI-ს პრომპტები კოპირდება ერთი დაჭერით.</p>
     </header>
+    <section class="res" id="resources"><h2>📚 ლექციის რესურსები</h2><div class="rgrid"><a class="rc" href="index.html"><b>▶ პრეზენტაცია</b><span>48 სლაიდი</span></a><a class="rc" href="#classwork"><b>📝 კლასის დავალება</b><span>AI ლაბორატორია — შენს პროექტში</span></a><a class="rc" href="#homework"><b>🏠 საშინაო დავალება</b><span>ორი პროვაიდერი, ერთი endpoint — და ხარჯის გათვლა</span></a><a class="rc" href="#quiz"><b>✅ შეამოწმე ცოდნა</b><span>12 კითხვა · ქულით</span></a></div><div class="rsub">📎 მასალები ჩამოსატვირთად</div><div class="rfiles"><a class="rf" href="materials/experiments.md" download>📎 experiments.md</a></div><div class="rsub">🔗 სასარგებლო ბმულები</div><ul class="rlinks"><li><a href="https://learn.microsoft.com/dotnet/ai/microsoft-extensions-ai" target="_blank" rel="noopener">Microsoft.Extensions.AI — დოკუმენტაცია</a> — <code>IChatClient</code>, <code>ChatOptions</code>, provider-ები</li><li><a href="https://learn.microsoft.com/dotnet/ai/ichatclient" target="_blank" rel="noopener">IChatClient-ის გამოყენება</a> — მაგალითები: ჩატი, ისტორია, streaming</li><li><a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a> — დაყენება და მოდელების სია (<code>llama3.2</code>)</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener">Google AI Studio</a> — Gemini API key-ს აღება</li><li><a href="https://ai.google.dev/gemini-api/docs/models" target="_blank" rel="noopener">Gemini — მოდელების სია</a> — მიმდინარე მოდელების სახელები</li><li><a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Gemini — ფასები</a> — საშინაოს ხარჯის გათვლისთვის</li><li><a href="https://googleapis.github.io/dotnet-genai/" target="_blank" rel="noopener">Google.GenAI .NET SDK</a> — <code>Client</code>, <code>AsIChatClient()</code></li><li><a href="https://tiktokenizer.vercel.app" target="_blank" rel="noopener">Tiktokenizer</a> — ნახე, როგორ იშლება ტექსტი ტოკენებად</li></ul></section>
     <h2 class="sec" id="sec-1">დღის თემა</h2>
 <article class="blk" data-slides="1,2"><span class="anchor" id="s-1"></span><span class="anchor" id="s-2"></span><div class="bh"><h3>დღის თემა: შესავალი Generative AI-სა და LLM API-ებში</h3><a class="chip" href="index.html#/1" data-go="1" title="პრეზენტაციაში გახსნა">სლაიდი 1</a></div>
 <p>RestaurantApi მზადაა: მენიუ, კალათა, შეკვეთა, ჯავშანი. მაგრამ ყველა endpoint ზუსტ მონაცემს ელოდება, კლიენტი კი წერს „რამე მსუბუქი მინდა, ხორცის გარეშე, ორისთვის“ — ასეთ ტექსტს if/else ვერ გაიგებს. დღეს ვიგებთ, რა არის ენობრივი მოდელი, როგორ წერს პასუხს შიგნიდან, რა ღირს ის — და ვაკეთებთ პირველ გამოძახებას ჩვენივე API-დან.</p>
@@ -753,7 +784,7 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 </ul>
 <p>ლექცია 3-ზე ამას გამოვასწორებთ: <code>builder.Services.AddChatClient(...)</code> Program.cs-ში, Controller-ში კი <code>IChatClient</code> constructor-ით შემოვა — როგორც ნებისმიერი სხვა სერვისი.</p></article>
 <h2 class="sec" id="sec-8">პრაქტიკა</h2>
-<article class="blk" data-slides="44"><span class="anchor" id="s-44"></span><div class="bh"><h3>კლასში დავალება: AI ლაბორატორია — შენს პროექტში</h3><a class="chip" href="index.html#/44" data-go="44" title="პრეზენტაციაში გახსნა">სლაიდი 44</a></div>
+<article class="blk" data-slides="44"><span class="anchor" id="s-44"></span><span class="anchor" id="classwork"></span><div class="bh"><h3>კლასში დავალება: AI ლაბორატორია — შენს პროექტში</h3><a class="chip" href="index.html#/44" data-go="44" title="პრეზენტაციაში გახსნა">სლაიდი 44</a></div>
 <p>დავალება · შენი API პროექტი</p>
 <h3>ნაბიჯები</h3>
 <ul>
@@ -839,7 +870,7 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 <div class="prompt"><div class="ph"><span>🤖 გამოცდა მთელ ლექციაზე</span><button class="copy" type="button">კოპირება</button></div><div class="pb">ვსწავლობ AI-ს .NET-ში. ლექციაზე გავიარეთ: რა არის LLM, ტოკენები და tokenizer, next-token prediction, hallucination, context window და stateless მოდელი, Temperature / Top-P / Max Tokens, finish_reason, reasoning მოდელები, პროვაიდერები (cloud vs Ollama), ფასის დათვლა input/output ტოკენებით, და Microsoft.Extensions.AI-ს IChatClient-ით პირველი გამოძახება ASP.NET Core Web API-დან.
 დამისვი 8 კითხვა სათითაოდ, მარტივიდან რთულისკენ, მათ შორის 2 პრაქტიკული სიტუაცია რესტორნის API-ზე. ყოველ ჩემს პასუხზე მითხარი, სწორია თუ არა და რატომ, მერე დასვი შემდეგი. ბოლოს მითხარი, რა უნდა გავიმეორო. კომუნიკაცია ქართულად.</div></div></article>
 <h2 class="sec" id="sec-10">საშინაო</h2>
-<article class="blk" data-slides="48"><span class="anchor" id="s-48"></span><div class="bh"><h3>საშინაო დავალება: ორი პროვაიდერი, ერთი endpoint — და ხარჯის გათვლა</h3><a class="chip" href="index.html#/48" data-go="48" title="პრეზენტაციაში გახსნა">სლაიდი 48</a></div>
+<article class="blk" data-slides="48"><span class="anchor" id="s-48"></span><span class="anchor" id="homework"></span><div class="bh"><h3>საშინაო დავალება: ორი პროვაიდერი, ერთი endpoint — და ხარჯის გათვლა</h3><a class="chip" href="index.html#/48" data-go="48" title="პრეზენტაციაში გახსნა">სლაიდი 48</a></div>
 <p>შენი API პროექტის AI ლაბორატორია იზრდება</p>
 <h3>მოთხოვნები</h3>
 <ul>
@@ -864,7 +895,7 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 <h3>💡 მინიშნება</h3>
 <p>ობიექტის შექმნა ცალკე მეთოდში გაიტანე — <code>switch</code> expression-ით:</p>
 <div class="codebox"><div class="ch"><span>csharp</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="nf">CreateClient</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">provider</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">provider</span><span class="w"> </span><span class="k">switch</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="s">"ollama"</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OllamaApiClient</span><span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="s">"gemini"</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Client</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArgumentException</span><span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span></span><span class="ln"><span class="p">}</span><span class="p">;</span></span></code></pre></div>
-<p><code>IChatClient</code> არის <code>IDisposable</code> — თუ client-ს ყოველ მოთხოვნაზე ქმნი, <code>using</code> გამოიყენე. API key — მხოლოდ გარემოს ცვლადში (<code>GEMINI_API_KEY</code>), არასდროს კოდში ან Git-ში.</p></article>
+<p><code>IChatClient</code> არის <code>IDisposable</code> — თუ client-ს ყოველ მოთხოვნაზე ქმნი, <code>using</code> გამოიყენე. API key — მხოლოდ გარემოს ცვლადში (<code>GEMINI_API_KEY</code>), არასდროს კოდში ან Git-ში.</p></article><h2 class="sec" id="quiz">შეამოწმე ცოდნა</h2><section class="quiz"><p class="qi">აირჩიე პასუხი — მაშინვე ნახავ, სწორია თუ არა და რატომ. ბოლოს გეცოდინება, რა გაიმეორო.</p><div class="qscore"><span id="qs">0</span> / 12 სწორი · <span id="qd">0</span> / 12 პასუხი<button type="button" class="btn qreset">თავიდან</button></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">1</span>რა არის ტოკენი?</div><div class="opts"><button type="button" class="opt" data-i="0">ერთი სიტყვა</button><button type="button" class="opt" data-i="1">ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს</button><button type="button" class="opt" data-i="2">ერთი ასო</button><button type="button" class="opt" data-i="3">ერთი წინადადება</button></div><div class="qe"><span class="verdict"></span> ტოკენი შეიძლება იყოს სიტყვა, მარცვალი ან ასო — ამას tokenizer წყვეტს. ფასი, ლიმიტი და სიჩქარე ტოკენებით ითვლება. <a class="chip" href="#s-12">გაიმეორე · სლაიდი 12</a></div></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">2</span>ერთი და იგივე აზრი ინგლისურად და ქართულად. რა ხდება ქართულზე?</div><div class="opts"><button type="button" class="opt" data-i="0">ტოკენები იგივეა</button><button type="button" class="opt" data-i="1">ბევრად მეტი ტოკენია → უფრო ძვირი და ნელი</button><button type="button" class="opt" data-i="2">ნაკლები ტოკენია</button><button type="button" class="opt" data-i="3">მოდელი ქართულს ვერ კითხულობს</button></div><div class="qe"><span class="verdict"></span> tokenizer-მა ქართული ცოტა „ნახა“, ამიტომ ქართული სიტყვა რამდენიმე ნაწილად იშლება. <a class="chip" href="#s-13">გაიმეორე · სლაიდი 13</a></div></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">3</span>როგორ წერს LLM პასუხს?</div><div class="opts"><button type="button" class="opt" data-i="0">მზა პასუხს ბაზაში ეძებს</button><button type="button" class="opt" data-i="1">ყოველ ნაბიჯზე ითვლის შემდეგი ტოკენის ალბათობებს, ირჩევს ერთს და იმეორებს</button><button type="button" class="opt" data-i="2">მთელ პასუხს ერთბაშად წერს</button><button type="button" class="opt" data-i="3">ინტერნეტში ეძებს პასუხს</button></div><div class="qe"><span class="verdict"></span> ეს არის next-token prediction — LLM-ის მთავარი მექანიზმი. <a class="chip" href="#s-14">გაიმეორე · სლაიდი 14</a></div></div><div class="qq" data-answer="2"><div class="qt"><span class="qn">4</span>მოდელმა თქვა: „ხინკალი ჩვენთან 1.20 ₾ ღირს“. რას ვაკეთებთ?</div><div class="opts"><button type="button" class="opt" data-i="0">ვენდობით — მოდელი ჭკვიანია</button><button type="button" class="opt" data-i="1">Temperature-ს 0-ზე ვაყენებთ და მერე ვენდობით</button><button type="button" class="opt" data-i="2">ფასი ყოველთვის ჩვენი ბაზიდან მოდის (tool ან RAG)</button><button type="button" class="opt" data-i="3">უფრო დიდ მოდელს ვიღებთ</button></div><div class="qe"><span class="verdict"></span> ეს hallucination-ია: მოდელი წერს სავარაუდოს და არა ჭეშმარიტს. Temperature 0 პასუხს ერთნაირს ხდის, მაგრამ არა სწორს. <a class="chip" href="#s-17">გაიმეორე · სლაიდი 17</a></div></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">5</span>პირველ მოთხოვნაში: „ჩემი სახელია ნინო“. მეორე, ცალკე მოთხოვნაში: „რა მქვია?“. რას უპასუხებს?</div><div class="opts"><button type="button" class="opt" data-i="0">„ნინო“</button><button type="button" class="opt" data-i="1">არ ეცოდინება — მოდელი stateless-ია</button><button type="button" class="opt" data-i="2">დაიმახსოვრებს 24 საათით</button><button type="button" class="opt" data-i="3">Ollama-ზე კი, Gemini-ზე არა</button></div><div class="qe"><span class="verdict"></span> ყოველი მოთხოვნა დამოუკიდებელია. „მეხსიერებისთვის“ ისტორია ყოველ ჯერზე ჩვენ უნდა გავუგზავნოთ. <a class="chip" href="#s-18">გაიმეორე · სლაიდი 18</a></div></div><div class="qq" data-answer="0"><div class="qt"><span class="qn">6</span>კლიენტის ტექსტიდან ვიღებთ თარიღს და სტუმრების რაოდენობას. რა Temperature?</div><div class="opts"><button type="button" class="opt" data-i="0">0</button><button type="button" class="opt" data-i="1">0.7</button><button type="button" class="opt" data-i="2">1.5</button><button type="button" class="opt" data-i="3">2</button></div><div class="qe"><span class="verdict"></span> ერთი სწორი პასუხია და ყოველ ჯერზე ერთნაირი შედეგი გვინდა. <a class="chip" href="#s-25">გაიმეორე · სლაიდი 25</a></div></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">7</span>პასუხში წერია <code>finish_reason: "length"</code>. რას ნიშნავს?</div><div class="opts"><button type="button" class="opt" data-i="0">მოდელმა წარმატებით დაასრულა</button><button type="button" class="opt" data-i="1">Max Tokens-ს მიაღწია — პასუხი მოიჭრა</button><button type="button" class="opt" data-i="2">ტექსტი ძალიან გრძელი გავუგზავნეთ</button><button type="button" class="opt" data-i="3">მოდელი გადაიტვირთა</button></div><div class="qe"><span class="verdict"></span> ნორმალური დასრულება არის <code>stop</code>. <code>length</code>-ზე ლიმიტი გავზარდოთ ან დავლოგოთ. <a class="chip" href="#s-24">გაიმეორე · სლაიდი 24</a></div></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">8</span>რას აკეთებს Top-P = 0.9?</div><div class="opts"><button type="button" class="opt" data-i="0">ტექსტის 90%-ს აბრუნებს</button><button type="button" class="opt" data-i="1">ტოვებს ყველაზე სავარაუდო ტოკენებს, სანამ მათი ჯამი 90%-ს არ მიაღწევს</button><button type="button" class="opt" data-i="2">Temperature-ს 0.9-ზე აყენებს</button><button type="button" class="opt" data-i="3">პასუხს 90 ტოკენით ზღუდავს</button></div><div class="qe"><span class="verdict"></span> სუსტ „კუდს“ ჭრის და არჩევანი მხოლოდ დარჩენილებს შორის ხდება. <a class="chip" href="#s-23">გაიმეორე · სლაიდი 23</a></div></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">9</span>FAQ-ბოტი: „ღიაა კვირას?“. reasoning მოდელი ავიღოთ?</div><div class="opts"><button type="button" class="opt" data-i="0">კი — ყოველთვის ჯობია</button><button type="button" class="opt" data-i="1">არა — მარტივი კითხვაა; reasoning ნელია და ფიქრის ტოკენებს ვიხდით</button><button type="button" class="opt" data-i="2">კი, თუ ქართულადაა</button><button type="button" class="opt" data-i="3">მხოლოდ Ollama-ზე</button></div><div class="qe"><span class="verdict"></span> reasoning ღირს რამდენიმე ნაბიჯიან ამოცანაზე, არა მარტივ კითხვაზე. <a class="chip" href="#s-26">გაიმეორე · სლაიდი 26</a></div></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">10</span>თვეში 10M input და 1M output ტოკენი. ფასი: $0.15 / $0.60 (1M-ზე). ხარჯი?</div><div class="opts"><button type="button" class="opt" data-i="0">$0.75</button><button type="button" class="opt" data-i="1">$2.10</button><button type="button" class="opt" data-i="2">$7.50</button><button type="button" class="opt" data-i="3">$1.50</button></div><div class="qe"><span class="verdict"></span> 10 × 0.15 + 1 × 0.60 = 1.50 + 0.60 = $2.10. <a class="chip" href="#s-32">გაიმეორე · სლაიდი 32</a></div></div><div class="qq" data-answer="1"><div class="qt"><span class="qn">11</span>რატომ ვწერთ კოდს <code>IChatClient</code>-ზე და არა პირდაპირ Ollama-ს ან Gemini-ს კლასზე?</div><div class="opts"><button type="button" class="opt" data-i="0">ასე უფრო სწრაფია</button><button type="button" class="opt" data-i="1">პროვაიდერის შეცვლა ერთ ადგილას ხდება, დანარჩენი კოდი არ იცვლება</button><button type="button" class="opt" data-i="2">Gemini სხვანაირად არ მუშაობს</button><button type="button" class="opt" data-i="3">ასე ტოკენები იაფია</button></div><div class="qe"><span class="verdict"></span> ზუსტად ისე, როგორც EF Core-ის provider: LINQ რჩება, provider იცვლება. <a class="chip" href="#s-35">გაიმეორე · სლაიდი 35</a></div></div><div class="qq" data-answer="2"><div class="qt"><span class="qn">12</span>სად ვინახავთ Gemini-ის API key-ს?</div><div class="opts"><button type="button" class="opt" data-i="0"><code>appsettings.json</code>-ში</button><button type="button" class="opt" data-i="1">კოდში, const-ად</button><button type="button" class="opt" data-i="2">გარემოს ცვლადში <code>GEMINI_API_KEY</code></button><button type="button" class="opt" data-i="3"><code>launchSettings.json</code>-ში</button></div><div class="qe"><span class="verdict"></span> დანარჩენი ფაილები Git-ში მიდის — გაჟონილ key-ს ბოტები წუთებში პოულობენ. <a class="chip" href="#s-42">გაიმეორე · სლაიდი 42</a></div></div><div class="qsum" id="qsum"></div></section>
   </main>
 </div>
 <script>
@@ -908,6 +939,35 @@ if (live) {
     e.preventDefault(); bc.postMessage({ t: 'go', n: +c.dataset.go - 1 });
   });
 }
+// quiz: click → right/wrong + explanation; summary at the end
+const quiz = [...document.querySelectorAll('.qq')];
+function qUpdate() {
+  const done = quiz.filter(q => q.classList.contains('done')), ok = done.filter(q => q.classList.contains('ok'));
+  const qs = document.getElementById('qs'); if (!qs) return;
+  qs.textContent = ok.length; document.getElementById('qd').textContent = done.length;
+  const sum = document.getElementById('qsum');
+  if (done.length === quiz.length) {
+    const bad = quiz.filter(q => q.classList.contains('no'));
+    sum.innerHTML = `<b>${ok.length} / ${quiz.length}</b> — ` + (bad.length
+      ? 'გაიმეორე ეს კითხვები: ' + bad.map(q => q.querySelector('.qn').textContent).join(', ') + '. ახსნა თითოეულის ქვეშაა, „გაიმეორე“ კი სწორ სლაიდზე გადაგიყვანს.'
+      : 'ყველაფერი სწორია! შეგიძლია შემდეგ ლექციაზე გადახვიდე. 🎉');
+    sum.classList.add('on');
+  } else sum.classList.remove('on');
+}
+document.addEventListener('click', e => {
+  const o = e.target.closest('.opt'); if (o) {
+    const q = o.closest('.qq'); if (q.classList.contains('done')) return;
+    const right = +q.dataset.answer, opts = [...q.querySelectorAll('.opt')];
+    opts.forEach((b, i) => { b.disabled = true; if (i === right) b.classList.add('right'); });
+    if (+o.dataset.i !== right) o.classList.add('wrong');
+    q.classList.add('done', +o.dataset.i === right ? 'ok' : 'no');
+    qUpdate(); return;
+  }
+  if (e.target.closest('.qreset')) {
+    quiz.forEach(q => { q.classList.remove('done', 'ok', 'no'); q.querySelectorAll('.opt').forEach(b => { b.disabled = false; b.classList.remove('right', 'wrong'); }); });
+    qUpdate(); document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+  }
+});
 // deep link #s-12
 const h = location.hash.match(/^#s-(\d+)$/);
 if (h) { const b = blockFor(+h[1]); if (b) { mark(b); setTimeout(() => b.scrollIntoView({ block: 'start' }), 50); } }
