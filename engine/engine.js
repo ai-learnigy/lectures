@@ -80,6 +80,27 @@
     history.replaceState(null, '', `#/${i + 1}${k ? '.' + k : ''}`);
     try { bc && bc.postMessage({ t: 'state', i, k }); } catch (e) {}
     [...ov.children].forEach((b, x) => b.classList.toggle('cur', x === i));
+    fitSlide(s);
+  }
+
+  // სლაიდი ეკრანის სიმაღლეში თუ არ ეტევა (გრძელი ტექსტი, ფონტი, ბევრი ნაბიჯი) —
+  // შიგთავსი პროპორციულად პატარავდება, რომ ქვედა ზოლამდე დაეტიოს. ყველა ეკრანზე ერთნაირად.
+  function fitSlide(s) {
+    if (!s) return;
+    const kids = [...s.children].filter(e => !e.matches('aside, script, style, .big-num, .abs'));
+    kids.forEach(e => { e.style.zoom = ''; });
+    const sc = parseFloat(getComputedStyle(deck).getPropertyValue('--s')) || 1;
+    const sr = s.getBoundingClientRect();
+    let top = Infinity, bottom = -Infinity;
+    kids.forEach(k => {
+      const r = k.getBoundingClientRect(); if (r.height) { top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom); }
+      k.querySelectorAll('*').forEach(e => { const q = e.getBoundingClientRect(); if (q.height && q.width) bottom = Math.max(bottom, q.bottom); });
+    });
+    const limit = sr.bottom - 70 * sc;
+    if (bottom > limit && bottom > top) {
+      const f = Math.max(0.55, (limit - top) / (bottom - top) * 0.98);
+      kids.forEach(e => { e.style.zoom = f.toFixed(3); });
+    }
   }
 
   function next() { if (k < groups[i].length) k++; else if (i < slides.length - 1) { i++; k = 0; } render(true); }
@@ -133,6 +154,7 @@
     deck.style.setProperty('--s', Math.min(innerWidth / 1600, innerHeight / H));
   }
   setTimeout(() => document.getElementById('help')?.classList.add('hide'), 6000);
-  addEventListener('resize', fit); fit();
+  addEventListener('resize', () => { fit(); fitSlide(slides[i]); }); fit();
+  document.fonts?.ready.then(() => fitSlide(slides[i]));
   render(true);
 })();

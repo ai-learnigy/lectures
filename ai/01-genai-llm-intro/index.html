@@ -623,7 +623,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
     <g class="zoom" style="transform-origin:330px 190px"><circle cx="330" cy="190" r="46" fill="#f3effe" stroke="#6d28d9" stroke-width="3"/><text x="330" y="206" text-anchor="middle" font-size="40">🧩</text><text x="330" y="112" text-anchor="middle" class="tw b" font-size="21">როგორ მუშაობს</text><text x="330" y="86" text-anchor="middle" class="tm" font-size="16">ტოკენი · შემდეგი ტოკენი · context</text></g>
     <g class="zoom" style="transform-origin:560px 200px"><circle cx="560" cy="200" r="46" fill="#fef5e4" stroke="#d97706" stroke-width="3"/><text x="560" y="216" text-anchor="middle" font-size="40">🎛️</text><text x="560" y="290" text-anchor="middle" class="tw b" font-size="21">პარამეტრები</text><text x="560" y="316" text-anchor="middle" class="tm" font-size="16">Temperature · Top-P · Max Tokens</text></g>
     <g class="zoom" style="transform-origin:800px 140px"><circle cx="800" cy="135" r="46" fill="#eaf8ef" stroke="#16a34a" stroke-width="3"/><text x="800" y="151" text-anchor="middle" font-size="40">💸</text><text x="800" y="58" text-anchor="middle" class="tw b" font-size="21">პროვაიდერები და ფასი</text><text x="800" y="32" text-anchor="middle" class="tm" font-size="16">ვინ, სად, რამდენად</text></g>
-    <g class="zoom" style="transform-origin:1340px 200px"><circle cx="1340" cy="200" r="52" fill="#eaf2fe" stroke="#2563eb" stroke-width="4" class="pulse"/><text x="1340" y="218" text-anchor="middle" font-size="44">🔌</text><text x="1340" y="292" text-anchor="middle" class="ta b" font-size="21">შემდეგი ნაბიჯი</text><text x="1340" y="318" text-anchor="middle" class="tm" font-size="16">როგორ მივა ჩვენი API მოდელამდე</text></g>
+    <g class="zoom" style="transform-origin:1340px 200px"><circle cx="1340" cy="200" r="52" fill="#eaf2fe" stroke="#2563eb" stroke-width="4" class="pulse"/><text x="1340" y="218" text-anchor="middle" font-size="44">🧭</text><text x="1340" y="292" text-anchor="middle" class="ta b" font-size="21">შეჯამება</text><text x="1340" y="318" text-anchor="middle" class="tm" font-size="16">დაგეგმვა წყვილებში · კითხვები</text></g>
   </svg>
   <div class="callout" style="--a:var(--pink);font-size:22px">🎮 გზაში: <b>ლაივ ტოკენაიზერი</b>, „იყავი LLM“, <b>Temperature-ის სლაიდერი</b> და ხარჯის კალკულატორი</div>
   
@@ -1039,7 +1039,7 @@ IGZvcg==  395
     <div class="prov" style="--a:#7b8096"><span class="nm">და სხვები</span><span class="md">Azure OpenAI · Mistral · DeepSeek…</span><span class="ds">თითქმის ყველა OpenAI-compatible API-ს გვთავაზობს</span></div>
   </div>
   <div class="callout ask mt">🙋 რომელი გამოგიყენებიათ? რით განსხვავდებოდა?</div>
-  <div class="callout mt" style="--a:var(--net);font-size:22px">ჩვენი კოდისთვის პროვაიდერის შეცვლა <b>ერთ ადგილზე</b> დავა — ამას ლექციის ბოლოს ვნახავთ</div>
+  <div class="callout mt" style="--a:var(--net);font-size:22px">კოდში პროვაიდერის შეცვლა <b>ერთ ადგილზე</b> დავა — ამას კოდის ლექციებზე ვნახავთ</div>
   
 </section>
 
@@ -1108,25 +1108,7 @@ IGZvcg==  395
   
 </section>
 
-<section class="slide" data-section="შემდეგი ნაბიჯი">
-  <div class="kicker">🔌 შემდეგი ნაბიჯი · როგორ მივა ჩვენი API მოდელამდე</div>
-  <h2><code class="i" style="font-size:.9em">IChatClient</code> — LLM-ის <span class="c-api">„DbContext“</span></h2>
-  <div class="callout ask">🙋 EF Core-ში SQL Server-იდან PostgreSQL-ზე გადასვლისას <b>რა იცვლება</b> კოდში?</div>
-  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-top:14px">
-    <div class="found">
-      <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>LINQ: _db.Dishes.Where(…)</small></div>
-      <div class="layer" style="--a:var(--asp)">DbContext · EF Core<small>ერთი API</small></div>
-      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">SqlServer<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Npgsql<small>provider</small></div></div>
-    </div>
-    <div class="found step">
-      <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>_chat.GetResponseAsync(…)</small></div>
-      <div class="layer" style="--a:var(--net)">IChatClient · Microsoft.Extensions.AI<small>ერთი API</small></div>
-      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">OpenAI<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Google.GenAI<small>provider</small></div></div>
-    </div>
-  </div>
-  <div class="callout step mt2" data-with style="--a:var(--mvc);font-size:23px">ბაზის შეცვლისას LINQ არ იცვლება. პროვაიდერის შეცვლისას — <b>ჩვენი AI კოდი არ იცვლება</b>. კოდს <b>შემდეგ ლექციაზე</b> ვწერთ</div>
-  
-</section>
+
 
 <section class="slide" data-section="პრაქტიკა">
   <div class="kicker">🧑‍💻 თქვენ აკეთებთ · კლასში</div>
@@ -1155,7 +1137,7 @@ IGZvcg==  395
 <section class="slide" data-section="შეჯამება">
   <div class="kicker">შევამოწმოთ</div>
   <h2>6 კითხვა</h2>
-  <div class="qa"><span class="n">1</span><span class="q">რა არის ტოკენი და რატომ გვაინტერესებს backend-ში?</span><span class="a step">ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს · ფასი, context window-ის ლიმიტი და სიჩქარე ტოკენებით ითვლება; ქართული — მეტი ტოკენი</span></div><div class="qa"><span class="n">2</span><span class="q">როგორ წერს LLM პასუხს?</span><span class="a step">next-token prediction: ითვლის შემდეგი ტოკენის ალბათობებს → ირჩევს ერთს → უმატებს → იმეორებს, სანამ არ დაასრულებს ან ლიმიტს არ მიაღწევს</span></div><div class="qa"><span class="n">3</span><span class="q">მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</span><span class="a step">ჩვენი მენიუ არ უნახავს; წერს სავარაუდოს და არა ჭეშმარიტს — hallucination · ფასი ყოველთვის ბაზიდან</span></div><div class="qa"><span class="n">4</span><span class="q">რატომ „არ ახსოვს“ მოდელს წინა მოთხოვნა?</span><span class="a step">stateless: ყოველი მოთხოვნა დამოუკიდებელია · ისტორია ჩვენ უნდა გავუგზავნოთ ყოველ ჯერზე</span></div><div class="qa"><span class="n">5</span><span class="q">შეკვეთის ტიპის დასადგენად რა Temperature-ს დავაყენებთ და რას ნიშნავს <code class="i">finish_reason = length</code>?</span><span class="a step">0 — ერთი სწორი პასუხი, ყოველ ჯერზე ერთნაირი · length — Max Tokens-ს მიაღწია, პასუხი მოიჭრა</span></div><div class="qa"><span class="n">6</span><span class="q">რატომ დავწერთ კოდს <code class="i">IChatClient</code>-ზე და არა პირდაპირ Gemini-ს კლასზე?</span><span class="a step">ერთი interface ყველა პროვაიდერისთვის (როგორც EF Core-ის provider) · პროვაიდერის შეცვლა = ერთი ადგილი, დანარჩენი კოდი არ იცვლება</span></div>
+  <div class="qa"><span class="n">1</span><span class="q">რა არის ტოკენი და რატომ გვაინტერესებს backend-ში?</span><span class="a step">ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს · ფასი, context window-ის ლიმიტი და სიჩქარე ტოკენებით ითვლება; ქართული — მეტი ტოკენი</span></div><div class="qa"><span class="n">2</span><span class="q">როგორ წერს LLM პასუხს?</span><span class="a step">next-token prediction: ითვლის შემდეგი ტოკენის ალბათობებს → ირჩევს ერთს → უმატებს → იმეორებს, სანამ არ დაასრულებს ან ლიმიტს არ მიაღწევს</span></div><div class="qa"><span class="n">3</span><span class="q">მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</span><span class="a step">ჩვენი მენიუ არ უნახავს; წერს სავარაუდოს და არა ჭეშმარიტს — hallucination · ფასი ყოველთვის ბაზიდან</span></div><div class="qa"><span class="n">4</span><span class="q">რატომ „არ ახსოვს“ მოდელს წინა მოთხოვნა?</span><span class="a step">stateless: ყოველი მოთხოვნა დამოუკიდებელია · ისტორია ჩვენ უნდა გავუგზავნოთ ყოველ ჯერზე</span></div><div class="qa"><span class="n">5</span><span class="q">შეკვეთის ტიპის დასადგენად რა Temperature-ს დავაყენებთ და რას ნიშნავს <code class="i">finish_reason = length</code>?</span><span class="a step">0 — ერთი სწორი პასუხი, ყოველ ჯერზე ერთნაირი · length — Max Tokens-ს მიაღწია, პასუხი მოიჭრა</span></div><div class="qa"><span class="n">6</span><span class="q">რესტორნის ჩატს 300 საუბარი აქვს დღეში. რა ზრდის ყველაზე მეტად ხარჯს?</span><span class="a step">ძვირი მოდელი (ფასი ათჯერ განსხვავდება) · მზარდი ისტორია, რომელიც ყოველ ჯერზე თავიდან იგზავნება · ქართული ტექსტი — მეტი ტოკენი</span></div>
   
 </section>
 
@@ -1399,6 +1381,27 @@ IGZvcg==  395
     history.replaceState(null, '', `#/${i + 1}${k ? '.' + k : ''}`);
     try { bc && bc.postMessage({ t: 'state', i, k }); } catch (e) {}
     [...ov.children].forEach((b, x) => b.classList.toggle('cur', x === i));
+    fitSlide(s);
+  }
+
+  // სლაიდი ეკრანის სიმაღლეში თუ არ ეტევა (გრძელი ტექსტი, ფონტი, ბევრი ნაბიჯი) —
+  // შიგთავსი პროპორციულად პატარავდება, რომ ქვედა ზოლამდე დაეტიოს. ყველა ეკრანზე ერთნაირად.
+  function fitSlide(s) {
+    if (!s) return;
+    const kids = [...s.children].filter(e => !e.matches('aside, script, style, .big-num, .abs'));
+    kids.forEach(e => { e.style.zoom = ''; });
+    const sc = parseFloat(getComputedStyle(deck).getPropertyValue('--s')) || 1;
+    const sr = s.getBoundingClientRect();
+    let top = Infinity, bottom = -Infinity;
+    kids.forEach(k => {
+      const r = k.getBoundingClientRect(); if (r.height) { top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom); }
+      k.querySelectorAll('*').forEach(e => { const q = e.getBoundingClientRect(); if (q.height && q.width) bottom = Math.max(bottom, q.bottom); });
+    });
+    const limit = sr.bottom - 70 * sc;
+    if (bottom > limit && bottom > top) {
+      const f = Math.max(0.55, (limit - top) / (bottom - top) * 0.98);
+      kids.forEach(e => { e.style.zoom = f.toFixed(3); });
+    }
   }
 
   function next() { if (k < groups[i].length) k++; else if (i < slides.length - 1) { i++; k = 0; } render(true); }
@@ -1452,7 +1455,8 @@ IGZvcg==  395
     deck.style.setProperty('--s', Math.min(innerWidth / 1600, innerHeight / H));
   }
   setTimeout(() => document.getElementById('help')?.classList.add('hide'), 6000);
-  addEventListener('resize', fit); fit();
+  addEventListener('resize', () => { fit(); fitSlide(slides[i]); }); fit();
+  document.fonts?.ready.then(() => fitSlide(slides[i]));
   render(true);
 })();
 </script>

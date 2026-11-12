@@ -335,7 +335,7 @@
     <g class="zoom" style="transform-origin:330px 190px"><circle cx="330" cy="190" r="46" fill="#1d1640" stroke="#8b6cff" stroke-width="3"/><text x="330" y="206" text-anchor="middle" font-size="40">🧩</text><text x="330" y="112" text-anchor="middle" class="tw b" font-size="21">როგორ მუშაობს</text><text x="330" y="86" text-anchor="middle" class="tm" font-size="16">ტოკენი · შემდეგი ტოკენი · context</text></g>
     <g class="zoom" style="transform-origin:560px 200px"><circle cx="560" cy="200" r="46" fill="#33240b" stroke="#f5a524" stroke-width="3"/><text x="560" y="216" text-anchor="middle" font-size="40">🎛️</text><text x="560" y="290" text-anchor="middle" class="tw b" font-size="21">პარამეტრები</text><text x="560" y="316" text-anchor="middle" class="tm" font-size="16">Temperature · Top-P · Max Tokens</text></g>
     <g class="zoom" style="transform-origin:800px 140px"><circle cx="800" cy="135" r="46" fill="#123321" stroke="#22c55e" stroke-width="3"/><text x="800" y="151" text-anchor="middle" font-size="40">💸</text><text x="800" y="58" text-anchor="middle" class="tw b" font-size="21">პროვაიდერები და ფასი</text><text x="800" y="32" text-anchor="middle" class="tm" font-size="16">ვინ, სად, რამდენად</text></g>
-    <g class="zoom" style="transform-origin:1340px 200px"><circle cx="1340" cy="200" r="52" fill="#0e2a33" stroke="#22d3ee" stroke-width="4" class="pulse"/><text x="1340" y="218" text-anchor="middle" font-size="44">🔌</text><text x="1340" y="292" text-anchor="middle" class="ta b" font-size="21">შემდეგი ნაბიჯი</text><text x="1340" y="318" text-anchor="middle" class="tm" font-size="16">როგორ მივა ჩვენი API მოდელამდე</text></g>
+    <g class="zoom" style="transform-origin:1340px 200px"><circle cx="1340" cy="200" r="52" fill="#0e2a33" stroke="#22d3ee" stroke-width="4" class="pulse"/><text x="1340" y="218" text-anchor="middle" font-size="44">🧭</text><text x="1340" y="292" text-anchor="middle" class="ta b" font-size="21">შეჯამება</text><text x="1340" y="318" text-anchor="middle" class="tm" font-size="16">დაგეგმვა წყვილებში · კითხვები</text></g>
   </svg>
   <div class="callout" style="--a:var(--pink);font-size:22px">🎮 გზაში: <b>ლაივ ტოკენაიზერი</b>, „იყავი LLM“, <b>Temperature-ის სლაიდერი</b> და ხარჯის კალკულატორი</div>
   <aside class="study">
@@ -345,7 +345,7 @@
 2. 🧩 **როგორ მუშაობს LLM** — ტოკენები, შემდეგი ტოკენის წინასწარმეტყველება, context window.
 3. 🎛️ **პარამეტრები** — Temperature, Top-P, Max Tokens; reasoning მოდელები.
 4. 💸 **პროვაიდერები და ფასი** — ღრუბელი თუ ლოკალური, როგორ ითვლება ხარჯი.
-5. 🔌 **შემდეგი ნაბიჯი** — როგორ მივა ჩვენი API მოდელამდე (`IChatClient`); კოდს შემდეგ ლექციაზე ვწერთ.
+5. 🧭 **შეჯამება** — AI ფუნქციის დაგეგმვა წყვილებში და შემაჯამებელი კითხვები.
 
 გზაში: ლაივ ტოკენაიზერი (ნებისმიერი ტექსტი), „იყავი LLM“, Temperature-ის სლაიდერი და ხარჯის კალკულატორი.
   </aside>
@@ -513,7 +513,7 @@ Backend დეველოპერისთვის LLM ჯადოსნუ�
 - `finish_reason` — რატომ შეწყვიტა წერა (`stop` — თვითონ დაასრულა, `length` — ლიმიტს მიაღწია)
 - `usage` — რამდენი **ტოკენი** დაიხარჯა. სწორედ ამაში ვიხდით ფულს.
 
-ამ JSON-ს ხელით არ დავწერთ — C#-ში ამას `IChatClient` გააკეთებს (შემდეგ ლექციაზე). მაგრამ კარგია იცოდე, რა მიდის „კაპოტის ქვეშ“.
+ამ JSON-ს ხელით არ დავწერთ — C#-ში ამას .NET-ის ბიბლიოთეკა გააკეთებს — კოდს შემდეგ ლექციებზე ვწერთ. მაგრამ კარგია იცოდე, რა მიდის „კაპოტის ქვეშ“.
   </aside>
 </section>
 
@@ -1089,7 +1089,7 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
     <div class="prov" style="--a:#7b8096"><span class="nm">და სხვები</span><span class="md">Azure OpenAI · Mistral · DeepSeek…</span><span class="ds">თითქმის ყველა OpenAI-compatible API-ს გვთავაზობს</span></div>
   </div>
   <div class="callout ask mt">🙋 რომელი გამოგიყენებიათ? რით განსხვავდებოდა?</div>
-  <div class="callout mt" style="--a:var(--net);font-size:22px">ჩვენი კოდისთვის პროვაიდერის შეცვლა <b>ერთ ადგილზე</b> დავა — ამას ლექციის ბოლოს ვნახავთ</div>
+  <div class="callout mt" style="--a:var(--net);font-size:22px">კოდში პროვაიდერის შეცვლა <b>ერთ ადგილზე</b> დავა — ამას კოდის ლექციებზე ვნახავთ</div>
   <aside class="study">
 ### პროვაიდერები — ვისი მოდელი, ვისი სერვერი
 
@@ -1134,7 +1134,7 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
 | მონაცემი | პროვაიდერთან მიდის | კომპიუტერს არ ტოვებს |
 | სწავლისთვის | API key, ლიმიტები, ზოგჯერ ბარათი | key არ სჭირდება, მაგრამ ძლიერი კომპიუტერი სჭირდება |
 
-**ჩვენი არჩევანი კურსზე:** ვიყენებთ **Google Gemini**-ს — ღრუბლოვანი მოდელია, ქართულად კარგად წერს და სწავლისთვის აქვს უფასო ლიმიტი (მეტი თუ დაგჭირდა — ფასიანი ტარიფი). ლოკალური მოდელი (Ollama) მაშინ ღირს, როცა მონაცემი კომპანიიდან არ უნდა გავიდეს. C# კოდი ორივესთვის ერთნაირია — მიზეზს ლექციის ბოლოს (`IChatClient`) ვნახავთ.
+**ჩვენი არჩევანი კურსზე:** ვიყენებთ **Google Gemini**-ს — ღრუბლოვანი მოდელია, ქართულად კარგად წერს და სწავლისთვის აქვს უფასო ლიმიტი (მეტი თუ დაგჭირდა — ფასიანი ტარიფი). ლოკალური მოდელი (Ollama) მაშინ ღირს, როცა მონაცემი კომპანიიდან არ უნდა გავიდეს. C# კოდი ორივესთვის თითქმის ერთნაირი იქნება — ამას კოდის ლექციებზე ვნახავთ.
 
 ```tip
 რეალურ კომპანიაში არჩევანს ხშირად **მონაცემი** წყვეტს: ბანკი ან კლინიკა შეიძლება ვერ აგზავნიდეს კლიენტის მონაცემს გარე პროვაიდერთან. მაშინ ღია მოდელი საკუთარ სერვერზე ეშვება.
@@ -1237,40 +1237,7 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
   </aside>
 </section>
 
-<section class="slide" data-section="შემდეგი ნაბიჯი">
-  <div class="kicker">🔌 შემდეგი ნაბიჯი · როგორ მივა ჩვენი API მოდელამდე</div>
-  <h2><code class="i" style="font-size:.9em">IChatClient</code> — LLM-ის <span class="c-api">„DbContext“</span></h2>
-  <div class="callout ask">🙋 EF Core-ში SQL Server-იდან PostgreSQL-ზე გადასვლისას <b>რა იცვლება</b> კოდში?</div>
-  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-top:14px">
-    <div class="found">
-      <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>LINQ: _db.Dishes.Where(…)</small></div>
-      <div class="layer" style="--a:var(--asp)">DbContext · EF Core<small>ერთი API</small></div>
-      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">SqlServer<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Npgsql<small>provider</small></div></div>
-    </div>
-    <div class="found step">
-      <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>_chat.GetResponseAsync(…)</small></div>
-      <div class="layer" style="--a:var(--net)">IChatClient · Microsoft.Extensions.AI<small>ერთი API</small></div>
-      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">OpenAI<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Google.GenAI<small>provider</small></div></div>
-    </div>
-  </div>
-  <div class="callout step mt2" data-with style="--a:var(--mvc);font-size:23px">ბაზის შეცვლისას LINQ არ იცვლება. პროვაიდერის შეცვლისას — <b>ჩვენი AI კოდი არ იცვლება</b>. კოდს <b>შემდეგ ლექციაზე</b> ვწერთ</div>
-  <aside class="study">
-### `IChatClient` — LLM-ის „DbContext“
 
-EF Core-იდან ეს იდეა უკვე იცი: კოდს `DbContext`-ით და LINQ-ით წერ, ბაზასთან კი **provider** ლაპარაკობს (`SqlServer`, `Npgsql`). ბაზის შეცვლა = provider-ის შეცვლა; LINQ ადგილზე რჩება.
-
-**Microsoft.Extensions.AI** ზუსტად ამას აკეთებს LLM-ისთვის:
-
-- `IChatClient` — ერთი interface ყველა ჩატ-მოდელისთვის; მთავარი მეთოდია `GetResponseAsync`
-- provider package-ები ამ interface-ს ახორციელებენ: **OllamaSharp** (Ollama), **Google.GenAI** (Gemini), **Microsoft.Extensions.AI.OpenAI** (OpenAI და ყველა OpenAI-compatible: Groq და სხვ.)
-
-ჩვენი კოდი მხოლოდ `IChatClient`-ს იცნობს. Gemini-დან OpenAI-ზე ან სხვა პროვაიდერზე გადასვლა = **ერთი ხაზის** შეცვლა — კოდს შემდეგ ლექციაზე დავწერთ, Gemini-სთან.
-
-```note
-Microsoft.Extensions.AI .NET-ის ოფიციალური „AI ფენაა“ — ისევე, როგორც `ILogger` ლოგირებისთვის. მასზე დგას Microsoft Agent Framework-იც (ლექცია 14). დეტალურად (DI, კონფიგურაცია) — ლექცია 3-ზე.
-```
-  </aside>
-</section>
 
 <lecture-classwork/>
 
@@ -1305,7 +1272,6 @@ Microsoft.Extensions.AI .NET-ის ოფიციალური „AI ფე�
 3. **Stateless** — მოდელს წინა მოთხოვნა არ ახსოვს; ისტორიას ჩვენ ვუგზავნით და ჩვენ ვიხდით.
 4. **Temperature, Top-P, Max Tokens** — მოთხოვნის პარამეტრები; `finish_reason = length` → პასუხი მოიჭრა. Reasoning მოდელი — მხოლოდ რთულ ამოცანაზე.
 5. **პროვაიდერი და ფასი** — input იაფია, output ძვირი; მოდელებს შორის ათჯერადი სხვაობა. ჩვენ ვიყენებთ Gemini-ს.
-6. **`IChatClient`** — ერთი interface ყველა პროვაიდერისთვის, როგორც `DbContext`.
 
 ### ⏭️ შემდეგ ლექციაზე — კოდი
 
