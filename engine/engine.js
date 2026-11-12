@@ -62,6 +62,8 @@
     // animations
     if (i !== prevI) {
       smil(s, a => a.hasAttribute('data-auto'));
+      // ინტერაქტიული ვიჯეტები სლაიდზე (ტოკენაიზერი, სლაიდერები…) — აქტიური სლაიდის შესახებ
+      document.dispatchEvent(new CustomEvent('deck:slide', { detail: s }));
     }
     if (i === prevI && k > prevK) {
       for (let x = prevK; x < k; x++) groups[i][x].forEach(e => smil(e, a => !a.hasAttribute('data-auto')));
@@ -107,6 +109,9 @@
 
   document.addEventListener('keydown', e => {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    // სლაიდზე ტექსტის ველში წერისას კლავიშები ნავიგაციას არ ეკუთვნის (Escape — ველიდან გამოსვლა)
+    const t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) { if (e.key === 'Escape') t.blur(); return; }
     const key = e.key, code = e.code;
     if (key === 'ArrowRight') { e.preventDefault(); e.shiftKey ? go(i + 1) : next(); }
     else if (key === 'ArrowLeft') { e.preventDefault(); e.shiftKey ? go(i - 1) : prev(); }

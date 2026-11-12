@@ -536,6 +536,8 @@ def main(filters):
         for d in marker.read_text().split():
             if (OUT / d).is_dir() and d not in ('courses', 'engine', '.git', '.github'):
                 shutil.rmtree(OUT / d)
+    if (ENGINE / 'assets').is_dir():   # საერთო ფაილები (მაგ. სლაიდზე ლაივ ტოკენაიზერი) → /assets/
+        shutil.copytree(ENGINE / 'assets', OUT / 'assets', dirs_exist_ok=True)
     catalog, problems = [], []
     for cdir in sorted((ROOT / 'courses').iterdir()):
         if not (cdir / 'course.json').exists():
@@ -559,7 +561,7 @@ def main(filters):
         page = (ENGINE / 'index.html').read_text().replace('/*CATALOG*/[]', json.dumps(catalog, ensure_ascii=False))
         write_page(OUT / 'index.html', page)
         (OUT / '.nojekyll').write_text('')
-        marker.write_text('\n'.join(c['slug'] for c in catalog) + '\n')
+        marker.write_text('\n'.join([c['slug'] for c in catalog] + ['assets']) + '\n')
         print(f'index: {sum(len(c["lectures"]) for c in catalog)} lectures in {len(catalog)} courses')
     if problems:
         sys.exit('⚠ ლექციის სტრუქტურა არასრულია — იხ. ზემოთ')

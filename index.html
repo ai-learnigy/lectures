@@ -76,7 +76,7 @@ footer kbd{font:500 12px var(--mono);border:1px solid var(--line);border-radius:
 <footer>პრეზენტაციაში: <kbd>F</kbd> სრული ეკრანი · <kbd>←</kbd> <kbd>→</kbd> ნავიგაცია · <kbd>P</kbd> კონსპექტი სლაიდებთან ერთად · <kbd>O</kbd> ყველა სლაიდი</footer>
 </main>
 <script>
-const CATALOG = [{"slug": "ai", "title": "AI აგენტები .NET-ში", "order": 1, "lectures": [{"num": 1, "slug": "01-genai-llm-intro", "title": "შესავალი Generative AI-სა და LLM API-ებში", "slides": 48, "materials": [], "study": true, "classwork": true, "homework": true, "quiz": 12, "lecturer": true}]}];
+const CATALOG = [{"slug": "ai", "title": "AI აგენტები .NET-ში", "order": 1, "lectures": [{"num": 1, "slug": "01-genai-llm-intro", "title": "შესავალი Generative AI-სა და LLM API-ებში", "slides": 44, "materials": [], "study": true, "classwork": true, "homework": true, "quiz": 12, "lecturer": true}]}];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const total = CATALOG.reduce((n, c) => n + c.lectures.length, 0);
 document.getElementById('sub').textContent = `${total} ლექცია`;
