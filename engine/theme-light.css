@@ -1,0 +1,83 @@
+/* ===== Light "warm paper" theme =====
+   Semantic colours (constant across the whole deck):
+   Frontend = pink · Backend/API = violet · Database = amber
+   Request = blue · Response/success = green · Error = red
+   Methods: GET green · POST amber · PUT blue · PATCH teal · DELETE red */
+:root{
+  --bg:#fbf8f3; --bg2:#f4efe6; --bg3:#efe8dc; --card:#ffffff; --line:#e6dfd2; --line2:#cfc6b6;
+  --ink:#1e2132; --ink2:#41465c; --muted:#7b8096;
+  --net:#6d28d9; --net2:#5b21b6;
+  --asp:#d97706; --wf:#2563eb; --mvc:#16a34a; --core:#0d9488; --api:#2563eb; --red:#dc2626; --pink:#db2777; --yel:#ca8a04;
+  --shadow:0 1px 2px rgba(30,33,50,.05),0 10px 28px -14px rgba(30,33,50,.18);
+}
+
+/* stage */
+#deck{background:
+  radial-gradient(900px 600px at 92% -8%,rgba(109,40,217,.07),transparent 60%),
+  radial-gradient(800px 560px at -6% 108%,rgba(217,119,6,.07),transparent 60%),
+  var(--bg)}
+#deck::before{background-image:radial-gradient(rgba(30,33,50,.075) 1.3px,transparent 1.4px);background-size:30px 30px;
+  mask-image:radial-gradient(ellipse at center,#000 25%,transparent 85%)}
+
+/* chrome */
+#hud .sec{color:var(--net)}
+#hud .dots{color:var(--line2)} #hud .dots b{color:var(--net)}
+#help{color:var(--muted)}
+#overview{background:rgba(251,248,243,.97)}
+#overview button{background:#fff;color:var(--ink2);box-shadow:var(--shadow)}
+#overview button:hover,#overview button.cur{color:var(--ink)}
+
+/* typography */
+.kicker{display:inline-block;width:fit-content;align-self:flex-start;letter-spacing:.12em;padding:6px 14px;border-radius:99px;background:color-mix(in srgb,currentColor 10%,transparent)}
+code.i{background:rgba(109,40,217,.08);color:#5b21b6}
+ul.clean li::before{border-radius:4px}
+
+/* cards */
+.card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.card.accent{border-color:color-mix(in srgb,var(--a,var(--net)) 30%,var(--line));border-top:5px solid var(--a,var(--net));
+  box-shadow:0 1px 2px rgba(30,33,50,.05),0 16px 34px -18px color-mix(in srgb,var(--a,var(--net)) 55%,transparent)}
+.card .ico{background:color-mix(in srgb,var(--a,var(--net)) 12%,#fff)}
+.pill{background:#fff;border-color:var(--line2)}
+.pill.on{background:color-mix(in srgb,var(--a,var(--net)) 10%,#fff);border-color:color-mix(in srgb,var(--a,var(--net)) 55%,#fff)}
+.tag{background:color-mix(in srgb,var(--a,var(--net)) 14%,#fff)}
+.chip{background:#fff;border-color:var(--line2)}
+table.t{background:#fff;box-shadow:var(--shadow)}
+table.t th{background:var(--bg2)}
+.method-card{background:color-mix(in srgb,var(--a) 7%,#fff);border-color:color-mix(in srgb,var(--a) 40%,#fff);box-shadow:var(--shadow)}
+.callout{background:color-mix(in srgb,var(--a,var(--net)) 7%,#fff)}
+.era{background:color-mix(in srgb,var(--a) 7%,#fff)}
+
+/* status boxes */
+.problem{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.solve{background:#f0fdf4;border-color:#86efac;color:#166534}
+.divider .big-num{-webkit-text-stroke:2px rgba(109,40,217,.16)}
+.year{opacity:.45}
+
+/* code — light editor look; terminal stays dark like a real terminal */
+.code{background:#fff;color:var(--ink);border-color:var(--line);box-shadow:var(--shadow)}
+.code .ttl{background:var(--bg2);color:var(--muted)}
+.code .ln.hl{background:rgba(109,40,217,.07);box-shadow:inset 3px 0 0 var(--net)}
+.code .ln.dim{opacity:.42}
+.code .k,.code .kd,.code .kn,.code .kr,.code .kc{color:#7c3aed}
+.code .kt{color:#2563eb}
+.code .s,.code .s1,.code .s2,.code .sa,.code .se,.code .si,.code .sd{color:#15803d}
+.code .c,.code .c1,.code .cm,.code .cp,.code .ch{color:#8b8fa3}
+.code .m,.code .mi,.code .mf,.code .mh{color:#c2410c}
+.code .nf,.code .fm{color:#1d4ed8}
+.code .nc,.code .nn,.code .nt,.code .nd{color:#b45309}
+.code .na{color:#7c3aed} .code .nb{color:#0e7490}
+.code .o,.code .p{color:#64748b}
+.code .nv,.code .nx{color:var(--ink)}
+.code .go{color:#64748b}
+.term{border-color:#2a2e45;box-shadow:var(--shadow)}
+
+/* svg */
+svg .box{fill:#fff;stroke:var(--line2)}
+svg .td{fill:#fff}
+
+/* lecturer notes panel + presenter window stay dark (laptop only) */
+#notes{color:#c3c7e6}
+#presenter{color:#e6e8f7}
+#presenter .p-steps{color:#22d3ee}
+#presenter .p-clock{color:#a78bfa}
+#presenter .p-foot{color:#8a90b8}

@@ -1,0 +1,10 @@
+__pycache__/
+.venv/
+.access-code
+dist/
+.vercel/
+# ლოკალური ბილდის შედეგი (საიტს Vercel აწყობს)
+/index.html
+/ai/
+/.generated
+/.nojekyll
