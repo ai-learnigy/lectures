@@ -1,0 +1,1361 @@
+<!doctype html>
+<html lang="ka"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI აგენტები .NET-ში · 1 — შესავალი Generative AI-სა და LLM API-ებში</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>:root{
+  --bg:#0a0c16; --bg2:#11142a; --bg3:#171b36; --card:#151935; --line:#272c52; --line2:#353b6b;
+  --ink:#eceefb; --ink2:#c3c7e6; --muted:#8a90b8;
+  --net:#8b6cff; --net2:#512bd4;
+  --asp:#f5a524; --wf:#3b82f6; --mvc:#22c55e; --core:#a78bfa; --api:#22d3ee; --red:#f43f5e; --pink:#ec4899; --yel:#facc15;
+  --font:"Noto Sans Georgian","FiraGO","BPG Arial","Sylfaen","DejaVu Sans",system-ui,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Code","Fira Code",ui-monospace,"DejaVu Sans Mono",monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);overflow:hidden}
+body{font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ---------- stage ---------- */
+#stage{position:fixed;inset:0;overflow:hidden;background:var(--bg)}
+#deck{position:absolute;left:50%;top:50%;width:1600px;height:var(--h,900px);transform:translate(-50%,-50%) scale(var(--s,1));transform-origin:center;
+  background:radial-gradient(1200px 700px at 85% -10%,rgba(139,108,255,.16),transparent 60%),
+             radial-gradient(900px 600px at -10% 110%,rgba(34,211,238,.08),transparent 60%),var(--bg);
+  overflow:hidden}
+#deck::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:40px 40px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%)}
+
+.slide{position:absolute;inset:0;padding:calc(70px + (var(--h,900px) - 900px) / 2) 90px calc(80px + (var(--h,900px) - 900px) / 2);opacity:0;visibility:hidden;
+  transform:translateX(40px) scale(.985);transition:opacity .55s var(--ease),transform .65s var(--ease),visibility 0s .6s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .55s var(--ease),transform .65s var(--ease),visibility 0s}
+.slide.past{transform:translateX(-40px) scale(.985)}
+
+/* chrome */
+#hud{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;align-items:center;gap:18px;padding:0 90px;
+  color:var(--muted);font-size:15px;z-index:20;pointer-events:none}
+#hud .sec{letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--core)}
+#hud .num{margin-left:auto;font-family:var(--mono);font-size:14px}
+#hud .dots{font-family:var(--mono);font-size:13px;color:var(--line2);letter-spacing:2px}
+#hud .dots b{color:var(--api);font-weight:400}
+#bar{position:absolute;left:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--net),var(--api));width:0;transition:width .5s var(--ease);z-index:21}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:34vh;overflow:auto;background:rgba(10,12,22,.97);border-top:2px solid var(--net);
+  color:var(--ink2);font-size:17px;line-height:1.6;padding:16px 28px;transform:translateY(100%);transition:transform .3s var(--ease);z-index:50}
+#notes.open{transform:none}
+#notes h6{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--net);margin-bottom:6px}
+#help{position:fixed;right:16px;top:12px;color:#8a90b8;font:12px var(--mono);z-index:40;opacity:.8;transition:opacity 1s;pointer-events:none}
+#help.hide{opacity:0}
+#overview{position:fixed;inset:0;background:rgba(5,6,12,.96);z-index:60;display:none;overflow:auto;padding:30px;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+#overview.open{display:grid}
+#overview button{all:unset;cursor:pointer;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px;color:var(--ink2);font-size:14px;line-height:1.35;min-height:84px}
+#overview button:hover,#overview button.cur{border-color:var(--net);color:#fff}
+#overview button small{display:block;color:var(--muted);font:12px var(--mono);margin-bottom:6px}
+
+/* ---------- typography ---------- */
+.kicker{font:600 15px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--api);margin-bottom:14px}
+h1{font-size:76px;line-height:1.08;font-weight:800;letter-spacing:-.01em}
+h2{font-size:50px;line-height:1.15;font-weight:800;margin-bottom:30px}
+h3{font-size:28px;font-weight:700;margin-bottom:12px}
+p,li{font-size:25px;line-height:1.55;color:var(--ink2)}
+.lead{font-size:30px;line-height:1.5;color:var(--ink2);max-width:1250px}
+.small{font-size:19px} .tiny{font-size:15px;color:var(--muted)}
+.muted{color:var(--muted)}
+b,strong{color:var(--ink);font-weight:700}
+.grad{background:linear-gradient(90deg,var(--net),var(--api));-webkit-background-clip:text;background-clip:text;color:transparent}
+code.i{font-family:var(--mono);font-size:.86em;background:rgba(139,108,255,.14);color:#d8ccff;padding:2px 8px;border-radius:6px}
+ul.clean{list-style:none} ul.clean li{position:relative;padding-left:34px;margin:10px 0}
+ul.clean li::before{content:"";position:absolute;left:4px;top:.62em;width:12px;height:12px;border-radius:3px;background:var(--net);transform:rotate(45deg)}
+.c-asp{color:var(--asp)} .c-wf{color:var(--wf)} .c-mvc{color:var(--mvc)} .c-core{color:var(--core)} .c-api{color:var(--api)} .c-red{color:var(--red)} .c-net{color:var(--net)} .c-yel{color:var(--yel)} .c-pink{color:var(--pink)}
+
+/* ---------- layout ---------- */
+.row{display:flex;gap:36px} .col{display:flex;flex-direction:column;gap:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.center{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;height:100%}
+.vcenter{display:flex;flex-direction:column;justify-content:center;height:100%}
+.f1{flex:1} .mt{margin-top:28px} .mt2{margin-top:50px} .mb{margin-bottom:24px}
+.abs{position:absolute}
+
+.card{background:linear-gradient(180deg,var(--card),rgba(21,25,53,.6));border:1px solid var(--line);border-radius:18px;padding:26px 28px;position:relative}
+.card h3{display:flex;align-items:center;gap:12px}
+.card p,.card li{font-size:21px}
+.card.accent{border-color:color-mix(in srgb,var(--a,var(--net)) 55%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--a,var(--net)) 20%,transparent),0 20px 60px -30px var(--a,var(--net))}
+.card .ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:24px;background:color-mix(in srgb,var(--a,var(--net)) 18%,transparent);color:var(--a,var(--net));flex:none}
+.pill{display:inline-flex;align-items:center;gap:8px;font:600 15px var(--mono);padding:6px 14px;border-radius:99px;border:1px solid var(--line2);color:var(--ink2);background:var(--bg2)}
+.pill.on{border-color:var(--a,var(--net));color:var(--a,var(--net));background:color-mix(in srgb,var(--a,var(--net)) 12%,transparent)}
+.tag{font:700 13px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:6px;background:color-mix(in srgb,var(--a,var(--net)) 20%,transparent);color:var(--a,var(--net))}
+.good{--a:var(--mvc)} .bad{--a:var(--red)} .warn{--a:var(--asp)}
+.pro li::before{background:var(--mvc)!important} .con li::before{background:var(--red)!important}
+
+table.t{width:100%;border-collapse:separate;border-spacing:0;font-size:20px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+table.t th,table.t td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+table.t th{background:var(--bg3);color:var(--ink);font-size:17px;letter-spacing:.03em}
+table.t tr:last-child td{border-bottom:0}
+table.t td:first-child{color:var(--ink);font-weight:700}
+
+/* ---------- code ---------- */
+.code{position:relative;background:#0d1024;border:1px solid var(--line);border-radius:14px;padding:20px 0 20px;font:17.5px/1.62 var(--mono);color:#d6dbff;overflow:hidden}
+.code .ttl{position:absolute;top:0;right:0;font:12px var(--mono);color:var(--muted);padding:6px 14px;background:var(--bg3);border-bottom-left-radius:10px;letter-spacing:.06em}
+.code .ln{display:block;padding:0 24px;white-space:pre;transition:opacity .35s,background .35s}
+.code .ln.hl{background:rgba(139,108,255,.14);box-shadow:inset 3px 0 0 var(--net)}
+.code .ln.dim{opacity:.28}
+.code.big{font-size:20px}
+.code.sm{font-size:15.5px;line-height:1.55}
+.code.xs{font-size:14px;line-height:1.5}
+/* pygments tokens */
+.code .k,.code .kd,.code .kn,.code .kr,.code .kc{color:#c792ea}
+.code .kt{color:#82aaff}
+.code .s,.code .s1,.code .s2,.code .sa,.code .se,.code .si,.code .sd{color:#c3e88d}
+.code .c,.code .c1,.code .cm,.code .cp,.code .ch{color:#6b7299;font-style:italic}
+.code .m,.code .mi,.code .mf,.code .mh{color:#f78c6c}
+.code .nf,.code .fm{color:#82aaff}
+.code .nc,.code .nn,.code .nt{color:#ffcb6b}
+.code .na{color:#c792ea} .code .nb{color:#89ddff}
+.code .o,.code .p{color:#89ddff}
+.code .nv,.code .nx{color:#d6dbff}
+.code .err{color:inherit;background:none}
+.code .gp{color:var(--mvc)} .code .go{color:#9aa0c3}
+.code .nd{color:#ffcb6b}
+.code .asp-delim{color:#f5a524;font-weight:700;background:rgba(245,165,36,.12)}
+
+/* terminal */
+.term{background:#07080f;border:1px solid var(--line);border-radius:14px;overflow:hidden;font:20px/1.7 var(--mono)}
+.term .bar{height:36px;background:#141729;display:flex;align-items:center;gap:8px;padding:0 14px}
+.term .bar i{width:12px;height:12px;border-radius:50%;background:#ff5f57}.term .bar i:nth-child(2){background:#febc2e}.term .bar i:nth-child(3){background:#28c840}
+.term .bar span{margin-left:12px;color:var(--muted);font-size:13px}
+.term .body{padding:18px 22px;color:#cfd3f0}
+.term .cmd::before{content:"$ ";color:var(--mvc)}
+.term .out{color:var(--muted)}
+.typing{display:inline-block;overflow:hidden;white-space:nowrap;vertical-align:bottom;width:0;border-right:2px solid transparent}
+.shown .typing,.typing.shown{animation:type var(--t,1.4s) steps(var(--n,30)) forwards,caret .8s step-end 3}
+@keyframes type{to{width:calc(var(--n,30) * 1ch)}}
+@keyframes caret{50%{border-color:var(--api)}}
+
+/* ---------- steps & animations ---------- */
+.step{opacity:0;transform:translateY(22px);transition:opacity .5s var(--ease),transform .6s var(--ease),filter .5s}
+.step.shown{opacity:1;transform:none}
+.step.fade{transform:none}
+.step.left{transform:translateX(-40px)} .step.right{transform:translateX(40px)}
+.step.zoom{transform:scale(.8)} .step.drop{transform:translateY(-40px)}
+.step.left.shown,.step.right.shown,.step.zoom.shown,.step.drop.shown{transform:none}
+svg .step{transform:none;transform-box:fill-box}
+.trigger{}
+.gone-after.shown{} /* hook */
+.dim-on.shown{opacity:.25!important}
+
+.in{opacity:0;animation:none}
+.active .in{animation:inUp .8s var(--ease) forwards;animation-delay:var(--d,0s)}
+.active .in.fade{animation-name:inFade} .active .in.zoom{animation-name:inZoom} .active .in.left{animation-name:inLeft}
+@keyframes inUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes inFade{from{opacity:0}to{opacity:1}}
+@keyframes inZoom{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+@keyframes inLeft{from{opacity:0;transform:translateX(-50px)}to{opacity:1;transform:none}}
+
+/* svg drawing */
+.draw path,.draw line,.draw polyline,path.draw,line.draw{stroke-dasharray:var(--len,1200);stroke-dashoffset:var(--len,1200);transition:stroke-dashoffset 1.3s var(--ease)}
+.shown.draw path,.shown.draw line,.shown.draw polyline,path.draw.shown,line.draw.shown,.active .autodraw path,.active path.autodraw{stroke-dashoffset:0}
+.autodraw path,path.autodraw{stroke-dasharray:var(--len,1200);stroke-dashoffset:var(--len,1200);transition:stroke-dashoffset 1.6s var(--ease) var(--d,0s)}
+.flow{stroke-dasharray:8 10;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-36}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+.float{animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+.spin{animation:spin 8s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.shake.shown{animation:shake .5s 2}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* svg text */
+svg text{font-family:var(--font);fill:var(--ink2)}
+svg .mono{font-family:var(--mono)}
+svg .box{fill:var(--card);stroke:var(--line2);stroke-width:2}
+svg .td{fill:#06070d;font-weight:700} svg .tw{fill:var(--ink)} svg .tm{fill:var(--muted)} svg .ta{fill:var(--api)} svg .tr{fill:var(--red)}
+svg .tg{fill:var(--mvc)} svg .to{fill:var(--asp)} svg .tb{fill:var(--wf)} svg .tp{fill:var(--core)} svg .tn{fill:var(--net)} svg .ty{fill:var(--yel)}
+svg .b{font-weight:800}
+.chain .lc{transition:none}
+.chain.shown .lc{animation:lit .5s var(--ease) forwards;animation-delay:calc(var(--i) * .45s)}
+@keyframes lit{from{fill:var(--card);stroke:var(--line2)}to{fill:color-mix(in srgb,var(--a,var(--net)) 30%,var(--card));stroke:var(--a,var(--net))}}
+.chain .lct{opacity:.35}
+.chain.shown .lct{animation:litT .5s forwards;animation-delay:calc(var(--i) * .45s)}
+@keyframes litT{to{opacity:1}}
+.problem{display:inline-block;background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.45);color:#ffc2cd;border-radius:12px;padding:12px 20px;font-size:21px}
+.problem::before{content:"⚠";color:var(--red);font-size:22px;margin-right:10px}
+.solve{display:inline-block;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.45);color:#c8f7d6;border-radius:12px;padding:12px 20px;font-size:21px}
+.solve::before{content:"✓";color:var(--mvc);font-size:22px;font-weight:800;margin-right:10px}
+.year{font:800 120px/1 var(--mono);color:transparent;-webkit-text-stroke:2px color-mix(in srgb,var(--a,var(--net)) 60%,transparent);position:absolute;right:80px;top:40px;opacity:.6}
+
+/* section divider */
+.divider .big-num{font:800 260px/1 var(--mono);position:absolute;right:70px;bottom:40px;color:transparent;-webkit-text-stroke:2px rgba(139,108,255,.25)}
+.divider h1{font-size:92px}
+
+/* quiz */
+.qa{display:grid;grid-template-columns:60px 1fr;gap:8px 18px;align-items:start;margin-bottom:30px}
+.qa .n{font:800 26px var(--mono);color:var(--net)}
+.qa .q{font-size:27px;color:var(--ink)}
+.qa .a{grid-column:2;font-size:22px;color:var(--mvc);border-left:3px solid var(--mvc);padding-left:14px}
+
+/* timeline */
+.tl{position:relative;height:100%}
+.era{border-radius:14px;padding:16px 18px;border:1px solid color-mix(in srgb,var(--a) 50%,transparent);background:color-mix(in srgb,var(--a) 9%,var(--bg2))}
+.era .y{font:700 16px var(--mono);color:var(--a)}
+.era .n{font-size:22px;font-weight:800;color:var(--ink);margin:4px 0}
+.era .d{font-size:16px;color:var(--ink2);line-height:1.4}
+
+.callout{border-left:4px solid var(--a,var(--net));background:color-mix(in srgb,var(--a,var(--net)) 9%,transparent);padding:16px 22px;border-radius:0 12px 12px 0;font-size:22px;color:var(--ink2)}
+.callout b{color:var(--a,var(--net))}
+.chip{display:inline-block;padding:3px 10px;border-radius:8px;font:600 16px var(--mono);background:var(--bg3);border:1px solid var(--line2);color:var(--ink2);margin:3px}
+
+@media print{
+  html,body{overflow:visible;background:#fff}
+  #stage{position:static;display:block}#deck{transform:none!important;box-shadow:none}
+  #hud,#bar,#help,#notes{display:none}
+}
+
+.shown path.draw,.shown line.draw,.shown polyline.draw{stroke-dashoffset:0}
+
+.grid2>*,.grid3>*,.grid4>*{min-width:0}
+.cmp{padding:14px 22px!important}.cmp h3{font-size:22px;margin-bottom:4px}.cmp p{font-size:18px}
+.active .typing.auto{animation:type var(--t,1.4s) steps(var(--n,30)) forwards,caret .8s step-end 3}
+.gone{opacity:0!important;transition:opacity .6s var(--ease)!important}
+.hl-row{transition:all .4s}
+.big-emoji{font-size:64px;line-height:1}
+.method-card{display:flex;align-items:center;gap:16px;padding:18px 22px;border-radius:16px;border:1px solid color-mix(in srgb,var(--a) 55%,transparent);background:color-mix(in srgb,var(--a) 10%,var(--bg2))}
+.method-card .m{font:800 26px var(--mono);color:var(--a);min-width:120px}
+.method-card .t{font-size:22px;color:var(--ink2)}
+.verb{font:800 64px var(--mono);color:var(--a)}
+#notes{max-height:46vh;font-size:19px;line-height:1.55}
+#notes .nl{padding:3px 10px;border-radius:6px;margin:2px 0}
+#notes .say{color:#e6e8f7}
+#notes .cue{color:#9aa0c3}
+#notes .cue .ck{display:inline-block;min-width:54px;font:700 15px var(--mono);color:#22d3ee}
+#notes .cue.done{opacity:.4}
+#notes .cue.next{background:rgba(34,211,238,.14);color:#fff;box-shadow:inset 3px 0 0 #22d3ee}
+#notes .q{color:#facc15}
+#notes .t{color:#a78bfa;font:600 15px var(--mono)}
+#notes .imp{color:#22c55e;font-weight:700}
+#notes .dir{color:#8a90b8;font-style:italic;font-size:16px}
+body.presenter #stage,body.presenter #help,body.presenter #notes,body.presenter #overview{display:none!important}
+body.presenter{overflow:auto;background:#0a0c16}
+#presenter{display:flex;flex-direction:column;height:100vh;font-family:var(--font);color:var(--ink)}
+#presenter .p-head{display:flex;gap:24px;align-items:center;padding:14px 26px;background:#151935;border-bottom:2px solid var(--net);font-size:20px;font-weight:700}
+#presenter .p-steps{color:var(--api);font:600 16px var(--mono)}
+#presenter .p-clock{margin-left:auto;color:var(--core);font:700 20px var(--mono)}
+#presenter .p-notes{flex:1;overflow:auto;padding:18px 30px;font-size:23px;line-height:1.55}
+#presenter .nl{padding:5px 12px;border-radius:8px;margin:3px 0}
+#presenter .say{color:#e6e8f7}
+#presenter .cue{color:#9aa0c3;font-size:19px}
+#presenter .cue .ck{display:inline-block;min-width:60px;font:700 16px var(--mono);color:#22d3ee}
+#presenter .cue.done{opacity:.35}
+#presenter .cue.next{background:rgba(34,211,238,.16);color:#fff;box-shadow:inset 4px 0 0 #22d3ee;font-size:22px}
+#presenter .q{color:#facc15}
+#presenter .t{color:#a78bfa;font:600 17px var(--mono)}
+#presenter .imp{color:#22c55e;font-weight:700}
+#presenter .dir{color:#8a90b8;font-style:italic;font-size:18px}
+#presenter .p-foot{display:flex;gap:20px;padding:10px 26px;background:#11142a;color:var(--muted);font-size:16px}
+#presenter .p-help{margin-left:auto;font-size:13px}
+
+/* ===== Light "warm paper" theme =====
+   Semantic colours (constant across the whole deck):
+   Frontend = pink · Backend/API = violet · Database = amber
+   Request = blue · Response/success = green · Error = red
+   Methods: GET green · POST amber · PUT blue · PATCH teal · DELETE red */
+:root{
+  --bg:#fbf8f3; --bg2:#f4efe6; --bg3:#efe8dc; --card:#ffffff; --line:#e6dfd2; --line2:#cfc6b6;
+  --ink:#1e2132; --ink2:#41465c; --muted:#7b8096;
+  --net:#6d28d9; --net2:#5b21b6;
+  --asp:#d97706; --wf:#2563eb; --mvc:#16a34a; --core:#0d9488; --api:#2563eb; --red:#dc2626; --pink:#db2777; --yel:#ca8a04;
+  --shadow:0 1px 2px rgba(30,33,50,.05),0 10px 28px -14px rgba(30,33,50,.18);
+}
+
+/* stage */
+#deck{background:
+  radial-gradient(900px 600px at 92% -8%,rgba(109,40,217,.07),transparent 60%),
+  radial-gradient(800px 560px at -6% 108%,rgba(217,119,6,.07),transparent 60%),
+  var(--bg)}
+#deck::before{background-image:radial-gradient(rgba(30,33,50,.075) 1.3px,transparent 1.4px);background-size:30px 30px;
+  mask-image:radial-gradient(ellipse at center,#000 25%,transparent 85%)}
+
+/* chrome */
+#hud .sec{color:var(--net)}
+#hud .dots{color:var(--line2)} #hud .dots b{color:var(--net)}
+#help{color:var(--muted)}
+#overview{background:rgba(251,248,243,.97)}
+#overview button{background:#fff;color:var(--ink2);box-shadow:var(--shadow)}
+#overview button:hover,#overview button.cur{color:var(--ink)}
+
+/* typography */
+.kicker{display:inline-block;width:fit-content;align-self:flex-start;letter-spacing:.12em;padding:6px 14px;border-radius:99px;background:color-mix(in srgb,currentColor 10%,transparent)}
+code.i{background:rgba(109,40,217,.08);color:#5b21b6}
+ul.clean li::before{border-radius:4px}
+
+/* cards */
+.card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.card.accent{border-color:color-mix(in srgb,var(--a,var(--net)) 30%,var(--line));border-top:5px solid var(--a,var(--net));
+  box-shadow:0 1px 2px rgba(30,33,50,.05),0 16px 34px -18px color-mix(in srgb,var(--a,var(--net)) 55%,transparent)}
+.card .ico{background:color-mix(in srgb,var(--a,var(--net)) 12%,#fff)}
+.pill{background:#fff;border-color:var(--line2)}
+.pill.on{background:color-mix(in srgb,var(--a,var(--net)) 10%,#fff);border-color:color-mix(in srgb,var(--a,var(--net)) 55%,#fff)}
+.tag{background:color-mix(in srgb,var(--a,var(--net)) 14%,#fff)}
+.chip{background:#fff;border-color:var(--line2)}
+table.t{background:#fff;box-shadow:var(--shadow)}
+table.t th{background:var(--bg2)}
+.method-card{background:color-mix(in srgb,var(--a) 7%,#fff);border-color:color-mix(in srgb,var(--a) 40%,#fff);box-shadow:var(--shadow)}
+.callout{background:color-mix(in srgb,var(--a,var(--net)) 7%,#fff)}
+.era{background:color-mix(in srgb,var(--a) 7%,#fff)}
+
+/* status boxes */
+.problem{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.solve{background:#f0fdf4;border-color:#86efac;color:#166534}
+.divider .big-num{-webkit-text-stroke:2px rgba(109,40,217,.16)}
+.year{opacity:.45}
+
+/* code — light editor look; terminal stays dark like a real terminal */
+.code{background:#fff;color:var(--ink);border-color:var(--line);box-shadow:var(--shadow)}
+.code .ttl{background:var(--bg2);color:var(--muted)}
+.code .ln.hl{background:rgba(109,40,217,.07);box-shadow:inset 3px 0 0 var(--net)}
+.code .ln.dim{opacity:.42}
+.code .k,.code .kd,.code .kn,.code .kr,.code .kc{color:#7c3aed}
+.code .kt{color:#2563eb}
+.code .s,.code .s1,.code .s2,.code .sa,.code .se,.code .si,.code .sd{color:#15803d}
+.code .c,.code .c1,.code .cm,.code .cp,.code .ch{color:#8b8fa3}
+.code .m,.code .mi,.code .mf,.code .mh{color:#c2410c}
+.code .nf,.code .fm{color:#1d4ed8}
+.code .nc,.code .nn,.code .nt,.code .nd{color:#b45309}
+.code .na{color:#7c3aed} .code .nb{color:#0e7490}
+.code .o,.code .p{color:#64748b}
+.code .nv,.code .nx{color:var(--ink)}
+.code .go{color:#64748b}
+.term{border-color:#2a2e45;box-shadow:var(--shadow)}
+
+/* svg */
+svg .box{fill:#fff;stroke:var(--line2)}
+svg .td{fill:#fff}
+
+/* lecturer notes panel + presenter window stay dark (laptop only) */
+#notes{color:#c3c7e6}
+#presenter{color:#e6e8f7}
+#presenter .p-steps{color:#22d3ee}
+#presenter .p-clock{color:#a78bfa}
+#presenter .p-foot{color:#8a90b8}
+
+#home{position:fixed;left:12px;top:10px;z-index:41;font:600 13px var(--mono);color:var(--muted);text-decoration:none;
+padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .25s}
+#home:hover,#home:focus-visible{opacity:1;background:rgba(0,0,0,.05)}
+:fullscreen #home{display:none}
+#studybtn{position:fixed;right:16px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:#fff;
+background:var(--net);border:0;border-radius:10px;padding:7px 13px;cursor:pointer;opacity:.9;box-shadow:0 4px 14px rgba(109,40,217,.25)}
+#studybtn:hover{opacity:1}#studybtn kbd{font:600 11px var(--mono);background:rgba(255,255,255,.22);border-radius:5px;padding:1px 6px}
+body[data-study] #help{right:190px}</style></head>
+<body data-study="1">
+<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a><button id="studybtn" type="button" title="კონსპექტი ცალკე ფანჯარაში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>
+<div id="stage"><div id="deck">
+<style>
+.mono{font-family:var(--mono)}
+.bubble{background:#fff;border:1px solid var(--line);border-radius:20px 20px 20px 6px;padding:16px 22px;font-size:24px;line-height:1.45;color:var(--ink);box-shadow:var(--shadow);max-width:640px}
+.bubble .who{display:block;font:600 14px var(--mono);color:var(--muted);margin-bottom:4px}
+.bubble.me{border-radius:20px 20px 6px 20px;margin-left:auto;background:color-mix(in srgb,var(--net) 7%,#fff);border-color:color-mix(in srgb,var(--net) 30%,#fff)}
+.toks{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.tk{display:inline-flex;flex-direction:column;align-items:center;font:600 24px var(--mono);padding:6px 10px 4px;border-radius:9px;white-space:pre;color:var(--ink);
+  background:color-mix(in srgb,var(--a) 13%,#fff);border:1px solid color-mix(in srgb,var(--a) 45%,#fff)}
+.tk small{font:600 12px var(--mono);color:var(--muted);margin-top:2px}
+.tk:nth-child(5n+1){--a:var(--net)}.tk:nth-child(5n+2){--a:var(--asp)}.tk:nth-child(5n+3){--a:var(--mvc)}.tk:nth-child(5n+4){--a:var(--api)}.tk:nth-child(5n){--a:var(--pink)}
+.toks.sm .tk{font-size:19px;padding:4px 7px 3px}
+.pb{display:grid;grid-template-columns:200px 1fr 80px;align-items:center;gap:14px;margin:9px 0}
+.pb .w{font:700 24px var(--mono);color:var(--ink);text-align:right}
+.pb .track{display:block;height:30px;border-radius:8px;background:var(--bg2);overflow:hidden}
+.pb .bar{display:block;height:100%;width:var(--p);border-radius:8px;background:var(--a,var(--net));transition:width .6s var(--ease)}
+.pb .v{font:700 20px var(--mono);color:var(--muted)}
+.pb.pick .w{color:var(--mvc)}.pb.pick .bar{background:var(--mvc)}
+.pb.cut{opacity:.3}
+.sentence{font-size:34px;font-weight:700;color:var(--ink);line-height:1.4}
+.sentence .blank{display:inline-block;min-width:150px;border-bottom:4px dashed var(--net);color:var(--net)}
+.rq{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;box-shadow:var(--shadow)}
+.mth{display:inline-block;font:800 17px var(--mono);color:#fff;background:var(--a);padding:4px 12px;border-radius:8px;min-width:84px;text-align:center}
+.url{font:700 20px var(--mono);color:var(--ink)}
+.json{font:600 17px/1.55 var(--mono);color:var(--ink2);white-space:pre;margin:0}
+.json .k{color:#7c3aed}.json .s{color:#15803d}.json .n{color:#c2410c}.json .hl{background:rgba(217,119,6,.16);border-radius:4px;box-shadow:0 0 0 2px rgba(217,119,6,.35)}
+.rs{border-left:5px solid var(--a);background:color-mix(in srgb,var(--a) 6%,#fff);border-radius:0 12px 12px 0;padding:12px 16px}
+.rs .h{font:600 15px var(--mono);color:var(--muted);margin-bottom:6px}
+.nest{position:relative;width:640px;height:560px}
+.nest div{position:absolute;border-radius:50%;border:3px solid var(--a);background:color-mix(in srgb,var(--a) 7%,transparent);display:flex;justify-content:center;font-weight:800;color:var(--a)}
+.nest span{margin-top:16px;font-size:22px}
+.cw{display:flex;gap:6px;align-items:stretch;height:96px;border:3px solid var(--ink);border-radius:14px;padding:6px;background:#fff;box-shadow:var(--shadow)}
+.cw > div{border-radius:9px;display:flex;flex-direction:column;justify-content:center;align-items:center;font:700 17px var(--font);color:var(--ink);background:color-mix(in srgb,var(--a) 15%,#fff);border:1px solid color-mix(in srgb,var(--a) 45%,#fff);text-align:center;padding:0 8px}
+.cw > div small{font:600 13px var(--mono);color:var(--muted)}
+.cw .free{background:repeating-linear-gradient(45deg,#fff,#fff 8px,var(--bg2) 8px,var(--bg2) 16px);border-style:dashed;color:var(--muted)}
+.tempcol{text-align:center}
+.tempcol .t{font:800 30px var(--mono);color:var(--a)}
+.tempcol .d{font-size:17px;color:var(--muted);margin-bottom:10px}
+.vbars{display:flex;align-items:flex-end;gap:10px;height:220px;justify-content:center;border-bottom:2px solid var(--line2);padding:0 10px}
+.vbars i{display:block;width:44px;height:var(--h);border-radius:8px 8px 0 0;background:var(--a);position:relative}
+.vbars i::after{content:attr(data-l);position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);font:600 14px var(--mono);color:var(--ink2);white-space:nowrap}
+.prov{display:flex;flex-direction:column;gap:8px;border-radius:16px;padding:18px 20px;background:#fff;border:1px solid var(--line);border-top:5px solid var(--a);box-shadow:var(--shadow)}
+.prov .nm{font:800 24px var(--font);color:var(--ink)}
+.prov .md{font:600 15px var(--mono);color:var(--a)}
+.prov .ds{font-size:17px;color:var(--ink2)}
+.nuget{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow)}
+.nuget .logo{width:50px;height:50px;border-radius:12px;display:grid;place-items:center;font:800 15px var(--mono);color:#fff;background:linear-gradient(135deg,#6d28d9,#2563eb);flex:none}
+.nuget .nm{font:700 20px var(--mono);color:var(--ink)}
+.nuget .ds{font-size:16px;color:var(--muted)}
+.swr{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;font-family:system-ui,sans-serif}
+.swr .rh{display:flex;align-items:center;gap:12px;padding:9px 14px;border-bottom:1px solid #e5e5e5;background:color-mix(in srgb,var(--c) 10%,#fff)}
+.swr .rh .m{font:800 14px var(--mono);color:#fff;background:var(--c);border-radius:4px;padding:5px 0;width:78px;text-align:center}
+.swr .rh .p{font:700 17px var(--mono);color:#3b4151}
+.swr .lab{font:700 13px var(--font);color:#3b4151;padding:10px 16px 2px;opacity:.8}
+.swr .rb{background:#41444e;color:#fff;font:600 16px/1.5 var(--mono);padding:10px 14px;border-radius:6px;white-space:pre;margin:4px 16px 14px}
+.swr .rb .k{color:#a5d6ff}.swr .rb .s{color:#a2fca2}.swr .rb .n{color:#fcc28c}
+.c-post{--c:#49cc90}
+.game{display:inline-flex;align-items:center;gap:10px;font:800 15px var(--mono);letter-spacing:.08em;color:#fff;background:var(--pink);padding:6px 14px;border-radius:99px}
+.mrow{display:grid;grid-template-columns:60px 1fr;gap:14px;align-items:center;padding:12px 18px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);margin:8px 0;font-size:21px}
+.mrow .e{font-size:30px;text-align:center}
+.lec{display:flex;flex-wrap:wrap;gap:8px}
+.lec span{font:600 15px var(--mono);padding:6px 10px;border-radius:8px;background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.lec span.on{background:var(--net);border-color:var(--net);color:#fff}
+.found{display:flex;flex-direction:column;align-items:stretch;gap:10px}
+.layer{border-radius:14px;padding:14px 18px;text-align:center;font-size:20px;font-weight:700;border:2px solid var(--a);background:color-mix(in srgb,var(--a) 9%,#fff);color:var(--ink)}
+.layer small{display:block;font:500 15px var(--mono);color:var(--muted)}
+.term .ok{color:#4ade80}
+.term .body{font-size:18px;line-height:1.65}
+.calc{font:600 21px/1.8 var(--mono);color:var(--ink2)}
+.calc b{color:var(--ink)}
+.calc .r{color:var(--mvc);font-weight:800}
+</style>
+<!-- =========================================================
+     AI · ლექცია 1 — შესავალი Generative AI-სა და LLM API-ებში
+     ფერები: LLM/მოდელი = იისფერი · ტოკენი/ფასი = ქარვისფერი · ჩვენი კოდი (C#) = ლურჯი
+             სწორი/შერჩეული = მწვანე · შეცდომა/რისკი = წითელი · თამაში/ჩართულობა = ვარდისფერი
+     პროექტი: RestaurantApi — მენიუ, კალათა, შეკვეთა, მაგიდის ჯავშანი (API კურსიდან)
+     ========================================================= -->
+
+<!-- 1. TITLE -->
+<section class="slide" data-section="შესავალი">
+  <div class="vcenter" style="max-width:820px">
+    <div class="kicker in" style="color:var(--net)">AI აგენტები .NET-ში · ლექცია 1</div>
+    <h1 class="in" style="--d:.15s"><span class="grad">Generative AI</span><br>და LLM API-ები</h1>
+    <p class="lead in mt" style="--d:.35s">როგორ „ფიქრობს“ ენობრივი მოდელი, რა ღირს ის — და პირველი გამოძახება <b>ჩვენი API-დან</b></p>
+  </div>
+  <div class="abs" style="right:90px;top:170px;width:560px;display:flex;flex-direction:column;gap:16px">
+    <div class="bubble in" style="--d:.5s"><span class="who">კლიენტი · 21:40</span>რამე მსუბუქი მინდა, ხორცის გარეშე, ორისთვის 🥗</div>
+    <div class="bubble me in" style="--d:1.1s"><span class="who">RestaurantApi · AI</span>გირჩევთ ბადრიჯანს ნიგვზით და ფხალის ასორტის — ორივე ვეგეტარიანულია. კალათაში დავამატო?</div>
+    <div class="in fade" style="--d:1.6s;text-align:center;font:600 16px var(--mono);color:var(--muted)">↑ ამას კურსის ბოლოს ავაწყობთ</div>
+  </div>
+</section>
+<section class="slide" data-section="დღის თემა">
+  <div class="kicker">დღის თემა</div>
+  <h2><span class="grad">შესავალი Generative AI-სა და LLM API-ებში</span></h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;align-items:start;gap:40px">
+    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🤔</span>რატომ გჭირდებათ</h3><p class="small">RestaurantApi მზადაა: მენიუ, კალათა, შეკვეთა, ჯავშანი. მაგრამ ყველა endpoint ზუსტ მონაცემს ელოდება, კლიენტი კი წერს „რამე მსუბუქი მინდა, ხორცის გარეშე, ორისთვის“ — ასეთ ტექსტს if/else ვერ გაიგებს. დღეს ვიგებთ, რა არის ენობრივი მოდელი, როგორ წერს პასუხს შიგნიდან, რა ღირს ის — და ვაკეთებთ პირველ გამოძახებას ჩვენივე API-დან.</p></div>
+    <div class="card accent" style="--a:var(--mvc)"><h3><span class="ico">🎯</span>ლექციის ბოლოს შეძლებთ</h3><ul class="clean small"><li class="step">ახსნა, როგორ ქმნის LLM ტექსტს: ტოკენები, next-token prediction, context window</li><li class="step">Temperature-ის, Top-P-ის და Max Tokens-ის შერჩევა ამოცანის მიხედვით</li><li class="step">პროვაიდერის არჩევა და თვის ხარჯის დათვლა ტოკენებით</li><li class="step">LLM-ის გამოძახება C#-იდან <code class="i">IChatClient</code>-ით და ტექსტის, ტოკენებისა და <code class="i">FinishReason</code>-ის წაკითხვა</li></ul></div>
+  </div>
+  
+</section>
+
+<!-- PROJECT RECAP -->
+<section class="slide" data-section="შესავალი">
+  <div class="kicker">გავიხსენოთ · ჩვენი პროექტი</div>
+  <h2><span class="mono">RestaurantApi</span> — რა გვაქვს უკვე</h2>
+  <div class="grid2" style="grid-template-columns:1.1fr 1fr;gap:40px;align-items:start">
+    <div class="col" style="gap:10px">
+      <div class="mrow step"><span class="e">📋</span><span><b>მენიუ</b> — კერძები, კატეგორიები, ფასები</span></div>
+      <div class="mrow step"><span class="e">🛒</span><span><b>კალათა</b> — დამატება, წაშლა, რაოდენობა</span></div>
+      <div class="mrow step"><span class="e">🧾</span><span><b>შეკვეთა</b> — კალათიდან შეკვეთის გაფორმება</span></div>
+      <div class="mrow step"><span class="e">📅</span><span><b>ჯავშანი</b> — მაგიდა, თარიღი, სტუმრების რაოდენობა</span></div>
+    </div>
+    <div class="col" style="gap:18px">
+      <div class="card accent step" style="--a:var(--red)"><h3><span class="ico">🤔</span>მაგრამ…</h3><p class="small">ყველა endpoint ელოდება <b>ზუსტ მონაცემს</b>: <code class="i">dishId</code>, <code class="i">quantity</code>, <code class="i">date</code>. ადამიანი კი <b>ასე არ ლაპარაკობს</b>.</p></div>
+      <div class="callout step" style="--a:var(--net)">ამ მოდულში იმავე პროექტს <b>AI-ს დავამატებთ</b> — ახალს არ ვიწყებთ</div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- MODULE MAP -->
+<section class="slide" data-section="შესავალი">
+  <div class="kicker">მოდულის რუკა · 24 ლექცია</div>
+  <h2>სად მივდივართ: <span class="c-net">AI მიმტანი</span> ჩვენს API-ში</h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:34px;align-items:start;margin-top:10px">
+    <div class="card accent step" style="--a:var(--net)">
+      <h3><span class="ico">🧠</span>ნაწილი 1 · საფუძვლები და RAG</h3>
+      <div class="lec mt"><span class="on">01 LLM</span><span>02 Prompt</span><span>03 M.E.AI</span><span>04 Tools</span><span>05 Pipeline</span><span>06 Streaming</span><span>07 Context</span><span>08 Resilience</span><span>09 Embeddings</span><span>10 pgvector</span><span>11 RAG</span><span>12 RAG+</span></div>
+      <p class="small mt">AI პასუხობს მენიუზე, <b>ჩვენი მონაცემებით</b></p>
+    </div>
+    <div class="card accent step" style="--a:var(--asp)">
+      <h3><span class="ico">🤖</span>ნაწილი 2 · აგენტები</h3>
+      <div class="lec mt"><span>13 Agents</span><span>14 Agent FW</span><span>15 Custom Tools</span><span>16 MCP</span><span>17 Workflows</span><span>18 Multi-Agent</span><span>19 Safety</span><span>20 Evals</span><span>21–22 პროექტი</span><span>24 დაცვა</span></div>
+      <p class="small mt">AI <b>თვითონ მოქმედებს</b>: კალათა, შეკვეთა, ჯავშანი</p>
+    </div>
+  </div>
+  <div class="callout step mt2" style="--a:var(--mvc);font-size:24px">ბოლოს: კლიენტი წერს ჩვეულებრივი ენით → აგენტი <b>ეძებს მენიუში</b>, <b>ამატებს კალათაში</b>, <b>ჯავშნის მაგიდას</b> — ჩვენივე endpoint-ებით</div>
+  
+</section>
+
+<!-- ROUTE -->
+<section class="slide" data-section="შესავალი">
+  <div class="kicker">დღის გზა</div>
+  <h2>5 გაჩერება</h2>
+  <svg viewBox="0 0 1420 400" width="1420" height="400">
+    <path class="autodraw" style="--d:.2s" d="M90 200 C260 60 400 340 560 200 S860 60 990 200 S1240 340 1340 200" stroke="#cfc6b6" stroke-width="4" fill="none" stroke-dasharray="10 10"/>
+    <g class="step zoom" style="transform-origin:90px 200px"><circle cx="90" cy="200" r="46" fill="#ede7fd" stroke="#dc2626" stroke-width="3"/><text x="90" y="216" text-anchor="middle" font-size="40">🤔</text><text x="90" y="290" text-anchor="middle" class="tw b" font-size="21">რატომ AI?</text><text x="90" y="316" text-anchor="middle" class="tm" font-size="16">რას ვერ აკეთებს if/else</text></g>
+    <g class="step zoom" style="transform-origin:330px 190px"><circle cx="330" cy="190" r="46" fill="#f3effe" stroke="#6d28d9" stroke-width="3"/><text x="330" y="206" text-anchor="middle" font-size="40">🧩</text><text x="330" y="112" text-anchor="middle" class="tw b" font-size="21">როგორ მუშაობს</text><text x="330" y="86" text-anchor="middle" class="tm" font-size="16">ტოკენი · შემდეგი ტოკენი · context</text></g>
+    <g class="step zoom" style="transform-origin:560px 200px"><circle cx="560" cy="200" r="46" fill="#fef5e4" stroke="#d97706" stroke-width="3"/><text x="560" y="216" text-anchor="middle" font-size="40">🎛️</text><text x="560" y="290" text-anchor="middle" class="tw b" font-size="21">პარამეტრები</text><text x="560" y="316" text-anchor="middle" class="tm" font-size="16">Temperature · Top-P · Max Tokens</text></g>
+    <g class="step zoom" style="transform-origin:800px 140px"><circle cx="800" cy="135" r="46" fill="#eaf8ef" stroke="#16a34a" stroke-width="3"/><text x="800" y="151" text-anchor="middle" font-size="40">💸</text><text x="800" y="58" text-anchor="middle" class="tw b" font-size="21">პროვაიდერები და ფასი</text><text x="800" y="32" text-anchor="middle" class="tm" font-size="16">ვინ, სად, რამდენად</text></g>
+    <g class="step zoom" style="transform-origin:1340px 200px"><circle cx="1340" cy="200" r="52" fill="#eaf2fe" stroke="#2563eb" stroke-width="4" class="pulse"/><text x="1340" y="218" text-anchor="middle" font-size="44">⌨️</text><text x="1340" y="292" text-anchor="middle" class="ta b" font-size="21">პირველი გამოძახება</text><text x="1340" y="318" text-anchor="middle" class="tm" font-size="16">IChatClient · RestaurantApi</text></g>
+  </svg>
+  <div class="callout step" style="--a:var(--pink);font-size:22px">🎮 გზაში <b>3 თამაში</b> გელით — ზოგ კითხვაზე <b>თქვენ</b> იქნებით მოდელი</div>
+  
+</section>
+
+<!-- ================= PART 1: WHY AI ================= -->
+<section class="slide divider" data-section="1 · რატომ AI">
+  <div class="vcenter">
+    <div class="kicker in">ნაწილი 1</div>
+    <h1 class="in" style="--d:.1s">რას ვერ აკეთებს<br><span class="grad">if / else?</span></h1>
+    <p class="lead mt in" style="--d:.3s">ჩვეულებრივი კოდი, ენობრივი მოდელი და ადგილი, სადაც ისინი ხვდებიან</p>
+  </div>
+  <div class="big-num">01</div>
+  
+</section>
+
+<section class="slide" data-section="1 · რატომ AI">
+  <div class="kicker">პრობლემა · განიხილეთ</div>
+  <h2>კლიენტები რესტორნის ჩატში წერენ…</h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:40px;align-items:start">
+    <div class="col" style="gap:16px">
+      <div class="bubble step"><span class="who">ნინო</span>რამე მსუბუქი, ხორცის გარეშე, ორისთვის, 40 ლარამდე</div>
+      <div class="bubble step"><span class="who">გიორგი</span>ხვალ 8-ზე ოთხნი ვიქნებით, ბავშვიც გვყავს, ფანჯარასთან თუ შეიძლება</div>
+      <div class="bubble step"><span class="who">ლუკა</span>ის წითელსოუსიანი რაღაც მინდა, წინა კვირას რომ ავიღე, ოღონდ ნაკლებად ცხარე</div>
+    </div>
+    <div class="col" style="gap:18px">
+      <div class="card accent step" style="--a:var(--pink)"><h3><span class="ico">🗣️</span>2 წუთი · წყვილებში</h3><p class="small">როგორ დაწერდით ამას <b>if/else</b>-ით და ჩვენი endpoint-ებით? რომელ endpoint-ს გამოიძახებდით და რა პარამეტრებით?</p></div>
+      <div class="problem step">„მსუბუქი“? „ხვალ 8-ზე“? „ის წითელსოუსიანი“? — <b>წესი ვერ დაიწერება</b></div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="1 · რატომ AI">
+  <div class="kicker">ორი სამყარო</div>
+  <h2>ჩვეულებრივი კოდი vs <span class="c-net">ენობრივი მოდელი</span></h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:36px;align-items:start">
+    <div class="card accent step" style="--a:var(--api)">
+      <h3><span class="ico">⚙️</span>C# კოდი</h3>
+      <ul class="clean small"><li>შეყვანა: <b>ზუსტი</b> (<code class="i">dishId</code>, <code class="i">date</code>)</li><li>წესები <b>ჩვენ</b> ვწერთ</li><li>ერთი შეყვანა → <b>ყოველთვის ერთი</b> შედეგი</li><li>შეცდომა = bug, ვპოულობთ და ვასწორებთ</li></ul>
+    </div>
+    <div class="card accent step" style="--a:var(--net)">
+      <h3><span class="ico">🧠</span>LLM</h3>
+      <ul class="clean small"><li>შეყვანა: <b>ნებისმიერი ტექსტი</b></li><li>„წესები“ ნასწავლია ტექსტიდან</li><li>ერთი შეყვანა → <b>შეიძლება სხვადასხვა</b> შედეგი</li><li>შეცდომა = <b>დამაჯერებელი სიცრუე</b></li></ul>
+    </div>
+  </div>
+  <div class="callout step mt2" style="--a:var(--mvc);font-size:24px">ერთს მეორე არ ცვლის: LLM <b>ესმის</b> ადამიანს, C# კოდი <b>ზუსტად ასრულებს</b>. ჩვენი საქმე — მათი <b>შეერთებაა</b></div>
+  
+</section>
+
+<section class="slide" data-section="1 · რატომ AI">
+  <div class="kicker">ტერმინები</div>
+  <h2>AI → ML → Deep Learning → <span class="grad">GenAI → LLM</span></h2>
+  <div class="grid2" style="grid-template-columns:660px 1fr;gap:30px;align-items:center">
+    <div class="nest">
+      <div class="in" style="--a:var(--muted);left:0;top:0;width:640px;height:560px;--d:.1s"><span>Artificial Intelligence</span></div>
+      <div class="in" style="--a:var(--api);left:60px;top:60px;width:520px;height:460px;--d:.3s"><span>Machine Learning</span></div>
+      <div class="in" style="--a:var(--core);left:120px;top:120px;width:400px;height:360px;--d:.5s"><span>Deep Learning</span></div>
+      <div class="in" style="--a:var(--asp);left:180px;top:180px;width:280px;height:260px;--d:.7s"><span>Generative AI</span></div>
+      <div class="in" style="--a:var(--net);left:240px;top:250px;width:160px;height:140px;--d:.9s;align-items:center"><span style="margin:0;font-size:28px">LLM</span></div>
+    </div>
+    <div class="col" style="gap:12px">
+      <div class="callout step" style="--a:var(--api)"><b>ML</b> — სისტემა წესებს <b>მაგალითებიდან</b> სწავლობს</div>
+      <div class="callout step" style="--a:var(--core)"><b>Deep Learning</b> — ML ნეირონული ქსელებით</div>
+      <div class="callout step" style="--a:var(--asp)"><b>GenAI</b> — ახალ კონტენტს <b>ქმნის</b>: ტექსტი, სურათი, ხმა</div>
+      <div class="callout step" style="--a:var(--net)"><b>LLM</b> — დიდი ენობრივი მოდელი: ტექსტი შედის, <b>ტექსტი გამოდის</b></div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="1 · რატომ AI">
+  <div class="kicker">backend-ის თვალით</div>
+  <h2>ჩვენთვის LLM = <span class="c-api">კიდევ ერთი HTTP API</span></h2>
+  <div class="grid2" style="grid-template-columns:1.15fr 1fr;gap:26px;align-items:start">
+    <div class="col" style="gap:12px">
+      <div class="rq step" style="--a:#49cc90"><span class="mth" style="--a:#49cc90">POST</span><span class="url">localhost:11434/v1/chat/completions</span></div>
+      <div class="rs step" data-with style="--a:var(--api)"><div class="h">Request body</div><pre class="json">{
+  <span class="k">"model"</span>: <span class="s">"llama3.2"</span>,
+  <span class="k">"messages"</span>: [
+    { <span class="k">"role"</span>: <span class="s">"user"</span>,
+      <span class="k">"content"</span>: <span class="s">"Suggest a light vegetarian dish"</span> }
+  ],
+  <span class="k">"temperature"</span>: <span class="n">0.7</span>,
+  <span class="k">"max_tokens"</span>: <span class="n">200</span>
+}</pre></div>
+    </div>
+    <div class="col" style="gap:12px">
+      <div class="rs step" style="--a:var(--mvc)"><div class="h">200 OK · Response body</div><pre class="json">{
+  <span class="k">"choices"</span>: [{
+    <span class="k">"message"</span>: { <span class="k">"role"</span>: <span class="s">"assistant"</span>,
+      <span class="k">"content"</span>: <span class="s">"Try grilled eggplant…"</span> },
+    <span class="k">"finish_reason"</span>: <span class="s">"stop"</span>
+  }],
+  <span class="hl"><span class="k">"usage"</span>: { <span class="k">"prompt_tokens"</span>: <span class="n">31</span>,
+             <span class="k">"completion_tokens"</span>: <span class="n">48</span> }</span>
+}</pre></div>
+      <div class="callout step" style="--a:var(--asp)">JSON შედის, JSON გამოდის. ახალი მხოლოდ სიტყვებია: <b>tokens</b>, <b>temperature</b>, <b>finish_reason</b></div>
+    </div>
+  </div>
+  
+</section>
+
+<!-- ================= PART 2: HOW LLM WORKS ================= -->
+<section class="slide divider" data-section="2 · როგორ მუშაობს">
+  <div class="vcenter">
+    <div class="kicker in">ნაწილი 2</div>
+    <h1 class="in" style="--d:.1s">როგორ „ფიქრობს“<br><span class="grad">LLM?</span></h1>
+    <p class="lead mt in" style="--d:.3s">ტოკენები · შემდეგი ტოკენის წინასწარმეტყველება · context window</p>
+  </div>
+  <div class="big-num">02</div>
+  
+</section>
+
+<section class="slide" data-section="2 · როგორ მუშაობს">
+  <div class="kicker">ტოკენი</div>
+  <h2>მოდელი სიტყვებს კი არა — <span class="c-asp">ტოკენებს</span> კითხულობს</h2>
+  <div class="col" style="gap:22px;margin-top:6px">
+    <div class="step">
+      <p class="small" style="margin-bottom:10px">🇬🇧 <b>Book a table for two</b></p>
+      <div class="toks"><span class="tk">Book<small>12768</small></span><span class="tk"> a<small>261</small></span><span class="tk"> table<small>3293</small></span><span class="tk"> for<small>395</small></span><span class="tk"> two<small>1920</small></span></div>
+    </div>
+    <div class="step">
+      <p class="small" style="margin-bottom:10px">🇬🇪 <b>დაჯავშნე მაგიდა ორისთვის</b></p>
+      <div class="toks"><span class="tk">და<small>…</small></span><span class="tk">ჯავ<small>…</small></span><span class="tk">შნ<small>…</small></span><span class="tk">ე<small>…</small></span><span class="tk"> მა<small>…</small></span><span class="tk">გი<small>…</small></span><span class="tk">და<small>…</small></span><span class="tk"> ორ<small>…</small></span><span class="tk">ის<small>…</small></span><span class="tk">თვ<small>…</small></span><span class="tk">ის<small>…</small></span></div>
+    </div>
+    <div class="grid3 step" style="gap:18px">
+      <div class="callout" style="--a:var(--asp)">ტოკენი = <b>ტექსტის ნაჭერი</b>: სიტყვა, მარცვალი ან ასო</div>
+      <div class="callout" style="--a:var(--net)">თითოს თავისი <b>ნომერი (ID)</b> აქვს — მოდელი რიცხვებს ხედავს</div>
+      <div class="callout" style="--a:var(--red)">ფასი, ლიმიტი, სიჩქარე — ყველაფერი <b>ტოკენებით</b> ითვლება</div>
+    </div>
+  </div>
+  <p class="tiny step" style="margin-top:14px;color:var(--muted)">დაყოფა და ID-ები საილუსტრაციოა — ზუსტი სურათი მოდელის tokenizer-ზეა დამოკიდებული</p>
+  
+</section>
+
+<section class="slide" data-section="2 · როგორ მუშაობს">
+  <div class="kicker"><span class="game">🎮 თამაში 1</span></div>
+  <h2>გამოიცანი: <span class="c-asp">რამდენი ტოკენია?</span></h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:30px;align-items:start;margin-top:4px">
+    <div class="card accent" style="--a:var(--api)"><h3><span class="ico">🇬🇧</span>ინგლისური</h3><p style="font-size:24px">I'd like to book a table for four people tomorrow at 8 pm.</p></div>
+    <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🇬🇪</span>ქართული</h3><p style="font-size:24px">მინდა ხვალ საღამოს 8 საათზე ოთხი ადამიანისთვის მაგიდა დავჯავშნო.</p></div>
+  </div>
+  <div class="row step mt2" style="gap:14px;justify-content:center">
+    <span class="pill on" style="--a:var(--mvc);font-size:20px">✋ 15-მდე</span><span class="pill on" style="--a:var(--api);font-size:20px">✋ 15–30</span><span class="pill on" style="--a:var(--asp);font-size:20px">✋ 30–60</span><span class="pill on" style="--a:var(--red);font-size:20px">✋ 60+</span>
+  </div>
+  <div class="callout step mt" style="--a:var(--pink);font-size:22px">ხელი ასწიეთ ორივე წინადადებაზე → ლექტორი ამოწმებს <b class="mono">tiktokenizer.vercel.app</b>-ზე</div>
+  <div class="callout step mt" style="--a:var(--red);font-size:22px">ერთი და იგივე აზრი ქართულად <b>ბევრად მეტი ტოკენია</b> → <b>უფრო ძვირი</b>, <b>უფრო ნელი</b> და context-ში <b>ნაკლები ეტევა</b></div>
+  
+</section>
+
+<section class="slide" data-section="2 · როგორ მუშაობს">
+  <div class="kicker">next-token prediction</div>
+  <h2>LLM-ის მთელი საიდუმლო: <span class="grad">შემდეგი ტოკენი</span></h2>
+  <svg viewBox="0 0 1420 520" width="1420" height="520">
+    <g class="in"><rect x="10" y="60" width="430" height="120" rx="18" class="box"/><text x="225" y="104" text-anchor="middle" class="tm" font-size="17">შეყვანა (ტოკენები)</text><text x="225" y="148" text-anchor="middle" class="tw b mono" font-size="24">Book a table for</text></g>
+    <g class="step fade"><path d="M440 120 H540" stroke="#6d28d9" stroke-width="3" class="flow"/>
+      <rect x="540" y="40" width="260" height="160" rx="22" fill="#f3effe" stroke="#6d28d9" stroke-width="3"/><text x="670" y="112" text-anchor="middle" font-size="46">🧠</text><text x="670" y="168" text-anchor="middle" class="tn b" font-size="22">LLM</text></g>
+    <g class="step fade"><path d="M800 120 H880" stroke="#d97706" stroke-width="3" class="flow"/>
+      <rect x="880" y="10" width="520" height="230" rx="18" fill="#fef5e4" stroke="#d97706" stroke-width="2"/><text x="900" y="44" class="to b" font-size="18">ალბათობები შემდეგი ტოკენისთვის</text>
+      <text x="1010" y="86" text-anchor="end" class="tw mono b" font-size="20">two</text><rect x="1024" y="70" width="300" height="22" rx="6" fill="#16a34a"/><text x="1336" y="88" class="tw mono" font-size="16">62%</text>
+      <text x="1010" y="126" text-anchor="end" class="tw mono b" font-size="20">four</text><rect x="1024" y="110" width="110" height="22" rx="6" fill="#d97706"/><text x="1146" y="128" class="tw mono" font-size="16">21%</text>
+      <text x="1010" y="166" text-anchor="end" class="tw mono b" font-size="20">tonight</text><rect x="1024" y="150" width="50" height="22" rx="6" fill="#d97706"/><text x="1086" y="168" class="tw mono" font-size="16">9%</text>
+      <text x="1010" y="206" text-anchor="end" class="tw mono b" font-size="20">pizza</text><rect x="1024" y="190" width="6" height="22" rx="3" fill="#dc2626"/><text x="1042" y="208" class="tw mono" font-size="16">0.1%</text></g>
+    <g class="step fade"><rect x="880" y="290" width="520" height="80" rx="16" fill="#eaf8ef" stroke="#16a34a" stroke-width="2"/><text x="1140" y="340" text-anchor="middle" class="tg b" font-size="22">② ირჩევს ერთს → „ two“</text></g>
+    <g class="step fade"><path d="M880 330 C600 330 300 330 225 190" stroke="#16a34a" stroke-width="3" fill="none" class="flow"/>
+      <rect x="10" y="400" width="680" height="100" rx="16" class="box"/><text x="40" y="440" class="tg b" font-size="21">③ უმატებს და იმეორებს</text><text x="40" y="478" class="tw mono" font-size="20">Book a table for two → … → [END]</text></g>
+    <g class="step fade"><text x="1140" y="440" text-anchor="middle" class="tw" font-size="22">ერთი ტოკენი = <tspan class="tn b">მოდელის ერთი სრული გაშვება</tspan></text><text x="1140" y="476" text-anchor="middle" class="tm" font-size="18">ამიტომ არის გრძელი პასუხი ნელი და ძვირი</text></g>
+  </svg>
+  
+</section>
+
+<section class="slide" data-section="2 · როგორ მუშაობს">
+  <div class="kicker"><span class="game">🎮 თამაში 2 · იყავი LLM</span></div>
+  <h2>რა სიტყვა მოდის <span class="c-net">შემდეგ?</span></h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+    <div class="col" style="gap:22px">
+      <p class="sentence">ხვალ საღამოს მინდა მაგიდა <span class="blank">&nbsp;?&nbsp;</span></p>
+      <div class="callout step" style="--a:var(--pink)">დაწერეთ <b>ერთი სიტყვა</b> ფურცელზე ან ჩატში. 10 წამი ⏱️</div>
+      <div class="callout step" style="--a:var(--net)">თქვენი პასუხები ერთად = <b>ალბათობების განაწილება</b>. ასე „ხედავს“ მოდელი</div>
+    </div>
+    <div class="step">
+      <div class="pb pick"><span class="w">დავჯავშნო</span><span class="track"><span class="bar" style="--p:88%"></span></span><span class="v">44%</span></div>
+      <div class="pb"><span class="w">ოთხისთვის</span><span class="track"><span class="bar" style="--p:46%;--a:var(--asp)"></span></span><span class="v">23%</span></div>
+      <div class="pb"><span class="w">ფანჯარასთან</span><span class="track"><span class="bar" style="--p:28%;--a:var(--asp)"></span></span><span class="v">14%</span></div>
+      <div class="pb"><span class="w">8-ზე</span><span class="track"><span class="bar" style="--p:20%;--a:var(--asp)"></span></span><span class="v">10%</span></div>
+      <div class="pb"><span class="w">ტერასაზე</span><span class="track"><span class="bar" style="--p:12%;--a:var(--asp)"></span></span><span class="v">6%</span></div>
+      <div class="pb"><span class="w">ბანანი</span><span class="track"><span class="bar" style="--p:1%;--a:var(--red)"></span></span><span class="v">0.01%</span></div>
+      <p class="tiny" style="text-align:right;margin-top:6px;color:var(--muted)">საილუსტრაციო რიცხვები</p>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="2 · როგორ მუშაობს">
+  <div class="kicker"><span class="game">🎮 თამაში 2 · რაუნდი 2</span></div>
+  <h2>იგივე სიტყვები — <span class="c-asp">სხვა კონტექსტი</span></h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+    <div class="col" style="gap:22px">
+      <p class="sentence" style="font-size:28px"><span style="color:var(--muted)">ვეგეტარიანელი ვარ და ხორცს არ ვჭამ.</span><br>ხვალ საღამოს მინდა მაგიდა და <span class="blank">&nbsp;?&nbsp;</span></p>
+      <div class="callout step" style="--a:var(--pink)">ახლა რას დაწერთ? 10 წამი ⏱️</div>
+    </div>
+    <div class="step">
+      <div class="pb pick"><span class="w">სალათი</span><span class="track"><span class="bar" style="--p:62%"></span></span><span class="v">31%</span></div>
+      <div class="pb"><span class="w">ფხალი</span><span class="track"><span class="bar" style="--p:50%;--a:var(--asp)"></span></span><span class="v">25%</span></div>
+      <div class="pb"><span class="w">ბადრიჯანი</span><span class="track"><span class="bar" style="--p:36%;--a:var(--asp)"></span></span><span class="v">18%</span></div>
+      <div class="pb"><span class="w">მენიუ</span><span class="track"><span class="bar" style="--p:30%;--a:var(--asp)"></span></span><span class="v">15%</span></div>
+      <div class="pb"><span class="w">მწვადი</span><span class="track"><span class="bar" style="--p:2%;--a:var(--red)"></span></span><span class="v">0.5%</span></div>
+    </div>
+  </div>
+  <div class="callout step mt2" style="--a:var(--net);font-size:24px">მოდელი ყოველთვის <b>მთელ ტექსტს</b> ხედავს. რასაც ჩვენ ვაწვდით, ის ცვლის ალბათობებს — ესაა <b>prompt engineering</b>-ის საფუძველი (ლექცია 2)</div>
+  
+</section>
+
+<section class="slide" data-section="2 · როგორ მუშაობს">
+  <div class="kicker">ვარჯიში და მისი შედეგები</div>
+  <h2>საიდან „იცის“ — და <span class="c-red">როდის იტყუება</span></h2>
+  <div class="grid3" style="gap:20px;margin-top:6px">
+    <div class="card accent step" style="--a:var(--api)"><div class="big-emoji">📚</div><h3 class="mt">1 · Pre-training</h3><p>ინტერნეტის ტექსტზე ისწავლა <b>შემდეგი ტოკენი</b>. შედეგი: „ტექსტის გამგრძელებელი“</p></div>
+    <div class="card accent step" style="--a:var(--net)"><div class="big-emoji">🧑‍🏫</div><h3 class="mt">2 · Fine-tuning</h3><p>დიალოგებზე ისწავლა <b>ასისტენტის</b> ქცევა: კითხვაზე პასუხი, ინსტრუქციის შესრულება</p></div>
+    <div class="card accent step" style="--a:var(--asp)"><div class="big-emoji">📅</div><h3 class="mt">Knowledge cutoff</h3><p>ვარჯიშის შემდეგ <b>ახალს არაფერს იგებს</b>. ჩვენს მენიუს საერთოდ არ იცნობს</p></div>
+  </div>
+  <div class="grid2 step mt2" style="grid-template-columns:1fr 1fr;gap:20px;align-items:center">
+    <div class="bubble"><span class="who">user</span>რა ღირს ხინკალი RestaurantApi-ში?</div>
+    <div class="bubble me" style="border-color:#fca5a5;background:#fef2f2"><span class="who">LLM 😇</span>ხინკალი ჩვენთან 1.20 ₾ ღირს, მინიმუმ 5 ცალი.</div>
+  </div>
+  <div class="callout step mt" style="--a:var(--red);font-size:22px"><b>Hallucination</b>: მოდელი წერს <b>დამაჯერებელს</b>, არა <b>ჭეშმარიტს</b>. გამოსავალი — ჩვენი მონაცემი მივაწოდოთ (Tools · RAG)</div>
+  
+</section>
+
+<section class="slide" data-section="2 · როგორ მუშაობს">
+  <div class="kicker">context window</div>
+  <h2>რას „ხედავს“ მოდელი <span class="c-net">ერთ მოთხოვნაში</span></h2>
+  <div class="cw in" style="margin-top:20px">
+    <div style="--a:var(--net);flex:1.2">System<small>ინსტრუქცია</small></div>
+    <div style="--a:var(--api);flex:2.4">საუბრის ისტორია<small>user · assistant · user…</small></div>
+    <div style="--a:var(--core);flex:1.6">მონაცემები<small>მენიუ, დოკუმენტები</small></div>
+    <div style="--a:var(--asp);flex:.8">კითხვა<small>user</small></div>
+    <div style="--a:var(--mvc);flex:1">პასუხი<small>output</small></div>
+    <div class="free" style="flex:2">თავისუფალი<small>ლიმიტამდე</small></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font:600 15px var(--mono);color:var(--muted);margin-top:8px"><span>0</span><span>ლიმიტი: ათიათასობით — მილიონამდე ტოკენი (მოდელზეა დამოკიდებული) →</span></div>
+  <div class="grid2 mt2" style="grid-template-columns:1fr 1fr;gap:26px;align-items:start">
+    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">📏</span>Context window</h3><p class="small">ერთ მოთხოვნაში <b>შემავალი + გამომავალი</b> ტოკენების მაქსიმუმი. ზედმეტს მოდელი ვერ „ნახავს“</p></div>
+    <div class="card accent step" style="--a:var(--red)"><h3><span class="ico">🐟</span>მოდელს მეხსიერება არ აქვს</h3><p class="small">ყოველი მოთხოვნა <b>ცალკეა</b> (stateless). „ისტორია“ = ჩვენ ყოველ ჯერზე <b>თავიდან ვუგზავნით</b></p></div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="2 · როგორ მუშაობს">
+  <div class="kicker">❓ კითხვები · ნაწილი 2</div>
+  <h2>გავიგეთ? <span class="c-net">3 კითხვა</span></h2>
+  <div class="qa"><span class="n">1</span><span class="q">რატომ არის ერთი და იგივე ტექსტი ქართულად უფრო ძვირი, ვიდრე ინგლისურად?</span><span class="a step">მეტ ტოკენად იშლება, ფასი კი ტოკენებით ითვლება</span></div>
+  <div class="qa"><span class="n">2</span><span class="q">მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</span><span class="a step">ჩვენი მენიუ არ უნახავს; წერს სავარაუდოს, არა ჭეშმარიტს — hallucination</span></div>
+  <div class="qa"><span class="n">3</span><span class="q">პირველ მოთხოვნაში ვუთხარით „ოთხნი ვართ“, მეორეში ვკითხეთ „რამდენი ვართ?“. რას უპასუხებს?</span><span class="a step">არ იცის — stateless; ისტორია ჩვენ უნდა გავუგზავნოთ</span></div>
+  
+</section>
+
+<section class="slide divider" data-section="შესვენება">
+  <div class="vcenter">
+    <div class="kicker in">შესვენება</div>
+    <h1 class="in" style="--d:.1s">10 <span class="grad">წუთი</span> ☕</h1>
+    <p class="lead mt in" style="--d:.3s">შემდეგ: როგორ ვაკონტროლოთ, <b>რომელ ტოკენს აირჩევს</b> მოდელი</p>
+  </div>
+  <div class="big-num">☕</div>
+</section>
+
+<!-- ================= PART 3: PARAMETERS ================= -->
+<section class="slide divider" data-section="3 · პარამეტრები">
+  <div class="vcenter">
+    <div class="kicker in">ნაწილი 3</div>
+    <h1 class="in" style="--d:.1s">რომელ ტოკენს<br><span class="grad">აირჩევს?</span></h1>
+    <p class="lead mt in" style="--d:.3s">Temperature · Top-P · Max Tokens · reasoning მოდელები</p>
+  </div>
+  <div class="big-num">03</div>
+  
+</section>
+
+<section class="slide" data-section="3 · პარამეტრები">
+  <div class="kicker">Temperature</div>
+  <h2>Temperature — <span class="c-asp">რამდენად „გაბედულად“</span> ირჩევს</h2>
+  <div class="grid3" style="gap:30px;margin-top:20px">
+    <div class="tempcol step" style="--a:var(--api)"><div class="t">0</div><div class="d">ყოველთვის ყველაზე სავარაუდო</div>
+      <div class="vbars"><i style="--h:200px" data-l="დავჯ."></i><i style="--h:6px;opacity:.4" data-l="ოთხ."></i><i style="--h:3px;opacity:.4" data-l="ფანჯ."></i><i style="--h:2px;opacity:.4" data-l="8-ზე"></i><i style="--h:1px;opacity:.4" data-l="ბან."></i></div></div>
+    <div class="tempcol step" style="--a:var(--mvc)"><div class="t">0.7</div><div class="d">ბუნებრივი, ოდნავ მრავალფეროვანი</div>
+      <div class="vbars"><i style="--h:150px" data-l="დავჯ."></i><i style="--h:80px" data-l="ოთხ."></i><i style="--h:50px" data-l="ფანჯ."></i><i style="--h:36px" data-l="8-ზე"></i><i style="--h:2px" data-l="ბან."></i></div></div>
+    <div class="tempcol step" style="--a:var(--red)"><div class="t">1.5</div><div class="d">„ბრტყელი“ — სუსტი ვარიანტებიც შანსს იღებს</div>
+      <div class="vbars"><i style="--h:100px" data-l="დავჯ."></i><i style="--h:84px" data-l="ოთხ."></i><i style="--h:74px" data-l="ფანჯ."></i><i style="--h:66px" data-l="8-ზე"></i><i style="--h:30px" data-l="ბან."></i></div></div>
+  </div>
+  <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:20px;margin-top:56px">
+    <div class="callout" style="--a:var(--api)">დაბალი → <b>პროგნოზირებადი</b>: კლასიფიკაცია, JSON, მონაცემის ამოღება</div>
+    <div class="callout" style="--a:var(--asp)">მაღალი → <b>კრეატიული</b>, მაგრამ მეტი შეცდომა და „სისულელე“</div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="3 · პარამეტრები">
+  <div class="kicker">Top-P (nucleus sampling)</div>
+  <h2>Top-P — <span class="c-net">კუდის მოჭრა</span></h2>
+  <div class="grid2" style="grid-template-columns:1.1fr 1fr;gap:40px;align-items:center">
+    <div>
+      <div class="pb pick"><span class="w">დავჯავშნო</span><span class="track"><span class="bar" style="--p:88%"></span></span><span class="v">44%</span></div>
+      <div class="pb"><span class="w">ოთხისთვის</span><span class="track"><span class="bar" style="--p:46%;--a:var(--asp)"></span></span><span class="v">+23</span></div>
+      <div class="pb"><span class="w">ფანჯარასთან</span><span class="track"><span class="bar" style="--p:28%;--a:var(--asp)"></span></span><span class="v">+14</span></div>
+      <div class="pb"><span class="w">8-ზე</span><span class="track"><span class="bar" style="--p:20%;--a:var(--asp)"></span></span><span class="v">=91</span></div>
+      <div class="pb cut"><span class="w">ტერასაზე</span><span class="track"><span class="bar" style="--p:12%;--a:var(--red)"></span></span><span class="v">✂</span></div>
+      <div class="pb cut"><span class="w">ბანანი</span><span class="track"><span class="bar" style="--p:1%;--a:var(--red)"></span></span><span class="v">✂</span></div>
+    </div>
+    <div class="col" style="gap:18px">
+      <div class="card accent step" style="--a:var(--net)"><h3><span class="ico">✂️</span>Top-P = 0.9</h3><p class="small">ვიღებთ ყველაზე სავარაუდო ტოკენებს, სანამ ჯამი <b>90%</b>-ს არ მიაღწევს. დანარჩენი — <b>გარეთ</b></p></div>
+      <div class="callout step" style="--a:var(--asp)">ჩვეულებრივ ვცვლით <b>ან Temperature-ს, ან Top-P-ს</b> — ორივეს ერთად არა</div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="3 · პარამეტრები">
+  <div class="kicker">Max Tokens</div>
+  <h2>Max Tokens — <span class="c-red">სად გაჩერდეს</span></h2>
+  <div class="grid2" style="grid-template-columns:1.1fr 1fr;gap:36px;align-items:start">
+    <div class="col" style="gap:16px">
+      <div class="bubble step"><span class="who">user · max_tokens = 15</span>აღწერე ჩვენი ფირმის ხაჭაპური</div>
+      <div class="bubble me step"><span class="who">assistant</span>აჭარული ხაჭაპური ნავის ფორმის ცომია, რომელსაც შუაში ყველი, კვერცხი და</div>
+      <div class="rs step" style="--a:var(--red)"><div class="h">response</div><pre class="json"><span class="k">"finish_reason"</span>: <span class="s">"length"</span>   <span style="color:var(--red)">← მოიჭრა!</span></pre></div>
+    </div>
+    <div class="col" style="gap:16px">
+      <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🛑</span>რას აკეთებს</h3><p class="small">ზღუდავს <b>პასუხის</b> ტოკენებს. მიაღწია — წერა წყდება <b>სიტყვის შუაშიც</b></p></div>
+      <div class="card accent step" style="--a:var(--mvc)"><h3><span class="ico">🛡️</span>რატომ გვჭირდება</h3><p class="small"><b>ხარჯის</b> და <b>დროის</b> ზღვარი: მოდელი „არ გაიტაცებს“ 3000-ტოკენიან პასუხზე</p></div>
+      <div class="callout step" style="--a:var(--red)">ყოველთვის ვამოწმებთ: <code class="i">finish_reason</code> = <b>stop</b> თუ <b>length</b>?</div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="3 · პარამეტრები">
+  <div class="kicker">რა როდის · RestaurantApi</div>
+  <h2>ერთი პროექტი — <span class="grad">სხვადასხვა პარამეტრი</span></h2>
+  <table class="t" style="margin-top:10px">
+    <tr><th>ამოცანა</th><th>Temperature</th><th>Max Tokens</th><th>რატომ</th></tr>
+    <tr class="step fade"><td>შეტყობინების ტიპი: შეკვეთა / ჯავშანი / კითხვა</td><td class="mono">0</td><td class="mono">~10</td><td>ერთი სწორი პასუხია, მოკლე</td></tr>
+    <tr class="step fade"><td>„ხვალ 8-ზე ოთხნი“ → თარიღი, დრო, რაოდენობა</td><td class="mono">0</td><td class="mono">~100</td><td>მონაცემის ამოღება — ზუსტად</td></tr>
+    <tr class="step fade"><td>ჩატი კლიენტთან, რეკომენდაცია</td><td class="mono">0.5–0.8</td><td class="mono">~300</td><td>ბუნებრივი, მაგრამ არა „ფანტაზია“</td></tr>
+    <tr class="step fade"><td>ახალი კერძის აღწერა მენიუსთვის</td><td class="mono">0.9–1.2</td><td class="mono">~200</td><td>კრეატიული ტექსტი, ვარიანტები</td></tr>
+  </table>
+  <div class="callout step mt" style="--a:var(--net);font-size:22px">პარამეტრი <b>მოთხოვნას</b> ეკუთვნის და არა პროექტს — ყოველ გამოძახებაზე თავისას ვირჩევთ</div>
+  
+</section>
+
+<section class="slide" data-section="3 · პარამეტრები">
+  <div class="kicker">reasoning მოდელები</div>
+  <h2>მოდელები, რომლებიც <span class="c-net">ჯერ ფიქრობენ</span></h2>
+  <div class="col" style="gap:18px;margin-top:10px">
+    <div class="flowrow step" style="display:flex;gap:14px;align-items:center">
+      <span class="pill on" style="--a:var(--api);font-size:18px;min-width:200px;justify-content:center">ჩვეულებრივი</span>
+      <div class="bubble" style="flex:none;font-size:20px">კითხვა</div><span style="font:800 28px var(--mono);color:var(--muted)">→</span>
+      <div class="bubble me" style="flex:none;font-size:20px;margin-left:0">პასუხი</div>
+    </div>
+    <div class="flowrow step" style="display:flex;gap:14px;align-items:center">
+      <span class="pill on" style="--a:var(--net);font-size:18px;min-width:200px;justify-content:center">reasoning</span>
+      <div class="bubble" style="flex:none;font-size:20px">კითხვა</div><span style="font:800 28px var(--mono);color:var(--muted)">→</span>
+      <div class="toks sm" style="flex:1;padding:10px 14px;border:2px dashed var(--net);border-radius:14px;background:color-mix(in srgb,var(--net) 5%,#fff)"><span class="tk">ჯერ…</span><span class="tk">8 სტუმარი</span><span class="tk">2 მაგიდა?</span><span class="tk">შევამოწმო…</span><span class="tk">არა, ჯობია…</span><span class="tk">…</span></div>
+      <span style="font:800 28px var(--mono);color:var(--muted)">→</span><div class="bubble me" style="flex:none;font-size:20px;margin-left:0">პასუხი</div>
+    </div>
+  </div>
+  <div class="grid3 mt2" style="gap:18px">
+    <div class="card accent step" style="--a:var(--mvc)"><h3><span class="ico">✅</span>კარგია</h3><p>რამდენიმე ნაბიჯიანი ამოცანა: გეგმა, გამოთვლა, რთული წესები</p></div>
+    <div class="card accent step" style="--a:var(--red)"><h3><span class="ico">💸</span>ფასი</h3><p>„ფიქრის“ ტოკენებს <b>ვიხდით</b> (როგორც output), ხშირად ვერც ვხედავთ</p></div>
+    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🐢</span>სიჩქარე</h3><p>პასუხამდე წამები გადის. „რა ღირს ხინკალი?“ — <b>ზედმეტია</b></p></div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="3 · პარამეტრები">
+  <div class="kicker">❓ კითხვები · ნაწილი 3</div>
+  <h2>რას აირჩევდით? <span class="c-net">3 სიტუაცია</span></h2>
+  <div class="qa"><span class="n">1</span><span class="q">კლიენტის შეტყობინებიდან ვიღებთ თარიღს და სტუმრების რაოდენობას. Temperature?</span><span class="a step">0 — ერთი სწორი პასუხია, ყოველ ჯერზე ერთნაირი გვინდა</span></div>
+  <div class="qa"><span class="n">2</span><span class="q">პასუხი სიტყვის შუაში წყდება. რა მოხდა და სად ჩანს?</span><span class="a step">Max Tokens-ს მიაღწია · <code class="i">finish_reason</code> = <b>length</b></span></div>
+  <div class="qa"><span class="n">3</span><span class="q">მენიუს FAQ-ბოტი („ღიაა კვირას?“) — reasoning მოდელი ავიღოთ?</span><span class="a step">არა — მარტივი კითხვაა; reasoning ნელია და ფიქრის ტოკენებს ვიხდით</span></div>
+  
+</section>
+
+<!-- ================= PART 4: PROVIDERS & PRICE ================= -->
+<section class="slide divider" data-section="4 · პროვაიდერები">
+  <div class="vcenter">
+    <div class="kicker in">ნაწილი 4</div>
+    <h1 class="in" style="--d:.1s">ვინ, სად და<br><span class="grad">რამდენად?</span></h1>
+    <p class="lead mt in" style="--d:.3s">პროვაიდერები · ღრუბელი თუ ლოკალური · ფასი ტოკენებში</p>
+  </div>
+  <div class="big-num">04</div>
+  
+</section>
+
+<section class="slide" data-section="4 · პროვაიდერები">
+  <div class="kicker">პროვაიდერები</div>
+  <h2>ვისი მოდელი, <span class="c-api">ვისი სერვერი</span></h2>
+  <div class="grid3" style="gap:18px;margin-top:10px">
+    <div class="prov step" style="--a:#16a34a"><span class="nm">OpenAI</span><span class="md">GPT · reasoning მოდელები</span><span class="ds">ყველაზე ფართოდ გავრცელებული API; მისი ფორმატი „სტანდარტად“ იქცა</span></div>
+    <div class="prov step" style="--a:#d97706"><span class="nm">Anthropic</span><span class="md">Claude</span><span class="ds">ძლიერია კოდში, გრძელ ტექსტში და აგენტურ ამოცანებში</span></div>
+    <div class="prov step" style="--a:#2563eb"><span class="nm">Google</span><span class="md">Gemini</span><span class="ds">დიდი context window, მულტიმოდალური; აქვს უფასო ლიმიტი</span></div>
+    <div class="prov step" style="--a:#db2777"><span class="nm">Groq</span><span class="md">ღია მოდელები (Llama, Qwen…)</span><span class="ds">საკუთარი ჩიპები — <b>ძალიან სწრაფი</b>; უფასო ლიმიტი სწავლისთვის</span></div>
+    <div class="prov step" style="--a:#6d28d9"><span class="nm">Ollama 💻</span><span class="md">ღია მოდელები ლოკალურად</span><span class="ds">შენს კომპიუტერზე, <b>უფასოდ</b>, ინტერნეტის გარეშე</span></div>
+    <div class="prov step" style="--a:#7b8096"><span class="nm">და სხვები</span><span class="md">Azure OpenAI · Mistral · DeepSeek…</span><span class="ds">თითქმის ყველა OpenAI-compatible API-ს გვთავაზობს</span></div>
+  </div>
+  <div class="callout step mt" style="--a:var(--net);font-size:22px">ჩვენი კოდისთვის ეს <b>ერთ ხაზზე</b> დავა — ამას მე-5 ნაწილში ვნახავთ</div>
+  
+</section>
+
+<section class="slide" data-section="4 · პროვაიდერები">
+  <div class="kicker">ღრუბელი vs ლოკალური</div>
+  <h2>☁️ Cloud API თუ 💻 <span class="c-net">Ollama?</span></h2>
+  <table class="t" style="margin-top:10px">
+    <tr><th></th><th>☁️ Cloud (OpenAI, Claude, Gemini, Groq)</th><th>💻 ლოკალური (Ollama)</th></tr>
+    <tr class="step fade"><td>ფასი</td><td>ვიხდით <b>ტოკენზე</b></td><td><b>უფასო</b> — ვიხდით კომპიუტერით და დენით</td></tr>
+    <tr class="step fade"><td>ხარისხი</td><td><b>ყველაზე ძლიერი</b> მოდელები</td><td>პატარა მოდელები — სუსტი, განსაკუთრებით <b>ქართულად</b></td></tr>
+    <tr class="step fade"><td>სიჩქარე</td><td>სწრაფი, მაგრამ ქსელზეა დამოკიდებული</td><td>შენს GPU/CPU-ზეა დამოკიდებული</td></tr>
+    <tr class="step fade"><td>მონაცემი</td><td>მიდის <b>პროვაიდერთან</b></td><td><b>არ ტოვებს</b> კომპიუტერს</td></tr>
+    <tr class="step fade"><td>სწავლისთვის</td><td>API key, ლიმიტები</td><td>key არ სჭირდება — <b>იდეალურია ექსპერიმენტისთვის</b></td></tr>
+  </table>
+  <div class="callout step mt" style="--a:var(--mvc);font-size:22px">ჩვენი გეგმა: <b>ვსწავლობთ Ollama-ზე</b>, ხარისხს ვამოწმებთ <b>ღრუბელში</b> — კოდი ორივესთვის ერთია</div>
+  
+</section>
+
+<section class="slide" data-section="4 · პროვაიდერები">
+  <div class="kicker">ფასი</div>
+  <h2>ვიხდით <span class="c-asp">ტოკენზე</span> — და არა თანაბრად</h2>
+  <div class="grid3" style="gap:20px;margin-top:10px">
+    <div class="card accent step" style="--a:var(--api)"><div class="big-emoji">📥</div><h3 class="mt">Input</h3><p>რასაც ვაგზავნით: system, ისტორია, მონაცემი, კითხვა. <b>იაფია</b></p></div>
+    <div class="card accent step" style="--a:var(--red)"><div class="big-emoji">📤</div><h3 class="mt">Output</h3><p>რასაც მოდელი წერს. <b>რამდენჯერმე ძვირია</b> input-ზე. reasoning ტოკენებიც აქ ითვლება</p></div>
+    <div class="card accent step" style="--a:var(--mvc)"><div class="big-emoji">♻️</div><h3 class="mt">Cached input</h3><p>იგივე დასაწყისი ხშირად? ზოგი პროვაიდერი <b>ფასდაკლებას</b> აკეთებს</p></div>
+  </div>
+  <table class="t step mt2">
+    <tr><th>საილუსტრაციო კლასი</th><th>Input · 1M ტოკენი</th><th>Output · 1M ტოკენი</th></tr>
+    <tr><td>⚡ A · პატარა, სწრაფი</td><td class="mono">$0.15</td><td class="mono">$0.60</td></tr>
+    <tr><td>🧠 B · დიდი, ძლიერი</td><td class="mono">$3.00</td><td class="mono">$15.00</td></tr>
+  </table>
+  <p class="tiny step" data-with style="margin-top:8px;color:var(--muted)">ფასები მიახლოებითი რიგია და იცვლება — რეალური ფასი ყოველთვის პროვაიდერის pricing გვერდზე</p>
+  
+</section>
+
+<section class="slide" data-section="4 · პროვაიდერები">
+  <div class="kicker"><span class="game">🎮 თამაში 3 · წყვილებში · 5 წუთი</span></div>
+  <h2>რა დაუჯდება რესტორანს <span class="c-asp">AI ასისტენტი?</span></h2>
+  <div class="grid2" style="grid-template-columns:1fr 1.15fr;gap:34px;align-items:start">
+    <div class="col" style="gap:14px">
+      <div class="mrow"><span class="e">💬</span><span><b>300</b> საუბარი დღეში</span></div>
+      <div class="mrow"><span class="e">📥</span><span><b>2 000</b> input ტოკენი საუბარზე</span></div>
+      <div class="mrow"><span class="e">📤</span><span><b>300</b> output ტოკენი საუბარზე</span></div>
+      <div class="mrow"><span class="e">📅</span><span><b>30</b> დღე · ფასები — წინა სლაიდიდან</span></div>
+      <div class="callout" style="--a:var(--pink)">დაითვალეთ თვის ხარჯი <b>A</b> და <b>B</b> მოდელით. ვინ პირველი?</div>
+    </div>
+    <div class="col" style="gap:12px">
+      <div class="card step" style="padding:18px 22px"><div class="calc">input: 300 × 2 000 × 30 = <b>18M</b><br>output: 300 × 300 × 30 = <b>2.7M</b></div></div>
+      <div class="card accent step" style="--a:var(--api);padding:18px 22px"><div class="calc">⚡ A: 18 × 0.15 + 2.7 × 0.60 = <span class="r">≈ $4.3 / თვე</span></div></div>
+      <div class="card accent step" style="--a:var(--red);padding:18px 22px"><div class="calc">🧠 B: 18 × 3 + 2.7 × 15 = <span class="r" style="color:var(--red)">≈ $94.5 / თვე</span></div></div>
+      <div class="callout step" style="--a:var(--asp)">🤔 და თუ ქართულის გამო ტოკენები <b>2-ჯერ მეტია</b>? თუ საუბრის ისტორია ყოველ ჯერზე <b>იზრდება</b>?</div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="4 · პროვაიდერები">
+  <div class="kicker">❓ კითხვები · ნაწილი 4</div>
+  <h2>რას ეტყოდით <span class="c-net">რესტორნის მფლობელს?</span></h2>
+  <div class="qa"><span class="n">1</span><span class="q">რატომ არის output ტოკენი input-ზე ძვირი?</span><span class="a step">თითო output ტოკენი მოდელის ცალკე გაშვებაა; input ერთად მუშავდება</span></div>
+  <div class="qa"><span class="n">2</span><span class="q">მფლობელი ამბობს: „კლიენტების მონაცემი გარეთ არ უნდა გავიდეს“. რას შესთავაზებდით?</span><span class="a step">ღია მოდელი საკუთარ სერვერზე (მაგ. Ollama) — მონაცემი სისტემას არ ტოვებს</span></div>
+  <div class="qa"><span class="n">3</span><span class="q">რა ორი რამ ზრდის ყველაზე მეტად ხარჯს ჩვენს ჩატში?</span><span class="a step">ძვირი მოდელი და მზარდი ისტორია (ყოველ ჯერზე თავიდან იგზავნება); ქართულიც მატებს</span></div>
+  
+</section>
+
+<!-- ================= PART 5: FIRST CALL ================= -->
+<section class="slide divider" data-section="5 · პირველი გამოძახება">
+  <div class="vcenter">
+    <div class="kicker in">ნაწილი 5</div>
+    <h1 class="in" style="--d:.1s">პირველი გამოძახება<br><span class="grad">C#-იდან</span></h1>
+    <p class="lead mt in" style="--d:.3s"><code class="i">IChatClient</code> RestaurantApi-ში — და ოთხი ექსპერიმენტი</p>
+  </div>
+  <div class="big-num">05</div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker">ნაცნობი იდეა</div>
+  <h2><code class="i" style="font-size:.9em">IChatClient</code> — LLM-ის <span class="c-api">„DbContext“</span></h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-top:10px">
+    <div class="found step">
+      <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>LINQ: _db.Dishes.Where(…)</small></div>
+      <div class="layer" style="--a:var(--asp)">DbContext · EF Core<small>ერთი API</small></div>
+      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">SqlServer<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Npgsql<small>provider</small></div></div>
+    </div>
+    <div class="found step">
+      <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>_chat.GetResponseAsync(…)</small></div>
+      <div class="layer" style="--a:var(--net)">IChatClient · Microsoft.Extensions.AI<small>ერთი API</small></div>
+      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">OllamaSharp<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Google.GenAI<small>provider</small></div></div>
+    </div>
+  </div>
+  <div class="callout step mt2" style="--a:var(--mvc);font-size:23px">ბაზის შეცვლისას LINQ არ იცვლება. პროვაიდერის შეცვლისას — <b>ჩვენი AI კოდი არ იცვლება</b></div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker">🧑‍💻 მომზადება · Ollama</div>
+  <h2>მოდელი <span class="c-net">ჩვენს კომპიუტერზე</span></h2>
+  <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
+    <div class="term step"><div class="bar"><i></i><i></i><i></i><span>Terminal</span></div>
+      <div class="body"><div class="cmd">ollama pull llama3.2</div><div class="out">pulling manifest… success  (~2 GB)</div><div class="cmd">ollama list</div><div class="out">NAME              SIZE</div><div class="out">llama3.2:latest   2.0 GB</div><div class="cmd">ollama run llama3.2 "Say hi to a restaurant guest"</div><div class="ok">Welcome! We're so glad you're here…</div></div></div>
+    <div class="col" style="gap:16px">
+      <div class="card accent step" style="--a:var(--net)"><h3><span class="ico">1</span>ollama.com → Download</h3><p class="small">Windows / macOS / Linux. ეშვება ფონურად</p></div>
+      <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">2</span>მოდელის ჩამოტვირთვა</h3><p class="small"><code class="i">ollama pull llama3.2</code> — 3B, ~2 GB</p></div>
+      <div class="callout step" style="--a:var(--api)">API უსმენს: <b class="mono">http://localhost:11434</b></div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker">🧑‍💻 NuGet · RestaurantApi</div>
+  <h2>ორი package</h2>
+  <div class="col" style="gap:16px;max-width:1100px;margin-top:10px">
+    <div class="nuget step"><div class="logo">M.E.AI</div><div><div class="nm">Microsoft.Extensions.AI</div><div class="ds">IChatClient, ChatOptions, ChatResponse — ერთი API ყველა მოდელისთვის</div></div></div>
+    <div class="nuget step"><div class="logo" style="background:linear-gradient(135deg,#0d9488,#2563eb)">OLM</div><div><div class="nm">OllamaSharp</div><div class="ds">provider: <code class="i">OllamaApiClient</code> თვითონ არის <code class="i">IChatClient</code></div></div></div>
+  </div>
+  <div class="callout step mt2" style="--a:var(--net)">Visual Studio → პროექტზე მარჯვენა ღილაკი → <b>Manage NuGet Packages</b> → Browse → ორივე → Install</div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker">🧑‍💻 ვწერთ · AiLabController</div>
+  <h2>პირველი endpoint: <span class="mono c-api">POST /api/ai-lab/ask</span></h2>
+  <div class="grid2" style="grid-template-columns:1.35fr 1fr;align-items:start;gap:26px">
+    <pre class="code sm" id="c1"><span class="ttl">Controllers/AiLabController.cs</span><code><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.Extensions.AI</span><span class="p">;</span></span><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">OllamaSharp</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="na">[ApiController]</span></span><span class="ln"><span class="na">[Route("api/ai-lab")]</span></span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AiLabController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="c1">// დროებით აქვე ვქმნით — ლექცია 3-ზე DI-ში გადავა</span></span><span class="ln"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="nf">OllamaApiClient</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"http://localhost:11434"</span><span class="p">)</span><span class="p">,</span><span class="w"> </span><span class="s">"llama3.2"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">    </span><span class="na">[HttpPost("ask")]</span></span><span class="ln"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IActionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Ask</span><span class="p">(</span><span class="n">AskRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span></span><span class="ln"><span class="w">    </span><span class="p">{</span></span><span class="ln"><span class="w">        </span><span class="n">ChatResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_chat</span><span class="p">.</span><span class="n">GetResponseAsync</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Prompt</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">InputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">OutputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">FinishReason</span><span class="o">?.</span><span class="n">Value</span><span class="p">)</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span><span class="p">}</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
+    <div class="col" style="gap:14px">
+      <pre class="code sm"><span class="ttl">Dtos/AiLab/AskDtos.cs</span><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskRequest</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Prompt</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">long?</span><span class="w"> </span><span class="n">InputTokens</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">long?</span><span class="w"> </span><span class="n">OutputTokens</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">string?</span><span class="w"> </span><span class="n">FinishReason</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">      </span></span></code></pre>
+      <i class="codestep" data-for="c1" data-lines="9-10"></i>
+      <div class="callout step" data-with style="--a:var(--net)">ცვლადის ტიპი — <b>IChatClient</b>, ობიექტი — Ollama-ს</div>
+      <i class="codestep" data-for="c1" data-lines="15"></i>
+      <div class="callout step" data-with style="--a:var(--api)">ერთი ხაზი = HTTP მოთხოვნა მოდელთან</div>
+      <i class="codestep" data-for="c1" data-lines="17-21"></i>
+      <div class="callout step" data-with style="--a:var(--mvc)">ტექსტი + <b>ტოკენები</b> + <b>finish reason</b> — ის, რაც თეორიაში ვნახეთ</div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker">Swagger · შედეგი</div>
+  <h2>პირველი პასუხი — <span class="c-mvc">ჩვენი API-დან</span></h2>
+  <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
+    <div class="swr c-post step">
+      <div class="rh"><span class="m">POST</span><span class="p">/api/ai-lab/ask</span></div>
+      <div class="lab">Request body</div>
+      <pre class="rb">{ <span class="k">"prompt"</span>: <span class="s">"Suggest one light vegetarian dish. One sentence."</span> }</pre>
+      <div class="lab">Response · 200</div>
+      <pre class="rb">{
+  <span class="k">"text"</span>: <span class="s">"Try a grilled eggplant salad with walnuts…"</span>,
+  <span class="k">"inputTokens"</span>: <span class="n">35</span>,
+  <span class="k">"outputTokens"</span>: <span class="n">19</span>,
+  <span class="k">"finishReason"</span>: <span class="s">"stop"</span>
+}</pre>
+    </div>
+    <div class="col" style="gap:16px">
+      <div class="callout step" style="--a:var(--asp)">ჩვენ 8 სიტყვა დავწერეთ — input კი <b>35</b> ტოკენია. რატომ? 🤔</div>
+      <div class="callout step" style="--a:var(--net)">მოდელს ჩვენი ტექსტის გარდა <b>შაბლონი</b> და <b>role</b> ნიშნებიც მიდის</div>
+      <div class="callout step" style="--a:var(--red)">ახლა იგივე <b>ქართულად</b> ჰკითხეთ — ნახეთ ტოკენები და <b>ხარისხი</b></div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker">🧑‍💻 ვამატებთ · ChatOptions</div>
+  <h2>პარამეტრები <span class="c-asp">კოდიდან</span></h2>
+  <div class="grid2" style="grid-template-columns:1.3fr 1fr;align-items:start;gap:26px">
+    <pre class="code sm" id="c2"><span class="ttl">Controllers/AiLabController.cs · Ask</span><code><span class="ln"><span class="na">[HttpPost("ask")]</span></span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IActionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Ask</span><span class="p">(</span><span class="n">AskRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ChatOptions</span></span><span class="ln"><span class="w">    </span><span class="p">{</span></span><span class="ln"><span class="w">        </span><span class="n">Temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">Temperature</span><span class="p">,</span></span><span class="ln"><span class="w">        </span><span class="n">MaxOutputTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">MaxOutputTokens</span></span><span class="ln"><span class="w">    </span><span class="p">}</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">    </span><span class="n">ChatResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">_chat</span><span class="p">.</span><span class="n">GetResponseAsync</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Prompt</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">InputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">OutputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">FinishReason</span><span class="o">?.</span><span class="n">Value</span><span class="p">)</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
+    <div class="col" style="gap:14px">
+      <pre class="code sm"><span class="ttl">Dtos/AiLab/AskDtos.cs</span><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskRequest</span><span class="p">(</span></span><span class="ln"><span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">Prompt</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">float?</span><span class="w"> </span><span class="n">Temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">int?</span><span class="w"> </span><span class="n">MaxOutputTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">      </span></span></code></pre>
+      <i class="codestep" data-for="c2" data-lines="4-8"></i>
+      <div class="callout step" data-with style="--a:var(--asp)"><b>null</b> = „მოდელის ნაგულისხმევი“</div>
+      <i class="codestep" data-for="c2" data-lines="10-11"></i>
+      <div class="callout step" data-with style="--a:var(--net)">options — <b>ამ მოთხოვნას</b> ეკუთვნის</div>
+      <i class="codestep" data-for="c2" data-lines="all"></i>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker"><span class="game">🔮 ჯერ გამოიცანით — მერე გავუშვებთ</span></div>
+  <h2>4 ექსპერიმენტი</h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:20px;margin-top:6px">
+    <div class="card accent step" style="--a:var(--api)"><h3><span class="ico">🎲</span>1 · Temperature</h3><p class="small">„სახელი მოუფიქრე ახალ ქართულ კერძს“ — 3-ჯერ <code class="i">0</code>-ით, 3-ჯერ <code class="i">1.5</code>-ით. <b>რა განსხვავება იქნება?</b></p></div>
+    <div class="card accent step" style="--a:var(--red)"><h3><span class="ico">✂️</span>2 · Max Tokens</h3><p class="small">„აღწერე ხაჭაპური“ + <code class="i">maxOutputTokens: 15</code>. <b>რას დააბრუნებს finishReason?</b></p></div>
+    <div class="card accent step" style="--a:var(--net)"><h3><span class="ico">🐟</span>3 · Stateless</h3><p class="small">ჯერ: „ჩემი სახელია ნინო“. მერე, <b>ცალკე</b> მოთხოვნით: „რა მქვია?“ <b>გაიხსენებს?</b></p></div>
+    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">🇬🇪</span>4 · ენა</h3><p class="small">ერთი და იგივე კითხვა ინგლისურად და ქართულად. <b>რამდენჯერ მეტი იქნება inputTokens?</b></p></div>
+  </div>
+  <div class="callout step mt" style="--a:var(--pink);font-size:22px">თითო ექსპერიმენტზე: ჯერ <b>ხელის აწევა / პროგნოზი</b> → მერე Swagger → ვინ გამოიცნო?</div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker">ერთი ხაზი — სხვა პროვაიდერი</div>
+  <h2>Ollama → <span class="c-api">Gemini</span>: იცვლება <span class="c-mvc">ერთი ადგილი</span></h2>
+  <div class="grid2" style="grid-template-columns:1.35fr 1fr;align-items:start;gap:26px">
+    <pre class="code sm" id="c3"><span class="ttl">Controllers/AiLabController.cs</span><code><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Google.GenAI</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="c1">// იყო: new OllamaApiClient(…, "llama3.2")</span></span><span class="ln"><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">Client</span><span class="p">(</span><span class="p">)</span><span class="w">                   </span><span class="c1">// GEMINI_API_KEY</span></span><span class="ln"><span class="w">        </span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="s">"gemini-3.8-flash"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="c1">// Ask(...) — ერთი ასოც არ შეცვლილა</span></span><span class="ln"><span class="w">    </span></span></code></pre>
+    <div class="col" style="gap:14px">
+      <div class="nuget step"><div class="logo" style="background:linear-gradient(135deg,#2563eb,#16a34a)">G</div><div><div class="nm">Google.GenAI</div><div class="ds">Google-ის ოფიციალური .NET SDK — აქვს <code class="i">IChatClient</code></div></div></div>
+      <i class="codestep" data-for="c3" data-lines="5"></i>
+      <div class="callout step" data-with style="--a:var(--api)"><b>new Client()</b> key-ს თვითონ კითხულობს <b>GEMINI_API_KEY</b> გარემოს ცვლადიდან</div>
+      <i class="codestep" data-for="c3" data-lines="6"></i>
+      <div class="callout step" data-with style="--a:var(--net)"><b>.AsIChatClient()</b> — ისევ ჩვენი ნაცნობი interface</div>
+      <i class="codestep" data-for="c3" data-lines="8"></i>
+      <div class="callout step" data-with style="--a:var(--mvc)">იგივე 4 ექსპერიმენტი — და <b>შეადარეთ ქართული</b> 🇬🇪</div>
+      <div class="problem step" style="font-size:19px">API key — <b>არასდროს კოდში და Git-ში</b></div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="5 · პირველი გამოძახება">
+  <div class="kicker">🤔 კითხვა კლასს</div>
+  <h2>რა არის <span class="c-red">ცუდი</span> ჩვენს კოდში?</h2>
+  <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
+    <pre class="code sm"><span class="ttl">AiLabController.cs</span><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AiLabController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="nf">OllamaApiClient</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"http://localhost:11434"</span><span class="p">)</span><span class="p">,</span><span class="w"> </span><span class="s">"llama3.2"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span><span class="err">…</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
+    <div class="col" style="gap:14px">
+      <div class="callout" style="--a:var(--pink)">გაიხსენეთ DI-ის ლექცია. <b>1 წუთი</b> — მეზობელთან ერთად</div>
+      <div class="problem step">Controller <b>თვითონ ქმნის</b> დამოკიდებულებას — <code class="i">new</code></div>
+      <div class="problem step" data-with>მისამართი და მოდელი — <b>კოდში ჩაწერილი</b></div>
+      <div class="problem step" data-with>ყოველ მოთხოვნაზე <b>ახალი client</b></div>
+      <div class="solve step">ლექცია 3: <code class="i">AddChatClient</code> + constructor injection + კონფიგურაცია</div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="პრაქტიკა">
+  <div class="kicker">🧑‍💻 თქვენ აკეთებთ · კლასში</div>
+  <h2>AI ლაბორატორია — შენს პროექტში</h2>
+  <div class="grid2" style="grid-template-columns:1.5fr 1fr;align-items:start">
+    <div class="card accent step" style="--a:var(--mvc)">
+      <h3><span class="ico">📝</span>დავალება · შენი API პროექტი</h3>
+      <ul class="clean small">
+<li>NuGet: <strong>Microsoft.Extensions.AI</strong> და <strong>OllamaSharp</strong></li>
+<li><code class="i">Dtos/AiLab/</code>: <strong>AskRequest</strong> და <strong>AskResponse</strong></li>
+<li><code class="i">POST /api/ai-lab/ask</code> — <code class="i">IChatClient</code> + <code class="i">ChatOptions</code></li>
+<li><strong>4 ექსპერიმენტი შენი პროექტის თემაზე</strong> — ჯერ პროგნოზი, მერე Swagger</li>
+<li>შედეგები → <code class="i">experiments.md</code> (მასალებში)</li>
+</ul>
+      <p class="tiny" style="margin-top:14px">✓ მზადაა, როცა: პასუხს ტექსტთან ერთად ტოკენები და finishReason ახლავს, ცხრილში 4 შედეგი და შენი დასკვნა წერია</p>
+    </div>
+    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3><ul class="clean small">
+<li><code class="i">AskResponse</code>-ს დაამატე <code class="i">ElapsedMs</code> (<code class="i">Stopwatch</code>) — რამდენი გრძელდება პირველი და მეორე მოთხოვნა?</li>
+<li>შეადარე <code class="i">llama3.2:1b</code> და <code class="i">llama3.2</code> (3B) ერთსა და იმავე ქართულ კითხვაზე: სიჩქარე და ხარისხი</li>
+</ul></div>
+  </div>
+  <div class="callout step mt" style="--a:var(--api)">წესი: <b>ჯერ ცდი თვითონ</b> → გვერდით მჯდომს ჰკითხე → მერე მე</div>
+  
+</section>
+
+<section class="slide" data-section="პრაქტიკა">
+  <div class="kicker">ყურადღება</div>
+  <h2>ხშირი <span class="c-red">შეცდომები</span></h2>
+  <div class="col" style="gap:14px">
+    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem"><code class="i">HttpRequestException</code>: connection refused</div><div class="solve">Ollama არ არის გაშვებული → გახსენი Ollama / <code class="i">ollama serve</code></div></div>
+    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">404 · model "llama3.2" not found</div><div class="solve">მოდელი არ არის ჩამოტვირთული → <code class="i">ollama pull llama3.2</code></div></div>
+    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">პირველი პასუხი 20+ წამი</div><div class="solve">მოდელი მეხსიერებაში იტვირთება — მეორე მოთხოვნა სწრაფია</div></div>
+    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">ქართული პასუხი შეცდომებით</div><div class="solve">პატარა მოდელია — შეადარე ღრუბლოვანს. ეს <b>ბაგი არ არის</b></div></div>
+    <div class="grid2 step" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">API key not valid (Gemini)</div><div class="solve">key არ ჩანს → <code class="i">setx</code>-ის შემდეგ <b>Visual Studio გადატვირთე</b></div></div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="შეჯამება">
+  <div class="kicker">შევამოწმოთ</div>
+  <h2>6 კითხვა</h2>
+  <div class="qa"><span class="n">1</span><span class="q">რა არის ტოკენი და რატომ გვაინტერესებს backend-ში?</span><span class="a step">ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს · ფასი, context window-ის ლიმიტი და სიჩქარე ტოკენებით ითვლება; ქართული — მეტი ტოკენი</span></div><div class="qa"><span class="n">2</span><span class="q">როგორ წერს LLM პასუხს?</span><span class="a step">next-token prediction: ითვლის შემდეგი ტოკენის ალბათობებს → ირჩევს ერთს → უმატებს → იმეორებს, სანამ არ დაასრულებს ან ლიმიტს არ მიაღწევს</span></div><div class="qa"><span class="n">3</span><span class="q">მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</span><span class="a step">ჩვენი მენიუ არ უნახავს; წერს სავარაუდოს და არა ჭეშმარიტს — hallucination · ფასი ყოველთვის ბაზიდან</span></div><div class="qa"><span class="n">4</span><span class="q">რატომ „არ ახსოვს“ მოდელს წინა მოთხოვნა?</span><span class="a step">stateless: ყოველი მოთხოვნა დამოუკიდებელია · ისტორია ჩვენ უნდა გავუგზავნოთ ყოველ ჯერზე</span></div><div class="qa"><span class="n">5</span><span class="q">შეკვეთის ტიპის დასადგენად რა Temperature-ს დავაყენებთ და რას ნიშნავს <code class="i">finish_reason = length</code>?</span><span class="a step">0 — ერთი სწორი პასუხი, ყოველ ჯერზე ერთნაირი · length — Max Tokens-ს მიაღწია, პასუხი მოიჭრა</span></div><div class="qa"><span class="n">6</span><span class="q">რატომ ვწერთ კოდს <code class="i">IChatClient</code>-ზე და არა პირდაპირ Ollama-ს ან OpenAI-ს კლასზე?</span><span class="a step">ერთი interface ყველა პროვაიდერისთვის (როგორც EF Core-ის provider) · პროვაიდერის შეცვლა = მხოლოდ ობიექტის შექმნის ადგილი</span></div>
+  
+</section>
+
+<section class="slide" data-section="შეჯამება">
+  <div class="kicker in" style="color:var(--net)">დღეს</div>
+  <h2 class="in" style="--d:.1s">LLM = <span class="grad">შემდეგი ტოკენი</span> · ჩვენთვის — <span class="grad">კიდევ ერთი API</span></h2>
+  <div class="grid2" style="grid-template-columns:1fr 1.1fr;gap:40px;align-items:start">
+    <div class="col" style="gap:18px">
+      <div class="card accent step" style="--a:var(--mvc)"><h3><span class="ico">🧠</span>დაიმახსოვრე</h3><ul class="clean small">
+        <li><b>ტოკენი</b> — ფასის, ლიმიტის და სიჩქარის ერთეული; ქართული — ძვირი</li>
+        <li><b>next-token</b> — სავარაუდო, არა ჭეშმარიტი → ფასი/ჯავშანი მხოლოდ ბაზიდან</li>
+        <li><b>stateless</b> — ისტორიას ჩვენ ვაგზავნით</li>
+        <li><b>Temperature · Max Tokens</b> — ყოველ მოთხოვნაზე თავისი</li>
+        <li><b>IChatClient</b> — ერთი კოდი, ნებისმიერი პროვაიდერი</li></ul></div>
+    </div>
+    <div class="col" style="gap:18px">
+      <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">⏭️</span>შემდეგი ლექცია · Prompt Engineering</h3>
+        <p class="small">დღეს მოდელს უბრალო ტექსტი გავუგზავნეთ და უბრალო ტექსტი მივიღეთ. მაგრამ კალათაში დასამატებლად <code class="i">dishId</code> და <code class="i">quantity</code> გვჭირდება — <b>C# ობიექტი</b>, არა წინადადება.</p></div>
+      <div class="callout step" style="--a:var(--net)">როგორ ვაიძულოთ მოდელი, რომ ყოველ ჯერზე ერთნაირი ფორმით უპასუხოს? 🤔</div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="slide" data-section="საშინაო">
+  <div class="kicker">🏠 საშინაო დავალება</div>
+  <h2>ორი პროვაიდერი, ერთი endpoint — და ხარჯის გათვლა</h2>
+  <div class="grid2" style="grid-template-columns:1.5fr 1fr;align-items:start">
+    <div class="card accent step" style="--a:var(--net)">
+      <h3><span class="ico">🏠</span>შენი API პროექტის AI ლაბორატორია იზრდება</h3>
+      <ul class="clean small">
+<li><code class="i">AskRequest</code> + <strong>Provider</strong> (<code class="i">ollama</code> / <code class="i">gemini</code>) · <code class="i">AskResponse</code> + <strong>Model</strong>, <strong>ElapsedMs</strong></li>
+<li>provider-ის მიხედვით — სხვა <code class="i">IChatClient</code>; <code class="i">Ask</code>-ის კოდი <strong>ერთი</strong> რჩება</li>
+<li>3 კითხვა შენს თემაზე, ორივე პროვაიდერზე (Ollama და Gemini) → შედარების ცხრილი <code class="i">README.md</code>-ში</li>
+<li>თვის ხარჯი: <strong>გაზომილი</strong> ტოკენები × <strong>რეალური</strong> ფასი → <code class="i">README.md</code></li>
+</ul>
+      <p class="tiny" style="margin-top:14px">✓ მზადაა, როცა: ორივე პროვაიდერი მუშაობს მხოლოდ <code>"provider"</code> ველის შეცვლით; README-ში — ცხრილი და ხარჯის ფორმულა</p>
+    </div>
+    <div class="card accent step" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3><ul class="clean small">
+<li>ვალიდაცია: უცნობი provider ან Temperature 0–2-ის გარეთ → <code class="i">400 BadRequest</code></li>
+<li>Ollama გამორთულია → <code class="i">503</code> გასაგები შეტყობინებით და არა 500</li>
+</ul></div>
+  </div>
+  <div class="callout step mt" style="--a:var(--api)">შემდეგი ლექციის დასაწყისში ამ დავალებას <b>ერთად განვიხილავთ</b></div>
+  
+</section>
+
+<div id="hud"><span class="sec"></span><span class="dots"></span><span class="num"></span></div><div id="bar"></div>
+</div></div>
+<div id="overview"></div>
+<div id="help">← → · F</div>
+<script>(() => {
+  // the study window (P) follows the deck over this channel; title is unique per lecture
+  let bc = null; try { bc = new BroadcastChannel('deck-' + document.title); } catch (e) {}
+  const deck = document.getElementById('deck');
+  const slides = [...deck.querySelectorAll('.slide')];
+  const hud = { sec: document.querySelector('#hud .sec'), num: document.querySelector('#hud .num'), dots: document.querySelector('#hud .dots') };
+  const bar = document.getElementById('bar');
+  const ov = document.getElementById('overview');
+
+  // ----- build step groups per slide -----
+  const groups = slides.map(s => {
+    const els = [...s.querySelectorAll('.step, .trigger, .codestep')].filter(e => !e.closest('.study'));
+    const g = [];
+    els.forEach(e => { if (e.hasAttribute('data-with') && g.length) g[g.length - 1].push(e); else g.push([e]); });
+    return g;
+  });
+  // sections
+  let curSec = '';
+  const sections = slides.map(s => (curSec = s.dataset.section ?? curSec));
+
+  // typing lengths
+  document.querySelectorAll('.typing').forEach(t => { t.style.setProperty('--n', t.textContent.length); if (!t.style.getPropertyValue('--t')) t.style.setProperty('--t', Math.max(.6, t.textContent.length * .045) + 's'); });
+
+  // svg draw lengths
+  document.querySelectorAll('.draw path,.draw line,.draw polyline,path.draw,line.draw,.autodraw path,path.autodraw').forEach(p => {
+    try { const L = Math.ceil(p.getTotalLength()) + 2; p.style.setProperty('--len', L); } catch (e) {}
+  });
+
+  let i = 0, k = 0;
+  const parseHash = () => { const m = location.hash.match(/#\/?(\d+)(?:\.(\d+))?/); if (m) { i = Math.min(slides.length - 1, Math.max(0, +m[1] - 1)); k = Math.min(groups[i].length, +(m[2] || 0)); } };
+  parseHash();
+
+  function smil(root, filter) {
+    root.querySelectorAll('animate,animateMotion,animateTransform,set').forEach(a => {
+      if (filter(a)) { try { a.beginElement(); } catch (e) {} }
+    });
+  }
+  function ranges(spec) {
+    const out = new Set();
+    String(spec).split(',').forEach(p => { const [a, b] = p.split('-').map(Number); for (let x = a; x <= (b || a); x++) out.add(x); });
+    return out;
+  }
+
+  let prevI = -1, prevK = -1;
+  function render(forward) {
+    slides.forEach((s, x) => { s.classList.toggle('active', x === i); s.classList.toggle('past', x < i); });
+    const s = slides[i];
+    groups[i].forEach((g, x) => g.forEach(e => e.classList.toggle('shown', x < k)));
+    // data-hide triggers: hide target element(s) once the trigger is shown
+    s.querySelectorAll('[data-hide]').forEach(t => {
+      s.querySelectorAll(t.dataset.hide).forEach(el => el.classList.toggle('gone', t.classList.contains('shown')));
+    });
+    // code highlights
+    s.querySelectorAll('pre.code[id]').forEach(pre => {
+      const steps = [...s.querySelectorAll(`.codestep[data-for="${pre.id}"]`)].filter(c => c.classList.contains('shown'));
+      const last = steps[steps.length - 1];
+      const lines = [...pre.querySelectorAll('.ln')];
+      if (!last || last.dataset.lines === 'all') { lines.forEach(l => l.classList.remove('hl', 'dim')); return; }
+      const set = ranges(last.dataset.lines);
+      lines.forEach((l, n) => { const on = set.has(n + 1); l.classList.toggle('hl', on); l.classList.toggle('dim', !on); });
+    });
+    // animations
+    if (i !== prevI) {
+      smil(s, a => a.hasAttribute('data-auto'));
+    }
+    if (i === prevI && k > prevK) {
+      for (let x = prevK; x < k; x++) groups[i][x].forEach(e => smil(e, a => !a.hasAttribute('data-auto')));
+    } else if (i !== prevI && k > 0) {
+      for (let x = 0; x < k; x++) groups[i][x].forEach(e => smil(e, a => !a.hasAttribute('data-auto')));
+    }
+    prevI = i; prevK = k;
+    // hud
+    hud.sec.textContent = sections[i] || '';
+    hud.num.textContent = `${i + 1} / ${slides.length}`;
+    const n = groups[i].length;
+    hud.dots.innerHTML = n ? Array.from({ length: n }, (_, x) => x < k ? '<b>●</b>' : '○').join('') : '';
+    bar.style.width = ((i + (n ? k / n : 1)) / slides.length * 100) + '%';
+    history.replaceState(null, '', `#/${i + 1}${k ? '.' + k : ''}`);
+    try { bc && bc.postMessage({ t: 'state', i, k }); } catch (e) {}
+    [...ov.children].forEach((b, x) => b.classList.toggle('cur', x === i));
+  }
+
+  function next() { if (k < groups[i].length) k++; else if (i < slides.length - 1) { i++; k = 0; } render(true); }
+  function prev() { if (k > 0) { k--; prevK = k; } else if (i > 0) { i--; k = groups[i].length; } render(false); }
+  function go(x, all) { i = Math.max(0, Math.min(slides.length - 1, x)); k = all ? groups[i].length : 0; render(true); }
+
+  // overview
+  slides.forEach((s, x) => {
+    const b = document.createElement('button');
+    const t = s.querySelector('h1,h2,h3')?.textContent.trim() || s.dataset.title || 'სლაიდი';
+    b.innerHTML = `<small>${x + 1} · ${sections[x] || ''}</small>${t}`;
+    b.onclick = e => { e.stopPropagation(); ov.classList.remove('open'); go(x); };
+    ov.appendChild(b);
+  });
+
+  if (bc) bc.onmessage = ({ data }) => {
+    if (data.t === 'hello') bc.postMessage({ t: 'state', i, k });
+    if (data.t === 'go') go(data.n);
+  };
+  const openStudy = () => {
+    const w = Math.min(1440, Math.max(1100, Math.round(screen.availWidth * .7))), h = screen.availHeight;
+    window.open('study.html?live#s-' + (i + 1), 'study-' + document.title, `width=${w},height=${h}`);
+  };
+  document.getElementById('studybtn')?.addEventListener('click', e => { e.currentTarget.blur(); openStudy(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const key = e.key, code = e.code;
+    if (key === 'ArrowRight') { e.preventDefault(); e.shiftKey ? go(i + 1) : next(); }
+    else if (key === 'ArrowLeft') { e.preventDefault(); e.shiftKey ? go(i - 1) : prev(); }
+    else if ([' ', 'Enter', 'PageDown', 'PageUp', 'ArrowDown', 'ArrowUp', 'Backspace'].includes(key)) { e.preventDefault(); }
+    else if (key === 'Home') go(0);
+    else if (key === 'End') go(slides.length - 1, true);
+    else if (code === 'KeyO' || key === 'Escape') ov.classList.toggle('open', key === 'Escape' ? false : !ov.classList.contains('open'));
+    else if (code === 'KeyF') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+    else if (code === 'KeyA') { k = groups[i].length; render(true); }
+    else if (code === 'KeyP' && document.body.dataset.study) { e.preventDefault(); openStudy(); }
+  });
+  addEventListener('hashchange', () => { const oi = i, ok = k; parseHash(); if (oi !== i || ok !== k) render(true); });
+
+  function fit() {
+    // 16:9 on wide screens; grow canvas height up to 16:10 so MacBook-style screens have no bars
+    const H = Math.max(900, Math.min(1000, Math.round(1600 * innerHeight / innerWidth)));
+    deck.style.setProperty('--h', H + 'px');
+    deck.style.setProperty('--s', Math.min(innerWidth / 1600, innerHeight / H));
+  }
+  setTimeout(() => document.getElementById('help')?.classList.add('hide'), 6000);
+  addEventListener('resize', fit); fit();
+  render(true);
+})();
+</script>
+</body></html>

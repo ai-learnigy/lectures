@@ -57,7 +57,13 @@ def access_key():
         _key = (salt, kdf.derive(code.encode()))
     return _key
 
+def has_code():
+    return bool(os.environ.get('LECTURES_CODE') or (CODE_FILE.exists() and CODE_FILE.read_text().strip()))
+
 def write_page(path, page):
+    if not has_code():   # კოდი არ არის → გვერდი ღიად ქვეყნდება
+        path.write_text(page)
+        return
     salt, key = access_key()
     iv = os.urandom(12)
     b = lambda x: base64.b64encode(x).decode()

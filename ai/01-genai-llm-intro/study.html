@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="ka"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>📖 შესავალი Generative AI-სა და LLM API-ებში — კონსპექტი</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbf8f3;--card:#fff;--ink:#1e2132;--ink2:#3b3f54;--muted:#7b8096;--line:#e6dfd2;--accent:#6d28d9;--accent-soft:#f3effe;--teal:#0d9488;
+  --green:#15803d;--amber:#b45309;--mono:"JetBrains Mono",ui-monospace,monospace;--sans:"Noto Sans Georgian",system-ui,sans-serif}
+*{box-sizing:border-box}
+html{scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17.5px/1.75 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+/* top bar */
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;padding:10px 20px;background:rgba(251,248,243,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .back{font:600 14px var(--mono);color:var(--muted);text-decoration:none;white-space:nowrap}
+.top .back:hover{color:var(--ink)}
+.top .ttl{flex:1;min-width:0;font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .ttl small{font:500 13px var(--mono);color:var(--muted);margin-right:8px}
+.btn{font:700 14px var(--sans);text-decoration:none;border-radius:10px;padding:7px 14px;white-space:nowrap;border:1px solid var(--line);color:var(--ink);background:var(--card);cursor:pointer}
+.btn.play{background:var(--accent);border-color:var(--accent);color:#fff}
+.live{display:none;align-items:center;gap:8px;font:600 13px var(--mono);color:var(--teal);background:#e6f6f4;border:1px solid #bfe7e2;border-radius:999px;padding:5px 12px;cursor:pointer}
+.live.on{display:flex}
+.live .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 1.6s infinite}
+.live.off{color:var(--muted);background:var(--card);border-color:var(--line)}.live.off .dot{background:var(--muted);animation:none}
+@keyframes pulse{50%{opacity:.3}}
+/* layout */
+.wrap{display:grid;grid-template-columns:230px minmax(0,1000px);gap:44px;justify-content:center;padding:32px 28px 120px}
+nav.toc{position:sticky;top:84px;align-self:start;font-size:14px;line-height:1.45}
+nav.toc .h{font:700 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+nav.toc a{display:block;color:var(--ink2);text-decoration:none;padding:6px 10px;border-left:2px solid var(--line)}
+nav.toc a:hover{color:var(--accent)}
+nav.toc a.cur{color:var(--accent);border-left-color:var(--accent);font-weight:700}
+nav.toc .mats{margin-top:22px;display:flex;flex-direction:column;gap:6px}
+nav.toc .mats a{border:0;padding:2px 0;font:500 13px var(--mono);color:var(--teal);word-break:break-all}
+header.hero{margin-bottom:8px}
+header.hero .k{font:600 14px var(--mono);color:var(--accent)}
+header.hero h1{font-size:38px;line-height:1.2;margin:6px 0 10px;letter-spacing:-.01em}
+header.hero p{color:var(--muted);margin:0;font-size:15.5px}
+header.hero kbd{font:500 12px var(--mono);border:1px solid var(--line);border-radius:5px;padding:0 5px;background:var(--card)}
+h2.sec{font-size:15px;font:700 13px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:48px 0 6px;padding-top:18px;border-top:1px solid var(--line)}
+/* blocks */
+.blk{position:relative;padding:14px 0 6px 22px;margin-left:-22px;border-left:3px solid transparent;transition:border-color .3s,background .3s;border-radius:0 12px 12px 0}
+.blk.cur{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 70%)}
+.anchor{position:absolute;top:0}
+.bh{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.bh h3{font-size:22px;line-height:1.35;margin:4px 0 6px}
+.chip{flex:none;font:600 12px var(--mono);color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--card)}
+.chip:hover{color:var(--accent);border-color:var(--accent)}
+.blk h2{font-size:26px;line-height:1.3;margin:6px 0 10px}
+.blk h3:not(.bh h3){font-size:19px;margin:22px 0 6px}
+.blk h4{font-size:17px;margin:18px 0 4px}
+.blk p{margin:10px 0}
+.blk ul,.blk ol{padding-left:24px;margin:8px 0}
+.blk li{margin:4px 0}
+.blk strong{color:var(--ink)}
+.blk :not(pre)>code{font:600 .86em var(--mono);background:#f1ece3;border-radius:6px;padding:1px 6px;color:#5b21b6}
+.blk table{border-collapse:collapse;margin:14px 0;font-size:15.5px;width:100%;display:block;overflow-x:auto}
+.blk th,.blk td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+.blk th{background:#f6f1e8}
+/* code */
+.codebox{margin:14px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fffdf9}
+.codebox .ch,.prompt .ph{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px 6px 14px;font:600 12.5px var(--mono);color:var(--muted);background:#f6f1e8;border-bottom:1px solid var(--line)}
+.copy{font:600 12px var(--mono);border:1px solid var(--line);background:var(--card);color:var(--ink2);border-radius:7px;padding:3px 10px;cursor:pointer}
+.copy:hover{border-color:var(--ink)}
+.copy.ok{color:var(--green);border-color:var(--green)}
+pre.code{margin:0;padding:12px 0;overflow-x:auto;font:14px/1.65 var(--mono)}
+pre.code .ln{display:block;padding:0 16px;white-space:pre}
+.code .ttl{background:var(--bg2);color:var(--muted)}
+.code .ln.hl{background:rgba(109,40,217,.07);box-shadow:inset 3px 0 0 var(--net)}
+.code .ln.dim{opacity:.42}
+.code .k,.code .kd,.code .kn,.code .kr,.code .kc{color:#7c3aed}
+.code .kt{color:#2563eb}
+.code .s,.code .s1,.code .s2,.code .sa,.code .se,.code .si,.code .sd{color:#15803d}
+.code .c,.code .c1,.code .cm,.code .cp,.code .ch{color:#8b8fa3}
+.code .m,.code .mi,.code .mf,.code .mh{color:#c2410c}
+.code .nf,.code .fm{color:#1d4ed8}
+.code .nc,.code .nn,.code .nt,.code .nd{color:#b45309}
+.code .na{color:#7c3aed} .code .nb{color:#0e7490}
+.code .o,.code .p{color:#64748b}
+.code .nv,.code .nx{color:var(--ink)}
+.code .go{color:#64748b}
+/* prompt */
+.prompt{margin:16px 0;border:1px solid #ddd2fb;border-radius:12px;overflow:hidden;background:var(--accent-soft)}
+.prompt .ph{background:#ebe3fd;border-color:#ddd2fb;color:var(--accent)}
+.prompt .pb{padding:12px 16px;white-space:pre-wrap;font-size:15.5px;line-height:1.6;color:var(--ink2)}
+/* self check */
+.selfcheck{margin:16px 0;border:1px solid #cfe9d6;border-radius:12px;background:#f3fbf5;padding:12px 16px}
+.selfcheck .sh{font-weight:700;color:var(--green);margin-bottom:6px}
+.selfcheck .sh small{font-weight:400;color:var(--muted);font-size:13.5px;margin-left:6px}
+.selfcheck details{border-top:1px solid #dcefe1;padding:8px 0}
+.selfcheck summary{cursor:pointer;font-weight:600;list-style:none;padding-left:26px;position:relative}
+.selfcheck summary::-webkit-details-marker{display:none}
+.selfcheck summary::before{content:"?";position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;background:var(--green);color:#fff;font:700 12px/18px var(--mono);text-align:center}
+.selfcheck details[open] summary::before{content:"✓"}
+.selfcheck .ans{padding:6px 0 2px 26px;color:var(--ink2)}
+/* terms */
+.terms{margin:16px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px 16px}
+.terms .th{font-weight:700;margin-bottom:6px}
+.terms dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:0}
+.terms dt{font:600 14.5px var(--mono);color:var(--accent)}
+.terms dd{margin:0;color:var(--ink2)}
+/* callouts */
+.callout{display:flex;gap:12px;margin:14px 0;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+.callout .ci{font-size:20px;line-height:1.6}
+.callout>div>p:first-child{margin-top:0}.callout>div>p:last-child{margin-bottom:0}
+.callout.warn{background:#fff8eb;border-color:#f6dfb5}
+.callout.note{background:#eef5ff;border-color:#cfe0fb}
+@media (max-width:980px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:0;padding:20px 16px 100px}
+  nav.toc{position:static;margin-bottom:12px}
+  nav.toc details{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:8px 12px}
+  nav.toc details>summary{cursor:pointer;font-weight:700}
+  nav.toc .h{display:none}
+  header.hero h1{font-size:30px}
+  .blk{padding-left:14px;margin-left:-14px}
+  .top .ttl small{display:none}
+  .terms dl{grid-template-columns:1fr}.terms dd{margin-bottom:8px}
+}
+@media (min-width:981px){nav.toc details>summary{display:none}}
+@media print{.top,nav.toc,.copy,.chip,.live{display:none}.wrap{display:block;padding:0}.selfcheck details{display:block}.blk.cur{background:none}}
+</style></head>
+<body>
+<div class="top">
+  <a class="back" href="../../">← ლექციები</a>
+  <div class="ttl"><small>AI აგენტები .NET-ში · 1</small>შესავალი Generative AI-სა და LLM API-ებში</div>
+  <button class="live" id="live" type="button" title="ჩართული: ტექსტი პრეზენტაციას მიჰყვება"><span class="dot"></span><span class="lt">მიჰყვება სლაიდებს</span></button>
+  <a class="btn play" href="index.html">▶ პრეზენტაცია</a>
+</div>
+<div class="wrap">
+  <nav class="toc"><details id="tocd"><summary>სარჩევი</summary><div class="h">სარჩევი</div><a href="#sec-1">დღის თემა</a><a href="#sec-2">შესავალი</a><a href="#sec-3">1 · რატომ AI</a><a href="#sec-4">2 · როგორ მუშაობს</a><a href="#sec-5">3 · პარამეტრები</a><a href="#sec-6">4 · პროვაიდერები</a><a href="#sec-7">5 · პირველი გამოძახება</a><a href="#sec-8">პრაქტიკა</a><a href="#sec-9">შეჯამება</a><a href="#sec-10">საშინაო</a><div class="mats"><a href="materials/experiments.md" download>📎 experiments.md</a></div></details></nav>
+  <main>
+    <header class="hero">
+      <div class="k">📖 კონსპექტი · AI აგენტები .NET-ში · ლექცია 1</div>
+      <h1>შესავალი Generative AI-სა და LLM API-ებში</h1>
+      <p>წაიკითხე ლექციის შემდეგ, ან პრეზენტაციასთან ერთად: პრეზენტაციაში დააჭირე <kbd>P</kbd> და ეს გვერდი სლაიდებს გაჰყვება. კოდი და AI-ს პრომპტები კოპირდება ერთი დაჭერით.</p>
+    </header>
+    <h2 class="sec" id="sec-1">დღის თემა</h2>
+<article class="blk" data-slides="1,2"><span class="anchor" id="s-1"></span><span class="anchor" id="s-2"></span><div class="bh"><h3>დღის თემა: შესავალი Generative AI-სა და LLM API-ებში</h3><a class="chip" href="index.html#/1" data-go="1" title="პრეზენტაციაში გახსნა">სლაიდი 1</a></div>
+<p>RestaurantApi მზადაა: მენიუ, კალათა, შეკვეთა, ჯავშანი. მაგრამ ყველა endpoint ზუსტ მონაცემს ელოდება, კლიენტი კი წერს „რამე მსუბუქი მინდა, ხორცის გარეშე, ორისთვის“ — ასეთ ტექსტს if/else ვერ გაიგებს. დღეს ვიგებთ, რა არის ენობრივი მოდელი, როგორ წერს პასუხს შიგნიდან, რა ღირს ის — და ვაკეთებთ პირველ გამოძახებას ჩვენივე API-დან.</p>
+<p><strong>ლექციის ბოლოს შეძლებ:</strong></p>
+<ul>
+<li>ახსნა, როგორ ქმნის LLM ტექსტს: ტოკენები, next-token prediction, context window</li>
+<li>Temperature-ის, Top-P-ის და Max Tokens-ის შერჩევა ამოცანის მიხედვით</li>
+<li>პროვაიდერის არჩევა და თვის ხარჯის დათვლა ტოკენებით</li>
+<li>LLM-ის გამოძახება C#-იდან <code>IChatClient</code>-ით და ტექსტის, ტოკენებისა და <code>FinishReason</code>-ის წაკითხვა</li>
+</ul></article>
+<h2 class="sec" id="sec-2">შესავალი</h2>
+<article class="blk" data-slides="3"><span class="anchor" id="s-3"></span><div class="bh"><h3>ჩვენი პროექტი: RestaurantApi</h3><a class="chip" href="index.html#/3" data-go="3" title="პრეზენტაციაში გახსნა">სლაიდი 3</a></div>
+<p>API კურსზე ავაწყვეთ რესტორნის API:</p>
+<ul>
+<li>📋 <strong>მენიუ</strong> — კერძები, კატეგორიები, ფასები</li>
+<li>🛒 <strong>კალათა</strong> — კერძის დამატება, წაშლა, რაოდენობის შეცვლა</li>
+<li>🧾 <strong>შეკვეთა</strong> — კალათიდან შეკვეთის გაფორმება</li>
+<li>📅 <strong>ჯავშანი</strong> — მაგიდა, თარიღი, სტუმრების რაოდენობა</li>
+</ul>
+<p>ყველა endpoint ელოდება <strong>ზუსტ, სტრუქტურირებულ მონაცემს</strong>: <code>dishId</code>, <code>quantity</code>, <code>date</code>. ფრონტენდი ამას ფორმებით და ღილაკებით აგროვებს. მაგრამ ადამიანი ჩატში ასე არ წერს — ის წერს „ხვალ 8-ზე ოთხნი ვიქნებით“.</p>
+<p>ამ მოდულში ახალ პროექტს არ ვიწყებთ: <strong>იმავე RestaurantApi-ს</strong> ვამატებთ AI-ს, ლექცია-ლექცია. თქვენ კი იმავეს აკეთებთ <strong>თქვენს</strong> პროექტში.</p></article>
+<article class="blk" data-slides="4"><span class="anchor" id="s-4"></span><div class="bh"><h3>მოდულის რუკა — 24 ლექცია</h3><a class="chip" href="index.html#/4" data-go="4" title="პრეზენტაციაში გახსნა">სლაიდი 4</a></div>
+<p><strong>ნაწილი 1 · AI-ის საფუძვლები, Microsoft.Extensions.AI და RAG (ლექციები 1–12).</strong> ვიგებთ, როგორ მუშაობს ენობრივი მოდელი, როგორ ვესაუბრებით მას C#-იდან, როგორ ვაძლევთ მას ჩვენს C# მეთოდებს (tools) და როგორ ვპასუხობთ <strong>ჩვენი მენიუს</strong> მონაცემებით (RAG, PostgreSQL + pgvector).</p>
+<p><strong>ნაწილი 2 · Agentic Systems (ლექციები 13–24).</strong> მოდელი აღარ მხოლოდ პასუხობს — ის <strong>მოქმედებს</strong>: ირჩევს, რომელი tool გამოიძახოს, ამატებს კალათაში, ჯავშნის მაგიდას. ვამატებთ MCP-ს, რამდენიმე აგენტს, უსაფრთხოებას და ხარისხის შეფასებას.</p>
+<p><strong>საბოლოო შედეგი:</strong> RestaurantApi-ში ჩაშენებული „AI მიმტანი“. კლიენტი წერს ჩვეულებრივი ენით, აგენტი კი ჩვენივე endpoint-ებით მოქმედებს.</p>
+<div class="callout tip"><span class="ci">👉</span><div><p>ყოველი ლექცია წინაზე დგას. დღევანდელი თემა — როგორ მუშაობს მოდელი და რა ღირს — ყველა შემდეგ ლექციაში დაგჭირდება: prompt-ის წერისას, ხარჯის დათვლისას, შეცდომის გაგებისას.</p></div></div></article>
+<article class="blk" data-slides="5"><span class="anchor" id="s-5"></span><div class="bh"><h3>ლექციის გეგმა — 5 გაჩერება</h3><a class="chip" href="index.html#/5" data-go="5" title="პრეზენტაციაში გახსნა">სლაიდი 5</a></div>
+<ol>
+<li>🤔 <strong>რატომ AI?</strong> — რა ამოცანას ვერ ხსნის ჩვეულებრივი კოდი.</li>
+<li>🧩 <strong>როგორ მუშაობს LLM</strong> — ტოკენები, შემდეგი ტოკენის წინასწარმეტყველება, context window.</li>
+<li>🎛️ <strong>პარამეტრები</strong> — Temperature, Top-P, Max Tokens; reasoning მოდელები.</li>
+<li>💸 <strong>პროვაიდერები და ფასი</strong> — ღრუბელი თუ ლოკალური, როგორ ითვლება ხარჯი.</li>
+<li>⌨️ <strong>პირველი გამოძახება</strong> — <code>IChatClient</code> RestaurantApi-ში.</li>
+</ol>
+<p>გზაში სამი თამაშია: ტოკენების გამოცნობა, „იყავი LLM“ და ხარჯის დათვლა წყვილებში.</p></article>
+<h2 class="sec" id="sec-3">1 · რატომ AI</h2>
+<article class="blk" data-slides="6"><span class="anchor" id="s-6"></span><div class="bh"><h3>ნაწილი 1 · რას ვერ აკეთებს if / else?</h3><a class="chip" href="index.html#/6" data-go="6" title="პრეზენტაციაში გახსნა">სლაიდი 6</a></div>
+<p>სანამ წაიკითხავ, სცადე თავად უპასუხო: რა ტიპის ამოცანას ვერ წერ ჩვეულებრივი C# კოდით, რამდენი პირობაც არ უნდა დაწერო?</p></article>
+<article class="blk" data-slides="7"><span class="anchor" id="s-7"></span><div class="bh"><h3>პრობლემა: კლიენტები ჩვეულებრივი ენით წერენ</h3><a class="chip" href="index.html#/7" data-go="7" title="პრეზენტაციაში გახსნა">სლაიდი 7</a></div>
+<p>სამი რეალისტური შეტყობინება რესტორნის ჩატიდან:</p>
+<ul>
+<li><strong>ნინო:</strong> „რამე მსუბუქი, ხორცის გარეშე, ორისთვის, 40 ლარამდე“</li>
+<li><strong>გიორგი:</strong> „ხვალ 8-ზე ოთხნი ვიქნებით, ბავშვიც გვყავს, ფანჯარასთან თუ შეიძლება“</li>
+<li><strong>ლუკა:</strong> „ის წითელსოუსიანი რაღაც მინდა, წინა კვირას რომ ავიღე, ოღონდ ნაკლებად ცხარე“</li>
+</ul>
+<p>სცადე: როგორ გადააქცევდი თითოეულს ჩვენი API-ს გამოძახებად? ნინოსთვის ფილტრი <code>isVegetarian=true</code>, <code>maxPrice=40</code> კიდევ გამოვა, მაგრამ „მსუბუქი“ რა არის — კალორია? პორცია? გიორგისთვის „ხვალ 8-ზე“ თარიღად და დროდ უნდა ვაქციოთ, „ბავშვიც“ — დამატებითი სკამი? ლუკას შემთხვევაში წინა შეკვეთებში უნდა ვეძებოთ და „წითელსოუსიანი“ კერძის აღწერას დავუკავშიროთ.</p>
+<p>სიტყვების ძებნით (<code>Contains("ხორცის გარეშე")</code>) ამას ვერ დაწერ: ერთი და იგივე აზრი ათასნაირად ითქმება, შეცდომებით, ჟარგონით, ორ ენაზე. <strong>ჩვეულებრივი კოდი ზუსტ შეყვანას ელოდება — ადამიანის ენა კი ზუსტი არ არის.</strong></p>
+<div class="selfcheck"><div class="sh">✅ შეამოწმე თავი <small>დაფიქრდი, მერე გახსენი პასუხი</small></div><details><summary>რატომ ვერ ვწერთ ბუნებრივ ენას <code>if/else</code>-ით?</summary><div class="ans">ერთი აზრი უამრავნაირად ითქმება; წესების რაოდენობა უსასრულოა და ნებისმიერ ახალ ფორმულირებაზე ტყდება.</div></details></div></article>
+<article class="blk" data-slides="8"><span class="anchor" id="s-8"></span><div class="bh"><h3>ჩვეულებრივი კოდი vs ენობრივი მოდელი</h3><a class="chip" href="index.html#/8" data-go="8" title="პრეზენტაციაში გახსნა">სლაიდი 8</a></div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>C# კოდი</th>
+<th>LLM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>შეყვანა</td>
+<td>ზუსტი, სტრუქტურირებული (<code>dishId</code>, <code>date</code>)</td>
+<td>ნებისმიერი ტექსტი</td>
+</tr>
+<tr>
+<td>წესები</td>
+<td>ჩვენ ვწერთ</td>
+<td>მოდელმა ტექსტიდან „ისწავლა“</td>
+</tr>
+<tr>
+<td>შედეგი</td>
+<td><strong>დეტერმინისტული</strong>: ერთი შეყვანა → ყოველთვის ერთი შედეგი</td>
+<td><strong>ალბათური</strong>: ერთ კითხვაზე შეიძლება სხვადასხვა პასუხი მოვიდეს</td>
+</tr>
+<tr>
+<td>შეცდომა</td>
+<td>bug — ვპოულობთ და ვასწორებთ</td>
+<td>დამაჯერებლად ნათქვამი სიცრუე (ამას მე-2 ნაწილში დავარქმევთ სახელს)</td>
+</tr>
+</tbody>
+</table>
+<p>მთავარი იდეა: <strong>LLM ჩვეულებრივ კოდს არ ცვლის.</strong> კალათაში დამატება, ფასის დათვლა, ჯავშნის შენახვა ისევ C#-ში რჩება — იქ სიზუსტე გვჭირდება. LLM-ს ვიყენებთ იქ, სადაც ადამიანის ენა უნდა „გავიგოთ“ ან შევქმნათ. მთელი ეს მოდული ამ ორი სამყაროს შეერთებაზეა.</p>
+<div class="terms"><div class="th">📘 ტერმინები</div><dl><dt>დეტერმინისტული</dt><dd>ერთი და იგივე შეყვანა ყოველთვის ერთსა და იმავე შედეგს იძლევა</dd><dt>ალბათური (probabilistic)</dt><dd>შედეგი შემთხვევითობას შეიცავს; ერთი შეყვანა სხვადასხვა შედეგს იძლევა</dd></dl></div></article>
+<article class="blk" data-slides="9"><span class="anchor" id="s-9"></span><div class="bh"><h3>AI → ML → Deep Learning → GenAI → LLM</h3><a class="chip" href="index.html#/9" data-go="9" title="პრეზენტაციაში გახსნა">სლაიდი 9</a></div>
+<p>ეს ტერმინები ხშირად ერთმანეთის სინონიმად გამოიყენება, სინამდვილეში კი ერთმანეთში ჩადგმული წრეებია:</p>
+<ul>
+<li><strong>Artificial Intelligence (AI)</strong> — ყველაზე ფართო ცნება: ნებისმიერი სისტემა, რომელიც „ჭკვიანურ“ ამოცანას ასრულებს. ჭადრაკის ძველი პროგრამაც AI იყო.</li>
+<li><strong>Machine Learning (ML)</strong> — წესებს პროგრამისტი კი არ წერს, სისტემა <strong>მაგალითებიდან სწავლობს</strong>. მაგ., spam ფილტრი, რომელმაც მილიონი წერილი „ნახა“.</li>
+<li><strong>Deep Learning</strong> — ML, რომელიც მრავალშრიან <strong>ნეირონულ ქსელებს</strong> იყენებს.</li>
+<li><strong>Generative AI (GenAI)</strong> — მოდელები, რომლებიც ახალ კონტენტს <strong>ქმნიან</strong>: ტექსტს, სურათს, ხმას, კოდს.</li>
+<li><strong>LLM (Large Language Model)</strong> — GenAI, რომელიც ტექსტზეა: ტექსტი შედის, ტექსტი გამოდის. „Large“ — მილიარდობით პარამეტრი და გიგანტური სასწავლო ტექსტი.</li>
+</ul>
+<p>ამ კურსში ჩვენ <strong>LLM-ის მომხმარებლები</strong> ვართ, არა შემქმნელები: მოდელს არ ვწვრთნით, მზა მოდელს API-ით ვიძახებთ და ჩვენს სისტემაში ვაერთებთ. ასე მუშაობს AI ინჟინრის პროფესიის უდიდესი ნაწილი.</p></article>
+<article class="blk" data-slides="10"><span class="anchor" id="s-10"></span><div class="bh"><h3>ჩვენთვის LLM = კიდევ ერთი HTTP API</h3><a class="chip" href="index.html#/10" data-go="10" title="პრეზენტაციაში გახსნა">სლაიდი 10</a></div>
+<p>Backend დეველოპერისთვის LLM ჯადოსნური არაფერია: ის <strong>გარე სერვისია</strong>, რომელსაც HTTP მოთხოვნას ვუგზავნით — ისევე, როგორც ამინდის ან გადახდის API-ს. თითქმის ყველა პროვაიდერი ერთნაირ ფორმატს იყენებს (ე.წ. <strong>OpenAI-compatible</strong> API). ზემოთ — ლოკალური Ollama-ს მისამართი, მაგრამ OpenAI-ზე, Groq-ზე ან Gemini-ზე მოთხოვნა თითქმის იდენტურია.</p>
+<p><strong>Request:</strong></p>
+<ul>
+<li><code>model</code> — რომელ მოდელს ვეკითხებით</li>
+<li><code>messages</code> — შეტყობინებების სია, თითოს თავისი <code>role</code> აქვს (<code>user</code>, <code>assistant</code>, <code>system</code> — მე-2 ლექციაზე დეტალურად)</li>
+<li><code>temperature</code>, <code>max_tokens</code> — პარამეტრები, მე-3 ნაწილში</li>
+</ul>
+<p><strong>Response:</strong></p>
+<ul>
+<li><code>choices[0].message.content</code> — პასუხის ტექსტი</li>
+<li><code>finish_reason</code> — რატომ შეწყვიტა წერა (<code>stop</code> — თვითონ დაასრულა, <code>length</code> — ლიმიტს მიაღწია)</li>
+<li><code>usage</code> — რამდენი <strong>ტოკენი</strong> დაიხარჯა. სწორედ ამაში ვიხდით ფულს.</li>
+</ul>
+<p>ამ JSON-ს ხელით არ დავწერთ — C#-ში ამას <code>IChatClient</code> გააკეთებს (მე-5 ნაწილი). მაგრამ კარგია იცოდე, რა მიდის „კაპოტის ქვეშ“.</p></article>
+<h2 class="sec" id="sec-4">2 · როგორ მუშაობს</h2>
+<article class="blk" data-slides="11"><span class="anchor" id="s-11"></span><div class="bh"><h3>ნაწილი 2 · როგორ „ფიქრობს“ LLM?</h3><a class="chip" href="index.html#/11" data-go="11" title="პრეზენტაციაში გახსნა">სლაიდი 11</a></div>
+<p>სამი იდეა, რომელიც მთელი კურსის მანძილზე დაგვჭირდება: <strong>ტოკენი</strong> (რას „კითხულობს“ მოდელი), <strong>next-token prediction</strong> (როგორ წერს პასუხს) და <strong>context window</strong> (რამდენს „ხედავს“ ერთდროულად).</p></article>
+<article class="blk" data-slides="12"><span class="anchor" id="s-12"></span><div class="bh"><h3>ტოკენი — მოდელის „ანბანი“</h3><a class="chip" href="index.html#/12" data-go="12" title="პრეზენტაციაში გახსნა">სლაიდი 12</a></div>
+<p>მოდელი ტექსტს ასოებად ან სიტყვებად კი არ კითხულობს, არამედ <strong>ტოკენებად</strong>. ტოკენი ტექსტის ნაჭერია: ხშირი სიტყვა ერთი ტოკენია (<code>table</code>), იშვიათი სიტყვა რამდენიმე ნაწილად იშლება, ზოგჯერ კი ცალკე ასოებადაც. ხშირად ტოკენში წინა ჰარიც შედის (<code>" table"</code>).</p>
+<p>ტექსტს ტოკენებად <strong>tokenizer</strong> ყოფს, და თითო ტოკენს <strong>ნომერს (ID)</strong> ანიჭებს. მოდელი სინამდვილეში რიცხვების მიმდევრობას ხედავს, მაგალითად <code>[12768, 261, 3293, 395, 1920]</code>, და პასუხსაც რიცხვებად აბრუნებს, რომელსაც tokenizer ისევ ტექსტად აქცევს.</p>
+<p><strong>რატომ გვაინტერესებს backend-ში?</strong> იმიტომ, რომ ყველაფერი ტოკენებით ითვლება:</p>
+<ul>
+<li>💸 <strong>ფასი</strong> — პროვაიდერი ტოკენზე იხდის (მე-4 ნაწილი)</li>
+<li>📏 <strong>ლიმიტი</strong> — რამდენი ტექსტი ეტევა ერთ მოთხოვნაში (context window)</li>
+<li>⏱️ <strong>სიჩქარე</strong> — პასუხი ტოკენ-ტოკენ იწერება; მეტი ტოკენი = მეტი ლოდინი</li>
+</ul>
+<div class="callout note"><span class="ci">💡</span><div><p>ზემოთ ტოკენებად დაყოფა და ID-ები <strong>საილუსტრაციოა</strong>. სხვადასხვა მოდელს სხვადასხვა tokenizer აქვს, ამიტომ ერთი და იგივე ტექსტი სხვადასხვა რაოდენობის ტოკენად იშლება. ზუსტი რიცხვის სანახავად — შემდეგი სლაიდის თამაში.</p></div></div>
+<div class="terms"><div class="th">📘 ტერმინები</div><dl><dt>ტოკენი (token)</dt><dd>ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს</dd><dt>tokenizer</dt><dd>პროგრამა, რომელიც ტექსტს ტოკენებად (და ID-ებად) ყოფს და პირიქით</dd></dl></div></article>
+<article class="blk" data-slides="13"><span class="anchor" id="s-13"></span><div class="bh"><h3>🎮 თამაში 1 · რამდენი ტოკენია?</h3><a class="chip" href="index.html#/13" data-go="13" title="პრეზენტაციაში გახსნა">სლაიდი 13</a></div>
+<p>ორი წინადადება, ერთი აზრი:</p>
+<ul>
+<li>🇬🇧 <em>I'd like to book a table for four people tomorrow at 8 pm.</em></li>
+<li>🇬🇪 <em>მინდა ხვალ საღამოს 8 საათზე ოთხი ადამიანისთვის მაგიდა დავჯავშნო.</em></li>
+</ul>
+<p>ჯერ გამოიცანი, თითოეული რამდენ ტოკენად დაიშლება, მერე შეამოწმე tokenizer-ის საიტზე: <a href="https://tiktokenizer.vercel.app">tiktokenizer.vercel.app</a> (აირჩიე ახალი მოდელის tokenizer, მაგ. <code>o200k_base</code>) ან <a href="https://platform.openai.com/tokenizer">platform.openai.com/tokenizer</a>.</p>
+<p><strong>რას დაინახავ:</strong> ინგლისური სიტყვა ხშირად ერთი ტოკენია, ქართული კი რამდენიმე ნაწილად იშლება. მიზეზი მარტივია: tokenizer იმ ტექსტზე „ისწავლა“, რაც ინტერნეტში ყველაზე ბევრია, და ქართული ტექსტი იქ ცოტაა.</p>
+<p><strong>რას ნიშნავს ეს ჩვენთვის:</strong></p>
+<ul>
+<li>💸 ქართული მოთხოვნა <strong>უფრო ძვირია</strong> — ფასი ტოკენზეა</li>
+<li>⏱️ ქართული პასუხი <strong>უფრო ნელა</strong> იწერება — მეტი ტოკენი უნდა დაიწეროს</li>
+<li>📏 context window-ში ქართული ტექსტი <strong>ნაკლები ეტევა</strong></li>
+<li>🎯 პატარა მოდელები ქართულად ხშირად <strong>უარესად</strong> წერენ — ეს დღესვე ვნახავთ ლოკალურ მოდელზე</li>
+</ul>
+<div class="callout tip"><span class="ci">👉</span><div><p>ეს არ ნიშნავს, რომ ქართული არ გამოვიყენოთ — კლიენტი ქართულად წერს. ნიშნავს, რომ ხარჯის დათვლისას და მოდელის არჩევისას <strong>ქართული ტექსტით</strong> ვამოწმებთ და არა ინგლისურით. ზოგი გამოცდილი გუნდი შიდა ინსტრუქციებს (system prompt) ინგლისურად წერს, მომხმარებელს კი ქართულად პასუხობს.</p></div></div></article>
+<article class="blk" data-slides="14"><span class="anchor" id="s-14"></span><div class="bh"><h3>Next-token prediction — LLM-ის მთელი საიდუმლო</h3><a class="chip" href="index.html#/14" data-go="14" title="პრეზენტაციაში გახსნა">სლაიდი 14</a></div>
+<p>LLM ერთ საქმეს აკეთებს: <strong>იცის, რა ტოკენი მოდის შემდეგ.</strong> უფრო ზუსტად, ტექსტის საფუძველზე თითოეული შესაძლო ტოკენისთვის ითვლის <strong>ალბათობას</strong>.</p>
+<p>ციკლი ასეთია:</p>
+<ol>
+<li><strong>შეყვანა</strong> — მოდელი იღებს ტოკენების მიმდევრობას: <code>Book a table for</code></li>
+<li><strong>ალბათობები</strong> — ითვლის, რომელი ტოკენი მოვა შემდეგ: <code>two</code> — 62%, <code>four</code> — 21%, <code>tonight</code> — 9%, <code>pizza</code> — 0.1%… (რიცხვები საილუსტრაციოა)</li>
+<li><strong>არჩევა</strong> — ირჩევს ერთს (როგორ — ამას <strong>Temperature</strong> წყვეტს, მე-3 ნაწილი)</li>
+<li><strong>გამეორება</strong> — არჩეულს უმატებს ტექსტს და მთელ ციკლს თავიდან უშვებს: <code>Book a table for two</code> → შემდეგი ტოკენი → …</li>
+<li><strong>დასასრული</strong> — როცა მოდელი სპეციალურ „დასრულების“ ტოკენს აირჩევს, ან ლიმიტს მიაღწევს (<code>max_tokens</code>)</li>
+</ol>
+<p>ესაა ყველაფერი. ჩატი, კოდის წერა, თარგმანი — ყველაფერი ამ ერთი ციკლით ხდება. მოდელს „ფიქრი“ და „ცოდნა“ ამ ალბათობებში აქვს „ჩაწერილი“: გიგანტურ ტექსტზე ვარჯიშისას ისწავლა, რა მოსდევს რას.</p>
+<p><strong>backend-ის დასკვნა:</strong> ყოველი ტოკენი მოდელის ერთი სრული გაშვებაა. ამიტომ 500-ტოკენიანი პასუხი 50-ტოკენიანზე შესამჩნევად ნელია და ძვირი. ამიტომაც ჩანს ChatGPT-ში პასუხი „ნელ-ნელა იწერება“ — ეს <strong>streaming</strong>-ია (მე-6 ლექცია).</p>
+<div class="terms"><div class="th">📘 ტერმინები</div><dl><dt>next-token prediction</dt><dd>შემდეგი ტოკენის წინასწარმეტყველება: LLM-ის ძირითადი მექანიზმი</dd><dt>ალბათობების განაწილება (distribution)</dt><dd>ყველა შესაძლო ტოკენის სია თავისი ალბათობით; ჯამი 100%</dd></dl></div></article>
+<article class="blk" data-slides="15"><span class="anchor" id="s-15"></span><div class="bh"><h3>🎮 თამაში 2 · იყავი LLM</h3><a class="chip" href="index.html#/15" data-go="15" title="პრეზენტაციაში გახსნა">სლაიდი 15</a></div>
+<p>წინადადება: <strong>„ხვალ საღამოს მინდა მაგიდა ___“</strong></p>
+<p>ჯერ თვითონ დაწერე ერთი სიტყვა. ლექციაზე ყველა სტუდენტი წერს თავის ვარიანტს, და შედეგი თითქმის ყოველთვის ასეთია: უმეტესობა წერს „დავჯავშნო“, ნაწილი „ოთხისთვის“ ან „ფანჯარასთან“, და <strong>არავინ</strong> წერს „ბანანი“.</p>
+<p>სწორედ ესაა ალბათობების განაწილება. მოდელმა ტექსტზე ვარჯიშისას ნახა, რომ ასეთ წინადადებას ყველაზე ხშირად „დავჯავშნო“ მოსდევს, ამიტომ მისი ალბათობა მაღალია. „ბანანი“ გრამატიკულად შეიძლება, მაგრამ თითქმის არასდროს გვხვდება — ალბათობა ნულთან ახლოსაა.</p>
+<p><strong>მნიშვნელოვანი დეტალი:</strong> ჯგუფში ყველამ ერთი და იგივე არ დაწერა, თუმცა ყველა პასუხი „ნორმალური“ იყო. მოდელიც ასეა: ერთ კითხვაზე რამდენიმე სწორი გაგრძელება არსებობს, და რომელს აირჩევს — ამას Temperature წყვეტს.</p></article>
+<article class="blk" data-slides="16"><span class="anchor" id="s-16"></span><div class="bh"><h3>რაუნდი 2 · იგივე სიტყვები, სხვა კონტექსტი</h3><a class="chip" href="index.html#/16" data-go="16" title="პრეზენტაციაში გახსნა">სლაიდი 16</a></div>
+<p>ახლა წინადადებას წინ ერთი წინადადება დაემატა: <strong>„ვეგეტარიანელი ვარ და ხორცს არ ვჭამ. ხვალ საღამოს მინდა მაგიდა და ___“</strong></p>
+<p>„მწვადის“ ალბათობა თითქმის ნულამდე დაეცა, „სალათის“ და „ფხალის“ კი გაიზარდა. მოდელი შემდეგ ტოკენს <strong>მთელი ტექსტის</strong> მიხედვით ირჩევს, არა მხოლოდ ბოლო სიტყვების.</p>
+<p>ეს ძალიან მნიშვნელოვანი დასკვნაა ჩვენთვის: <strong>რასაც მოდელს ვაწვდით, ის ცვლის პასუხს.</strong> თუ ვეტყვით „შენ რესტორნის მიმტანი ხარ, პასუხობ მოკლედ და მხოლოდ ჩვენი მენიუდან“, ალბათობები ისე შეიცვლება, რომ პასუხიც შესაბამისი იქნება. ამას ჰქვია <strong>prompt engineering</strong> (ლექცია 2), ხოლო უფრო ფართოდ — რა შეიტანო მოდელის „ხედვის არეში“ — <strong>context engineering</strong> (ლექცია 7).</p></article>
+<article class="blk" data-slides="17"><span class="anchor" id="s-17"></span><div class="bh"><h3>საიდან „იცის“ მოდელმა — და როდის იტყუება</h3><a class="chip" href="index.html#/17" data-go="17" title="პრეზენტაციაში გახსნა">სლაიდი 17</a></div>
+<p>მოდელი ორ ეტაპად იქმნება:</p>
+<ol>
+<li><strong>Pre-training</strong> — გიგანტურ ტექსტზე (ინტერნეტი, წიგნები, კოდი) სწავლობს შემდეგი ტოკენის გამოცნობას. შედეგი: მოდელი, რომელიც ნებისმიერ ტექსტს „დამაჯერებლად აგრძელებს“, მაგრამ ჯერ ასისტენტი არ არის — კითხვას შეიძლება კიდევ ათი კითხვით „გააგრძელოს“.</li>
+<li><strong>Fine-tuning</strong> (და RLHF) — დამატებით ვარჯიშობს დიალოგებზე და ადამიანების შეფასებებზე: სწავლობს ინსტრუქციის შესრულებას და ასისტენტის ქცევას. ასე ხდება „ჩატის“ მოდელი.</li>
+</ol>
+<p><strong>Knowledge cutoff</strong> — ვარჯიშის მონაცემები რაღაც თარიღამდეა. ამის შემდეგ მომხდარი მოდელმა არ იცის. და რაც მთავარია: <strong>ჩვენი რესტორნის მენიუ, ფასები, თავისუფალი მაგიდები</strong> მას არასდროს უნახავს.</p>
+<p><strong>Hallucination (ჰალუცინაცია)</strong> — როცა მოდელმა პასუხი არ იცის, ის მაინც წერს ყველაზე „სავარაუდო“ ტექსტს. „ხინკალი 1.20 ₾“ დამაჯერებლად ჟღერს, რადგან ასეთი წინადადებები ინტერნეტში ბევრია — მაგრამ ეს ჩვენი ფასი არ არის. მოდელი არ „იტყუება“ განზრახ: მისი მიზანი <strong>სავარაუდო</strong> ტექსტია და არა <strong>ჭეშმარიტი</strong>.</p>
+<p><strong>გამოსავალი</strong> (კურსის მთავარი თემა): მოდელს მეხსიერებიდან კი არ ვაპასუხებინებთ, <strong>ჩვენს მონაცემს ვაწვდით</strong> — tool-ით (ლექცია 4: მოდელი ჩვენს <code>GetMenu()</code> მეთოდს იძახებს) ან RAG-ით (ლექცია 11: შესაბამის დოკუმენტს ვპოულობთ და prompt-ში ვსვამთ).</p>
+<div class="callout warn"><span class="ci">⚠️</span><div><p>წესი, რომელიც მთელ კურსზე მოქმედებს: <strong>ფასი, მარაგი, ჯავშანი, ფული — მოდელის მეხსიერებიდან არასდროს.</strong> ასეთი მონაცემი ყოველთვის ჩვენი ბაზიდან მოდის.</p></div></div>
+<div class="terms"><div class="th">📘 ტერმინები</div><dl><dt>pre-training</dt><dd>ძირითადი ვარჯიში დიდ ტექსტზე: შემდეგი ტოკენის გამოცნობა</dd><dt>fine-tuning</dt><dd>დამატებითი ვარჯიში კონკრეტულ ქცევაზე (მაგ. ასისტენტის დიალოგი)</dd><dt>knowledge cutoff</dt><dd>თარიღი, სადამდეც მოდელის ვარჯიშის მონაცემები აღწევს</dd><dt>hallucination</dt><dd>დამაჯერებლად ნათქვამი, მაგრამ მცდარი ან მოგონილი ინფორმაცია</dd></dl></div></article>
+<article class="blk" data-slides="18"><span class="anchor" id="s-18"></span><div class="bh"><h3>Context window — რას „ხედავს“ მოდელი ერთ მოთხოვნაში</h3><a class="chip" href="index.html#/18" data-go="18" title="პრეზენტაციაში გახსნა">სლაიდი 18</a></div>
+<p><strong>Context window</strong> არის ტოკენების მაქსიმალური რაოდენობა, რასაც მოდელი ერთ მოთხოვნაში ამუშავებს — <strong>შემავალიც და გამომავალიც</strong> ერთად. თანამედროვე მოდელებთან ეს ათიათასობით ტოკენიდან მილიონამდეა (კონკრეტული რიცხვი მოდელის დოკუმენტაციაშია).</p>
+<p>რა შედის მასში (სლაიდის ზოლი):</p>
+<ul>
+<li><strong>System</strong> — ინსტრუქცია მოდელისთვის („შენ რესტორნის ასისტენტი ხარ…“)</li>
+<li><strong>საუბრის ისტორია</strong> — წინა შეკითხვები და პასუხები</li>
+<li><strong>მონაცემები</strong> — მენიუ, დოკუმენტები, tool-ების პასუხები</li>
+<li><strong>კითხვა</strong> — მომხმარებლის ბოლო შეტყობინება</li>
+<li><strong>პასუხი</strong> — რასაც მოდელი დაწერს</li>
+</ul>
+<p><strong>მოდელს მეხსიერება არ აქვს (stateless).</strong> ეს ყველაზე ხშირი გაუგებრობაა. ChatGPT-ში ჩანს, თითქოს მოდელს „ახსოვს“ საუბარი — სინამდვილეში ყოველ ახალ შეტყობინებაზე აპლიკაცია <strong>მთელ ისტორიას თავიდან უგზავნის</strong>. ჩვენც ასე უნდა მოვიქცეთ: თუ ისტორიას არ გავუგზავნით, მოდელმა არ იცის, რაზე ვლაპარაკობდით. დღეს ამას კოდშიც შევამოწმებთ, ხოლო ისტორიის შენახვას PostgreSQL-ში — ლექცია 7-ზე ვისწავლით.</p>
+<p><strong>backend-ის დასკვნები:</strong></p>
+<ul>
+<li>გრძელი ისტორია = ყოველ მოთხოვნაზე მეტი ტოკენი = მეტი ფული</li>
+<li>ისტორიას ბოლოს და ბოლოს <strong>ლიმიტი</strong> დაუდგება — მისი მართვა (შეკუმშვა, შერჩევა) ჩვენი საქმეა</li>
+<li>მოდელი ხედავს <strong>მხოლოდ</strong> იმას, რაც ამ მოთხოვნაში ჩავსვით</li>
+</ul>
+<div class="terms"><div class="th">📘 ტერმინები</div><dl><dt>context window</dt><dd>ტოკენების მაქსიმუმი ერთ მოთხოვნაში (შემავალი + გამომავალი)</dd><dt>stateless</dt><dd>სისტემა, რომელსაც წინა მოთხოვნები არ ახსოვს; ყოველი მოთხოვნა დამოუკიდებელია</dd></dl></div></article>
+<article class="blk" data-slides="19,20"><span class="anchor" id="s-19"></span><span class="anchor" id="s-20"></span><div class="bh"><h3>❓ შეამოწმე თავი · ნაწილი 2</h3><a class="chip" href="index.html#/19" data-go="19" title="პრეზენტაციაში გახსნა">სლაიდი 19</a></div>
+<div class="selfcheck"><div class="sh">✅ შეამოწმე თავი <small>დაფიქრდი, მერე გახსენი პასუხი</small></div><details><summary>რატომ არის ერთი და იგივე ტექსტი ქართულად უფრო ძვირი, ვიდრე ინგლისურად?</summary><div class="ans">ქართული ტექსტი მეტ ტოკენად იშლება (tokenizer-მა ქართული ცოტა ნახა), ფასი კი ტოკენებით ითვლება.</div></details><details><summary>მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</summary><div class="ans">ჩვენი მენიუ ვარჯიშისას არ უნახავს. მოდელი წერს ყველაზე სავარაუდო ტექსტს და არა ჭეშმარიტს — ეს hallucination-ია. ფასი ყოველთვის ბაზიდან.</div></details><details><summary>პირველ მოთხოვნაში ვუთხარით „ოთხნი ვართ“, მეორეში ვკითხეთ „რამდენი ვართ?“. რას უპასუხებს?</summary><div class="ans">არ ეცოდინება. მოდელი stateless-ია: ყოველი მოთხოვნა ცალკეა. რომ „ახსოვდეს“, მეორე მოთხოვნაში წინა შეტყობინებებიც უნდა გავგზავნოთ.</div></details><details><summary>რას ნიშნავს „next-token prediction“?</summary><div class="ans">მოდელი ყოველ ნაბიჯზე ითვლის ალბათობებს შემდეგი ტოკენისთვის, ირჩევს ერთს, უმატებს ტექსტს და ციკლს იმეორებს — სანამ დასრულების ტოკენს ან ლიმიტს არ მიაღწევს.</div></details></div></article>
+<h2 class="sec" id="sec-5">3 · პარამეტრები</h2>
+<article class="blk" data-slides="21"><span class="anchor" id="s-21"></span><div class="bh"><h3>ნაწილი 3 · რომელ ტოკენს აირჩევს?</h3><a class="chip" href="index.html#/21" data-go="21" title="პრეზენტაციაში გახსნა">სლაიდი 21</a></div>
+<p>ვიცით, რომ მოდელი ყოველ ნაბიჯზე ალბათობების სიას იღებს. ახლა ვნახავთ, რომელი პარამეტრებით ვმართავთ <strong>არჩევანს</strong> და <strong>პასუხის სიგრძეს</strong> — ესენი ყოველ API მოთხოვნაში გვხვდება.</p></article>
+<article class="blk" data-slides="22"><span class="anchor" id="s-22"></span><div class="bh"><h3>Temperature — რამდენად „გაბედულად“ ირჩევს მოდელი</h3><a class="chip" href="index.html#/22" data-go="22" title="პრეზენტაციაში გახსნა">სლაიდი 22</a></div>
+<p><strong>Temperature</strong> ცვლის ალბათობების განაწილების ფორმას, სანამ მოდელი ტოკენს აირჩევს. ჩვეულებრივ დიაპაზონია <strong>0–2</strong> (ზოგ პროვაიდერთან 0–1).</p>
+<ul>
+<li><strong>0</strong> — განაწილება იმდენად „მკვეთრდება“, რომ თითქმის ყოველთვის ყველაზე სავარაუდო ტოკენი იმარჯვებს. ერთ კითხვაზე პასუხი (თითქმის) ყოველთვის ერთნაირია.</li>
+<li><strong>~0.7</strong> — ბუნებრივი ტექსტი: ძირითადად სავარაუდო ტოკენები, მაგრამ ზოგჯერ სხვაც. ჩატისთვის ხშირი არჩევანია.</li>
+<li><strong>1.5</strong> — განაწილება „ბრტყელდება“: სუსტი ვარიანტებიც სერიოზულ შანსს იღებენ. ტექსტი მრავალფეროვანია, მაგრამ იზრდება სისულელის შანსი („ბანანი“).</li>
+</ul>
+<p><strong>როდის რა:</strong></p>
+<ul>
+<li>დაბალი (0–0.3) — როცა <strong>ერთი სწორი პასუხი</strong> არსებობს: შეკვეთის ტიპის დადგენა, JSON-ის ამოღება ტექსტიდან, კლასიფიკაცია.</li>
+<li>საშუალო (0.5–0.9) — ჩვეულებრივი საუბარი, ახსნა, რეკომენდაცია.</li>
+<li>მაღალი (1+) — კრეატიული ტექსტი: კერძის „მარკეტინგული“ აღწერა, სლოგანის ვარიანტები.</li>
+</ul>
+<div class="callout note"><span class="ci">💡</span><div><p>Temperature = 0 <strong>ყოველთვის</strong> არ ნიშნავს ბაიტ-ბაიტ ერთნაირ პასუხს: სერვერზე გამოთვლის დეტალების გამო პატარა განსხვავება მაინც შეიძლება გამოჩნდეს. „თითქმის დეტერმინისტული“ — ასე ჯობია ვთქვათ.</p></div></div></article>
+<article class="blk" data-slides="23"><span class="anchor" id="s-23"></span><div class="bh"><h3>Top-P — კუდის მოჭრა</h3><a class="chip" href="index.html#/23" data-go="23" title="პრეზენტაციაში გახსნა">სლაიდი 23</a></div>
+<p><strong>Top-P</strong> (ასევე <em>nucleus sampling</em>) სხვა გზით მართავს არჩევანს: ტოკენებს ალბათობით ალაგებს და იღებს <strong>ყველაზე სავარაუდოებს, სანამ მათი ჯამი P-ს არ მიაღწევს</strong>. დანარჩენ „კუდს“ საერთოდ აგდებს, და არჩევანი მხოლოდ დარჩენილებს შორის ხდება.</p>
+<p>მაგალითი, Top-P = 0.9:</p>
+<table>
+<thead>
+<tr>
+<th>ტოკენი</th>
+<th>ალბათობა</th>
+<th>ჯამი</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>დავჯავშნო</td>
+<td>44%</td>
+<td>44%</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>ოთხისთვის</td>
+<td>23%</td>
+<td>67%</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>ფანჯარასთან</td>
+<td>14%</td>
+<td>81%</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>8-ზე</td>
+<td>10%</td>
+<td>91%</td>
+<td>✓ — 90%-ს გადააჭარბა, აქ ვჩერდებით</td>
+</tr>
+<tr>
+<td>ტერასაზე</td>
+<td>6%</td>
+<td>—</td>
+<td>✂</td>
+</tr>
+<tr>
+<td>ბანანი</td>
+<td>0.01%</td>
+<td>—</td>
+<td>✂</td>
+</tr>
+</tbody>
+</table>
+<p>Top-P = 1 ნიშნავს „არაფერს ვჭრით“. რაც უფრო პატარაა, მით უფრო „ფრთხილია“ მოდელი.</p>
+<div class="callout tip"><span class="ci">👉</span><div><p>პროვაიდერების დოკუმენტაციის ზოგადი რჩევა: შეცვალე <strong>ან</strong> Temperature, <strong>ან</strong> Top-P — არა ორივე ერთად, თორემ ძნელი გასაგები ხდება, რომელმა რა შეცვალა. ამ კურსში ძირითადად Temperature-ს ვიყენებთ.</p></div></div></article>
+<article class="blk" data-slides="24"><span class="anchor" id="s-24"></span><div class="bh"><h3>Max Tokens — სად გაჩერდეს</h3><a class="chip" href="index.html#/24" data-go="24" title="პრეზენტაციაში გახსნა">სლაიდი 24</a></div>
+<p><strong>Max Tokens</strong> (<code>max_tokens</code>, <code>max_output_tokens</code>, C#-ში <code>MaxOutputTokens</code>) ზღუდავს, მაქსიმუმ რამდენი ტოკენი დაწეროს მოდელმა <strong>პასუხში</strong>. ლიმიტს რომ მიაღწევს, წერა უბრალოდ წყდება — სიტყვის ან წინადადების შუაშიც.</p>
+<p><strong>რატომ გვჭირდება:</strong></p>
+<ul>
+<li>💸 <strong>ხარჯის ზღვარი</strong> — output ტოკენი ყველაზე ძვირია; ლიმიტი გარანტიას გვაძლევს, რომ ერთი მოთხოვნა „არ გაიზრდება“.</li>
+<li>⏱️ <strong>დროის ზღვარი</strong> — მოკლე პასუხი სწრაფად მოდის.</li>
+<li>🐛 <strong>დაცვა უცნაური ქცევისგან</strong> — ზოგჯერ მოდელი ერთსა და იმავეს იმეორებს უსასრულოდ; ლიმიტი ამას აჩერებს.</li>
+</ul>
+<p><strong>როგორ გავიგოთ, მოიჭრა თუ არა?</strong> პასუხში არის <code>finish_reason</code>:</p>
+<table>
+<thead>
+<tr>
+<th>მნიშვნელობა</th>
+<th>ნიშნავს</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stop</code></td>
+<td>მოდელმა თვითონ დაასრულა — ნორმალური შემთხვევა</td>
+</tr>
+<tr>
+<td><code>length</code></td>
+<td>Max Tokens-ს მიაღწია — <strong>პასუხი მოჭრილია</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="callout warn"><span class="ci">⚠️</span><div><p>ლიმიტი ძალიან დაბალი რომ იყოს, მომხმარებელი მოჭრილ წინადადებას მიიღებს. ამიტომ backend-ში <code>finish_reason == length</code> ყოველთვის უნდა შევამოწმოთ (დალოგოთ, ან ლიმიტი გავზარდოთ). დღეს ამას კოდშიც ვნახავთ.</p></div></div></article>
+<article class="blk" data-slides="25"><span class="anchor" id="s-25"></span><div class="bh"><h3>ერთი პროექტი — სხვადასხვა პარამეტრი</h3><a class="chip" href="index.html#/25" data-go="25" title="პრეზენტაციაში გახსნა">სლაიდი 25</a></div>
+<p>RestaurantApi-ში LLM რამდენიმე სხვადასხვა საქმეს გააკეთებს, და თითოს თავისი პარამეტრები სჭირდება:</p>
+<table>
+<thead>
+<tr>
+<th>ამოცანა</th>
+<th>Temperature</th>
+<th>Max Tokens</th>
+<th>რატომ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>შეტყობინების ტიპის დადგენა (შეკვეთა / ჯავშანი / კითხვა)</td>
+<td>0</td>
+<td>~10</td>
+<td>ერთი სწორი პასუხი; ერთი სიტყვა</td>
+</tr>
+<tr>
+<td>„ხვალ 8-ზე ოთხნი“ → თარიღი, დრო, სტუმრების რაოდენობა</td>
+<td>0</td>
+<td>~100</td>
+<td>მონაცემის ზუსტი ამოღება (ლექცია 2: structured output)</td>
+</tr>
+<tr>
+<td>ჩატი კლიენტთან, რეკომენდაცია</td>
+<td>0.5–0.8</td>
+<td>~300</td>
+<td>ბუნებრივი ტონი, მაგრამ არა ფანტაზია</td>
+</tr>
+<tr>
+<td>ახალი კერძის აღწერა მენიუსთვის</td>
+<td>0.9–1.2</td>
+<td>~200</td>
+<td>კრეატიული ტექსტი</td>
+</tr>
+</tbody>
+</table>
+<p>რიცხვები ორიენტირია და არა კანონი — სწორ მნიშვნელობას ექსპერიმენტით პოულობენ (ლექცია 12 და 20: შეფასება/evals).</p>
+<p><strong>მთავარი:</strong> პარამეტრი <strong>ცალკეულ მოთხოვნას</strong> ეკუთვნის. ერთი და იგივე მოდელი ერთ endpoint-ში 0-ით გამოიძახება, მეორეში — 0.8-ით.</p></article>
+<article class="blk" data-slides="26"><span class="anchor" id="s-26"></span><div class="bh"><h3>Reasoning მოდელები — ჯერ ფიქრობენ, მერე პასუხობენ</h3><a class="chip" href="index.html#/26" data-go="26" title="პრეზენტაციაში გახსნა">სლაიდი 26</a></div>
+<p>ჩვეულებრივი მოდელი პასუხის წერას მაშინვე იწყებს. <strong>Reasoning მოდელი</strong> ჯერ წერს შიდა „ფიქრს“ — ნაბიჯ-ნაბიჯ მსჯელობას (ე.წ. reasoning ან thinking ტოკენებს) — და მხოლოდ ამის შემდეგ საბოლოო პასუხს. ეს ისევ next-token prediction-ია, უბრალოდ მოდელი გაწვრთნილია, რომ პასუხამდე „ხმამაღლა იფიქროს“.</p>
+<p><strong>როდის ღირს:</strong> რამდენიმე ნაბიჯიანი ამოცანა — „8 სტუმარი, 2 ბავშვი, ტერასა დაკავებულია, რომელი მაგიდები გავაერთიანოთ?“, გამოთვლები, რთული წესების ერთად გათვალისწინება, აგენტის მოქმედებების დაგეგმვა.</p>
+<p><strong>რა ღირს:</strong></p>
+<ul>
+<li>💸 <strong>ფული</strong> — reasoning ტოკენები ფასდება (ჩვეულებრივ output ტოკენებად), თუნდაც მომხმარებელს არ აჩვენო; ზოგი პროვაიდერი მათ საერთოდ არ გიჩვენებს, მხოლოდ რაოდენობას წერს <code>usage</code>-ში.</li>
+<li>🐢 <strong>დრო</strong> — პასუხამდე შეიძლება რამდენიმე წამი ან მეტი გავიდეს.</li>
+<li>🎛️ <strong>პარამეტრები</strong> — ზოგი reasoning მოდელი Temperature-ს არ იღებს, სამაგიეროდ აქვს „ფიქრის რაოდენობის“ პარამეტრი (მაგ. reasoning effort).</li>
+</ul>
+<p><strong>წესი:</strong> მარტივ კითხვაზე („რა ღირს ხინკალი?“, „ღიაა კვირას?“) reasoning მოდელი ზედმეტი ხარჯია. რეალურ სისტემაში ხშირად ორ მოდელს იყენებენ: სწრაფ და იაფს — უმეტესი მოთხოვნისთვის, reasoning-ს — მხოლოდ რთულისთვის.</p></article>
+<article class="blk" data-slides="27"><span class="anchor" id="s-27"></span><div class="bh"><h3>❓ შეამოწმე თავი · ნაწილი 3</h3><a class="chip" href="index.html#/27" data-go="27" title="პრეზენტაციაში გახსნა">სლაიდი 27</a></div>
+<div class="selfcheck"><div class="sh">✅ შეამოწმე თავი <small>დაფიქრდი, მერე გახსენი პასუხი</small></div><details><summary>კლიენტის შეტყობინებიდან ვიღებთ თარიღს და სტუმრების რაოდენობას. რა Temperature-ს დააყენებდი?</summary><div class="ans">0 (ან ძალიან დაბალს). ერთი სწორი პასუხი არსებობს და ყოველ ჯერზე ერთნაირი შედეგი გვინდა.</div></details><details><summary>პასუხი სიტყვის შუაში წყდება. რა მოხდა და სად ჩანს?</summary><div class="ans">მოდელმა Max Tokens-ის ლიმიტს მიაღწია. პასუხში <code>finish_reason</code> = <code>length</code> (C#-ში <code>ChatFinishReason.Length</code>).</div></details><details><summary>მენიუს FAQ-ბოტისთვის („ღიაა კვირას?“) reasoning მოდელს აიღებდი?</summary><div class="ans">არა. კითხვა მარტივია; reasoning მოდელი ნელია და ფიქრის ტოკენებსაც ვიხდით. სწრაფი, იაფი მოდელი სრულიად საკმარისია.</div></details><details><summary>რით განსხვავდება Top-P Temperature-სგან?</summary><div class="ans">Temperature განაწილების ფორმას ცვლის (მკვეთრი ↔ ბრტყელი), Top-P კი ჭრის სუსტ ტოკენებს: ტოვებს ყველაზე სავარაუდოებს, სანამ ჯამი P-ს არ მიაღწევს.</div></details></div></article>
+<h2 class="sec" id="sec-6">4 · პროვაიდერები</h2>
+<article class="blk" data-slides="28"><span class="anchor" id="s-28"></span><div class="bh"><h3>ნაწილი 4 · ვინ, სად და რამდენად?</h3><a class="chip" href="index.html#/28" data-go="28" title="პრეზენტაციაში გახსნა">სლაიდი 28</a></div>
+<p>მოდელი ვიღაცის სერვერზე უნდა მუშაობდეს — პროვაიდერის ღრუბელში ან ჩვენს კომპიუტერზე. არჩევანი ფასს, სიჩქარეს, ხარისხს და მონაცემების უსაფრთხოებას ცვლის.</p></article>
+<article class="blk" data-slides="29"><span class="anchor" id="s-29"></span><div class="bh"><h3>პროვაიდერები — ვისი მოდელი, ვისი სერვერი</h3><a class="chip" href="index.html#/29" data-go="29" title="პრეზენტაციაში გახსნა">სლაიდი 29</a></div>
+<table>
+<thead>
+<tr>
+<th>პროვაიდერი</th>
+<th>მოდელები</th>
+<th>რით გამოირჩევა</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OpenAI</strong></td>
+<td>GPT, reasoning მოდელები</td>
+<td>ყველაზე გავრცელებული API. მისი request/response ფორმატი სხვებმაც აიღეს („OpenAI-compatible“)</td>
+</tr>
+<tr>
+<td><strong>Anthropic</strong></td>
+<td>Claude</td>
+<td>ძლიერია კოდში, გრძელ დოკუმენტებში, აგენტურ ამოცანებში</td>
+</tr>
+<tr>
+<td><strong>Google</strong></td>
+<td>Gemini</td>
+<td>დიდი context window, ტექსტი + სურათი + ხმა; აქვს უფასო ლიმიტი</td>
+</tr>
+<tr>
+<td><strong>Groq</strong></td>
+<td>ღია მოდელები (Llama, Qwen და სხვ.)</td>
+<td>საკუთარი ჩიპები, ძალიან სწრაფი პასუხი; უფასო ლიმიტი სწავლისთვის</td>
+</tr>
+<tr>
+<td><strong>Ollama</strong></td>
+<td>ღია მოდელები, შენს კომპიუტერზე</td>
+<td>უფასო, ოფლაინ, მონაცემი კომპიუტერს არ ტოვებს</td>
+</tr>
+<tr>
+<td>სხვები</td>
+<td>Azure OpenAI, Mistral, DeepSeek…</td>
+<td>უმეტესობა OpenAI-compatible endpoint-ს გვთავაზობს</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ღია (open-weight) მოდელი</strong> ნიშნავს, რომ მოდელის „წონები“ (ნასწავლი პარამეტრები) საჯაროა: ნებისმიერს შეუძლია ჩამოტვირთოს და საკუთარ სერვერზე ან კომპიუტერზე გაუშვას. დახურულ მოდელს (GPT, Claude, Gemini) მხოლოდ პროვაიდერის API-ით იძახებ.</p>
+<div class="callout note"><span class="ci">💡</span><div><p>მოდელების კონკრეტული ვერსიები და სახელები თვეობით იცვლება, ამიტომ ამ ლექციაში მათ არ ვიმახსოვრებთ. მიმდინარე სიას ყოველთვის პროვაიდერის დოკუმენტაციაში ვამოწმებთ.</p></div></div></article>
+<article class="blk" data-slides="30"><span class="anchor" id="s-30"></span><div class="bh"><h3>Cloud API თუ ლოკალური მოდელი?</h3><a class="chip" href="index.html#/30" data-go="30" title="პრეზენტაციაში გახსნა">სლაიდი 30</a></div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>☁️ Cloud</th>
+<th>💻 ლოკალური (Ollama)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ფასი</td>
+<td>ტოკენზე ვიხდით</td>
+<td>უფასო — ვიხდით კომპიუტერის რესურსით</td>
+</tr>
+<tr>
+<td>ხარისხი</td>
+<td>ყველაზე ძლიერი მოდელები</td>
+<td>პატარა მოდელები სუსტია, განსაკუთრებით ქართულად</td>
+</tr>
+<tr>
+<td>სიჩქარე</td>
+<td>სწრაფი; ქსელზეა დამოკიდებული</td>
+<td>შენს GPU/CPU-ზეა დამოკიდებული</td>
+</tr>
+<tr>
+<td>მონაცემი</td>
+<td>პროვაიდერთან მიდის</td>
+<td>კომპიუტერს არ ტოვებს</td>
+</tr>
+<tr>
+<td>სწავლისთვის</td>
+<td>API key, ლიმიტები, ზოგჯერ ბარათი</td>
+<td>key არ სჭირდება — იდეალურია ექსპერიმენტისთვის</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ჩვენი გეგმა კურსზე:</strong> ექსპერიმენტებს ვაკეთებთ <strong>Ollama-ზე</strong> (უფასოა და key არ სჭირდება), ხოლო როცა ქართული პასუხის ხარისხი მნიშვნელოვანია, ვამოწმებთ <strong>ღრუბლოვან</strong> მოდელზე (Gemini — უფასო ლიმიტი აქვს). C# კოდი ორივესთვის ერთნაირია — ამის მიზეზს მე-5 ნაწილში ვნახავთ.</p>
+<div class="callout tip"><span class="ci">👉</span><div><p>რეალურ კომპანიაში არჩევანს ხშირად <strong>მონაცემი</strong> წყვეტს: ბანკი ან კლინიკა შეიძლება ვერ აგზავნიდეს კლიენტის მონაცემს გარე პროვაიდერთან. მაშინ ღია მოდელი საკუთარ სერვერზე ეშვება.</p></div></div></article>
+<article class="blk" data-slides="31"><span class="anchor" id="s-31"></span><div class="bh"><h3>ფასი — ვიხდით ტოკენზე, და არა თანაბრად</h3><a class="chip" href="index.html#/31" data-go="31" title="პრეზენტაციაში გახსნა">სლაიდი 31</a></div>
+<p>პროვაიდერები ფასს წერენ <strong>1 მილიონ ტოკენზე</strong> (ზოგჯერ 1000-ზე), და სამ რამეს ცალ-ცალკე ითვლიან:</p>
+<ul>
+<li>📥 <strong>Input</strong> — ყველაფერი, რასაც ვაგზავნით: system ინსტრუქცია, საუბრის ისტორია, მონაცემები, კითხვა. შედარებით იაფია.</li>
+<li>📤 <strong>Output</strong> — რასაც მოდელი წერს. ჩვეულებრივ <strong>რამდენჯერმე ძვირია</strong> input-ზე, რადგან თითო output ტოკენი მოდელის ცალკე გაშვებაა. reasoning მოდელის „ფიქრის“ ტოკენებიც output-ად ფასდება.</li>
+<li>♻️ <strong>Cached input</strong> — თუ ბევრ მოთხოვნას ერთნაირი დასაწყისი აქვს (მაგ. გრძელი system prompt), ზოგი პროვაიდერი მის განმეორებას იაფად ითვლის.</li>
+</ul>
+<p><strong>საილუსტრაციო ფასები</strong> (რიგის გასაგებად — <strong>არა</strong> რეალური ფასები):</p>
+<table>
+<thead>
+<tr>
+<th>კლასი</th>
+<th>Input / 1M</th>
+<th>Output / 1M</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⚡ A · პატარა, სწრაფი მოდელი</td>
+<td>$0.15</td>
+<td>$0.60</td>
+</tr>
+<tr>
+<td>🧠 B · დიდი, ძლიერი მოდელი</td>
+<td>$3.00</td>
+<td>$15.00</td>
+</tr>
+</tbody>
+</table>
+<p>განსხვავება მოდელებს შორის ათჯერადი და მეტია. ამიტომ „ყველაზე ჭკვიანი მოდელი ყველაფრისთვის“ ხშირად ცუდი გადაწყვეტილებაა.</p>
+<div class="callout warn"><span class="ci">⚠️</span><div><p>ფასები ხშირად იცვლება. ხარჯის რეალური გათვლისთვის ყოველთვის გახსენი პროვაიდერის <strong>pricing</strong> გვერდი — საშინაო დავალებაში ამას გააკეთებ.</p></div></div></article>
+<article class="blk" data-slides="32"><span class="anchor" id="s-32"></span><div class="bh"><h3>🎮 თამაში 3 · რა დაუჯდება რესტორანს AI ასისტენტი?</h3><a class="chip" href="index.html#/32" data-go="32" title="პრეზენტაციაში გახსნა">სლაიდი 32</a></div>
+<p><strong>მოცემულია:</strong></p>
+<ul>
+<li>300 საუბარი დღეში</li>
+<li>თითო საუბარზე საშუალოდ 2 000 input და 300 output ტოკენი</li>
+<li>30 დღე</li>
+<li>ფასები: ⚡ A — $0.15 / $0.60, 🧠 B — $3 / $15 (1M ტოკენზე, საილუსტრაციო)</li>
+</ul>
+<p>ჯერ თვითონ დაითვალე, მერე შეამოწმე.</p>
+<p><strong>ამოხსნა:</strong></p>
+<ol>
+<li>ტოკენები თვეში: input = 300 × 2 000 × 30 = <strong>18 000 000</strong> (18M); output = 300 × 300 × 30 = <strong>2 700 000</strong> (2.7M)</li>
+<li>⚡ A: 18 × $0.15 + 2.7 × $0.60 = $2.70 + $1.62 = <strong>≈ $4.3 თვეში</strong></li>
+<li>🧠 B: 18 × $3 + 2.7 × $15 = $54 + $40.5 = <strong>≈ $94.5 თვეში</strong></li>
+</ol>
+<p>ერთი და იგივე ფუნქცია — <strong>22-ჯერ</strong> განსხვავებული ხარჯი.</p>
+<p><strong>დასაფიქრებელი:</strong></p>
+<ul>
+<li>თუ ქართული ტექსტის გამო ტოკენები ორჯერ მეტია — ხარჯიც (დაახლოებით) ორჯერ იზრდება.</li>
+<li>საუბრის ისტორია ყოველ ახალ შეტყობინებაზე <strong>თავიდან</strong> იგზავნება (stateless!). მე-10 შეტყობინებისას input-ში წინა ცხრაც ზის — input ტოკენები სწრაფად იზრდება. ამის მართვაა ლექცია 7-ის თემა.</li>
+<li>reasoning მოდელი output-ს ფიქრის ტოკენებით ზრდის — B-ს ხარჯი შეიძლება კიდევ რამდენჯერმე გაიზარდოს.</li>
+</ul>
+<div class="callout tip"><span class="ci">👉</span><div><p>ასეთი „ხელით გათვლა“ რეალურ სამუშაოში ყოველი AI ფუნქციის დაწყებამდე კეთდება — სანამ კოდს დაწერ, უნდა იცოდე, რამდენი დაჯდება. ლექცია 8-ზე ხარჯს კოდშიც დავითვლით, <code>Usage</code>-ის მიხედვით.</p></div></div></article>
+<article class="blk" data-slides="33"><span class="anchor" id="s-33"></span><div class="bh"><h3>❓ შეამოწმე თავი · ნაწილი 4</h3><a class="chip" href="index.html#/33" data-go="33" title="პრეზენტაციაში გახსნა">სლაიდი 33</a></div>
+<div class="selfcheck"><div class="sh">✅ შეამოწმე თავი <small>დაფიქრდი, მერე გახსენი პასუხი</small></div><details><summary>რატომ არის output ტოკენი input-ზე ძვირი?</summary><div class="ans">input-ის ტოკენებს მოდელი ერთად ამუშავებს, output-ის თითო ტოკენი კი მოდელის ცალკე სრული გაშვებაა (next-token prediction).</div></details><details><summary>მფლობელი ამბობს: „კლიენტების მონაცემი გარეთ არ უნდა გავიდეს“. რას შესთავაზებდი?</summary><div class="ans">ღია მოდელს, რომელიც საკუთარ სერვერზე ეშვება (მაგ. Ollama-თი ან სხვა inference სერვერით). მონაცემი სისტემას არ ტოვებს; სამაგიეროდ, ხარისხი შეიძლება ღრუბლოვანზე დაბალი იყოს და სერვერი უფრო ძლიერი დაგვჭირდეს.</div></details><details><summary>რა ზრდის ყველაზე მეტად ხარჯს ჩატში?</summary><div class="ans">ძვირი მოდელის არჩევა და მზარდი საუბრის ისტორია, რომელიც ყოველ მოთხოვნაზე თავიდან იგზავნება. ქართული ტექსტიც ზრდის ტოკენების რაოდენობას.</div></details></div></article>
+<h2 class="sec" id="sec-7">5 · პირველი გამოძახება</h2>
+<article class="blk" data-slides="34"><span class="anchor" id="s-34"></span><div class="bh"><h3>ნაწილი 5 · პირველი გამოძახება C#-იდან</h3><a class="chip" href="index.html#/34" data-go="34" title="პრეზენტაციაში გახსნა">სლაიდი 34</a></div>
+<p>თეორია საკმარისია — ახლა ყველაფერს, რაც ვისწავლეთ (ტოკენები, temperature, max tokens, stateless), საკუთარი თვალით ვნახავთ ჩვენი API-დან.</p></article>
+<article class="blk" data-slides="35"><span class="anchor" id="s-35"></span><div class="bh"><h3>IChatClient — LLM-ის „DbContext“</h3><a class="chip" href="index.html#/35" data-go="35" title="პრეზენტაციაში გახსნა">სლაიდი 35</a></div>
+<p>EF Core-იდან ეს იდეა უკვე იცი: კოდს <code>DbContext</code>-ით და LINQ-ით წერ, ბაზასთან კი <strong>provider</strong> ლაპარაკობს (<code>SqlServer</code>, <code>Npgsql</code>). ბაზის შეცვლა = provider-ის შეცვლა; LINQ ადგილზე რჩება.</p>
+<p><strong>Microsoft.Extensions.AI</strong> ზუსტად ამას აკეთებს LLM-ისთვის:</p>
+<ul>
+<li><code>IChatClient</code> — ერთი interface ყველა ჩატ-მოდელისთვის; მთავარი მეთოდია <code>GetResponseAsync</code></li>
+<li>provider package-ები ამ interface-ს ახორციელებენ: <strong>OllamaSharp</strong> (Ollama), <strong>Google.GenAI</strong> (Gemini), <strong>Microsoft.Extensions.AI.OpenAI</strong> (OpenAI და ყველა OpenAI-compatible: Groq და სხვ.)</li>
+</ul>
+<p>ჩვენი კოდი მხოლოდ <code>IChatClient</code>-ს იცნობს. Ollama-დან Gemini-ზე გადასვლა = <strong>ერთი ხაზის</strong> შეცვლა — დღესვე ვნახავთ.</p>
+<div class="callout note"><span class="ci">💡</span><div><p>Microsoft.Extensions.AI .NET-ის ოფიციალური „AI ფენაა“ — ისევე, როგორც <code>ILogger</code> ლოგირებისთვის. მასზე დგას Microsoft Agent Framework-იც (ლექცია 14). დეტალურად (DI, კონფიგურაცია) — ლექცია 3-ზე.</p></div></div></article>
+<article class="blk" data-slides="36"><span class="anchor" id="s-36"></span><div class="bh"><h3>მომზადება — Ollama</h3><a class="chip" href="index.html#/36" data-go="36" title="პრეზენტაციაში გახსნა">სლაიდი 36</a></div>
+<p><strong>Ollama</strong> ღია მოდელებს შენს კომპიუტერზე უშვებს და მათ ლოკალურ HTTP API-ს უკეთებს.</p>
+<ol>
+<li>გადმოწერე <a href="https://ollama.com">ollama.com</a>-დან და დააყენე (Windows / macOS / Linux). ფონურად ეშვება.</li>
+<li>ტერმინალში ჩამოტვირთე მოდელი:</li>
+</ol>
+<div class="codebox"><div class="ch"><span>bash</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln">ollama<span class="w"> </span>pull<span class="w"> </span>llama3.2<span class="w">        </span><span class="c1"># ~2 GB, ერთხელ</span></span><span class="ln">ollama<span class="w"> </span>list<span class="w">                 </span><span class="c1"># რა მოდელები გაქვს</span></span><span class="ln">ollama<span class="w"> </span>run<span class="w"> </span>llama3.2<span class="w"> </span><span class="s2">"Say hi to a restaurant guest"</span><span class="w">   </span>#<span class="w"> </span>სწრაფი<span class="w"> </span>შემოწმება</span></code></pre></div>
+<ol start="3">
+<li>Ollama-ს API უსმენს მისამართს <strong><code>http://localhost:11434</code></strong> — ჩვენი C# კოდი აქ დაუკავშირდება.</li>
+</ol>
+<div class="callout warn"><span class="ci">⚠️</span><div><p><strong>ლექციამდე</strong> დააყენე Ollama და ჩამოტვირთე მოდელი — კლასში 2 GB-ის ერთად გადმოწერა ქსელს „დაახრჩობს“. სუსტ ლეპტოპზე (8 GB RAM-ზე ნაკლები) ცადე უფრო პატარა <code>llama3.2:1b</code>, ან გამოიყენე ღრუბლოვანი პროვაიდერი (იხ. სლაიდი „ერთი ხაზი — სხვა პროვაიდერი“).</p></div></div>
+<div class="terms"><div class="th">📘 ტერმინები</div><dl><dt>Ollama</dt><dd>პროგრამა, რომელიც ღია LLM-ებს ლოკალურად უშვებს და HTTP API-ს აძლევს</dd><dt>3B</dt><dd>მოდელის ზომა: 3 მილიარდი პარამეტრი. მეტი = ჭკვიანი, მაგრამ მძიმე და ნელი</dd></dl></div></article>
+<article class="blk" data-slides="37"><span class="anchor" id="s-37"></span><div class="bh"><h3>ორი NuGet package</h3><a class="chip" href="index.html#/37" data-go="37" title="პრეზენტაციაში გახსნა">სლაიდი 37</a></div>
+<p>RestaurantApi-ში ვაყენებთ:</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>რისთვის</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Microsoft.Extensions.AI</strong></td>
+<td><code>IChatClient</code>, <code>ChatOptions</code>, <code>ChatResponse</code> და (მოგვიანებით) middleware — ერთი API ყველა მოდელისთვის</td>
+</tr>
+<tr>
+<td><strong>OllamaSharp</strong></td>
+<td>Ollama-ს provider. მისი <code>OllamaApiClient</code> კლასი პირდაპირ ახორციელებს <code>IChatClient</code>-ს</td>
+</tr>
+</tbody>
+</table>
+<p>Visual Studio-ში: პროექტზე მარჯვენა ღილაკი → <strong>Manage NuGet Packages</strong> → <strong>Browse</strong> → მოძებნე და დააყენე ორივე. ან ტერმინალიდან:</p>
+<div class="codebox"><div class="ch"><span>bash</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln">dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>Microsoft.Extensions.AI</span><span class="ln">dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>OllamaSharp</span></code></pre></div></article>
+<article class="blk" data-slides="38"><span class="anchor" id="s-38"></span><div class="bh"><h3>პირველი endpoint: POST /api/ai-lab/ask</h3><a class="chip" href="index.html#/38" data-go="38" title="პრეზენტაციაში გახსნა">სლაიდი 38</a></div>
+<p>RestaurantApi-ში ვქმნით „ლაბორატორიას“ — ცალკე Controller-ს ექსპერიმენტებისთვის. ის კლიენტისთვის არ არის; მასზე მოდელის ქცევას ვსწავლობთ (ლექცია 2-შიც დაგვჭირდება).</p>
+<p>DTO-ები — როგორც API კურსზე ვაკეთებდით, <code>record</code>-ით:</p>
+<div class="codebox"><div class="ch"><span>Dtos/AiLab/AskDtos.cs</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskRequest</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Prompt</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">long?</span><span class="w"> </span><span class="n">InputTokens</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">long?</span><span class="w"> </span><span class="n">OutputTokens</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">string?</span><span class="w"> </span><span class="n">FinishReason</span><span class="p">)</span><span class="p">;</span></span></code></pre></div>
+<p>Controller:</p>
+<div class="codebox"><div class="ch"><span>Controllers/AiLabController.cs</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.Extensions.AI</span><span class="p">;</span></span><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">OllamaSharp</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="na">[ApiController]</span></span><span class="ln"><span class="na">[Route("api/ai-lab")]</span></span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AiLabController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="c1">// დროებით აქვე ვქმნით — ლექცია 3-ზე DI-ში გადავა</span></span><span class="ln"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="nf">OllamaApiClient</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"http://localhost:11434"</span><span class="p">)</span><span class="p">,</span><span class="w"> </span><span class="s">"llama3.2"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">    </span><span class="na">[HttpPost("ask")]</span></span><span class="ln"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IActionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Ask</span><span class="p">(</span><span class="n">AskRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span></span><span class="ln"><span class="w">    </span><span class="p">{</span></span><span class="ln"><span class="w">        </span><span class="n">ChatResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_chat</span><span class="p">.</span><span class="n">GetResponseAsync</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Prompt</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">InputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">OutputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">FinishReason</span><span class="o">?.</span><span class="n">Value</span><span class="p">)</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span><span class="p">}</span></span><span class="ln"><span class="p">}</span></span></code></pre></div>
+<p>ხაზ-ხაზ:</p>
+<ul>
+<li><strong><code>IChatClient _chat = new OllamaApiClient(...)</code></strong> — ცვლადის ტიპი interface-ია, ობიექტი კი Ollama-ს provider. პარამეტრები: Ollama-ს მისამართი და მოდელის სახელი.</li>
+<li><strong><code>GetResponseAsync(request.Prompt)</code></strong> — აგზავნის HTTP მოთხოვნას (ზუსტად ისეთს, როგორიც 1-ელ ნაწილში ვნახეთ) და ელოდება პასუხს. <code>async</code>, რადგან ეს ქსელის ოპერაციაა.</li>
+<li><strong><code>ChatResponse</code></strong> — პასუხი: <code>Text</code> (ტექსტი), <code>Usage</code> (ტოკენები: <code>InputTokenCount</code>, <code>OutputTokenCount</code>), <code>FinishReason</code> (<code>stop</code> / <code>length</code>).</li>
+<li><strong><code>?.</code></strong> — <code>Usage</code> და <code>FinishReason</code> შეიძლება <code>null</code> იყოს (ყველა provider ყოველთვის არ აბრუნებს), ამიტომ null-conditional ოპერატორი.</li>
+</ul>
+<div class="callout warn"><span class="ci">⚠️</span><div><p><code>new OllamaApiClient(...)</code> Controller-ის შიგნით — ესაა ის, რასაც DI-ზე <strong>ვერიდებოდით</strong>: Controller თვითონ ქმნის თავის დამოკიდებულებას, ყოველ მოთხოვნაზე ახალს. დღეს ეს შეგნებულად ასეა, რომ ყურადღება მოდელზე იყოს. ლექცია 3-ზე <code>IChatClient</code>-ს DI-ში დავარეგისტრირებთ (<code>AddChatClient</code>) და Controller-ში constructor-ით მივიღებთ.</p></div></div></article>
+<article class="blk" data-slides="39"><span class="anchor" id="s-39"></span><div class="bh"><h3>პირველი პასუხი Swagger-ში</h3><a class="chip" href="index.html#/39" data-go="39" title="პრეზენტაციაში გახსნა">სლაიდი 39</a></div>
+<p>გაუშვი პროექტი (F5), Swagger-ში გახსენი <code>POST /api/ai-lab/ask</code> → <strong>Try it out</strong>:</p>
+<div class="codebox"><div class="ch"><span>json</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="p">{</span><span class="w"> </span><span class="nt">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Suggest one light vegetarian dish. One sentence."</span><span class="w"> </span><span class="p">}</span></span></code></pre></div>
+<p>პასუხი დაახლოებით ასეთი იქნება (ტექსტი და რიცხვები შენთან განსხვავდება):</p>
+<div class="codebox"><div class="ch"><span>json</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">  </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Try a grilled eggplant salad with walnuts…"</span><span class="p">,</span></span><span class="ln"><span class="w">  </span><span class="nt">"inputTokens"</span><span class="p">:</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span></span><span class="ln"><span class="w">  </span><span class="nt">"outputTokens"</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span></span><span class="ln"><span class="w">  </span><span class="nt">"finishReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stop"</span></span><span class="ln"><span class="p">}</span></span></code></pre></div>
+<p><strong>რატომ არის input უფრო მეტი, ვიდრე ჩვენი სიტყვები?</strong> მოდელს მხოლოდ ჩვენი ტექსტი არ მიდის: provider შეტყობინებას ახვევს სპეციალურ <strong>ჩატის შაბლონში</strong> — role-ის ნიშნები (<code>user</code>, <code>assistant</code>), დასაწყისის/დასასრულის ტოკენები. ეს ტოკენებიც ითვლება და ფასდება.</p>
+<p><strong>ახლა იგივე ქართულად:</strong> „მირჩიე ერთი მსუბუქი ვეგეტარიანული კერძი. ერთი წინადადებით.“ — შეადარე <code>inputTokens</code> და პასუხის ხარისხი. პატარა ლოკალური მოდელი ქართულად ხშირად შეცდომებით წერს — ეს ნორმალურია და სწორედ ამიტომ ვამოწმებთ ღრუბლოვან მოდელსაც.</p></article>
+<article class="blk" data-slides="40"><span class="anchor" id="s-40"></span><div class="bh"><h3>პარამეტრები კოდიდან — ChatOptions</h3><a class="chip" href="index.html#/40" data-go="40" title="პრეზენტაციაში გახსნა">სლაიდი 40</a></div>
+<p>მე-3 ნაწილის პარამეტრები C#-ში <code>ChatOptions</code> კლასშია:</p>
+<table>
+<thead>
+<tr>
+<th>ChatOptions</th>
+<th>თეორიაში</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Temperature</code></td>
+<td>Temperature</td>
+</tr>
+<tr>
+<td><code>TopP</code></td>
+<td>Top-P</td>
+</tr>
+<tr>
+<td><code>MaxOutputTokens</code></td>
+<td>Max Tokens</td>
+</tr>
+<tr>
+<td><code>ModelId</code></td>
+<td>რომელი მოდელი (თუ provider რამდენიმეს უჭერს მხარს)</td>
+</tr>
+</tbody>
+</table>
+<p><code>AskRequest</code>-ს ვამატებთ ორ არასავალდებულო ველს:</p>
+<div class="codebox"><div class="ch"><span>Dtos/AiLab/AskDtos.cs</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskRequest</span><span class="p">(</span></span><span class="ln"><span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">Prompt</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">float?</span><span class="w"> </span><span class="n">Temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">int?</span><span class="w"> </span><span class="n">MaxOutputTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="p">;</span></span></code></pre></div>
+<p>და <code>Ask</code>-ში ვქმნით <code>ChatOptions</code>-ს:</p>
+<div class="codebox"><div class="ch"><span>Controllers/AiLabController.cs</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="kt">var</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ChatOptions</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="n">Temperature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">Temperature</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="n">MaxOutputTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">MaxOutputTokens</span></span><span class="ln"><span class="p">}</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="n">ChatResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="n">_chat</span><span class="p">.</span><span class="n">GetResponseAsync</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Prompt</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">)</span><span class="p">;</span></span></code></pre></div>
+<p><code>null</code> ნიშნავს „არ ვუთითებთ“ — მოდელი თავის ნაგულისხმევ მნიშვნელობას გამოიყენებს. ასე Swagger-იდან ერთი endpoint-ით ნებისმიერ კომბინაციას ვცდით.</p>
+<div class="callout note"><span class="ci">💡</span><div><p><code>options</code> ცალკეულ მოთხოვნას ეკუთვნის: სხვა endpoint-ში სხვა <code>ChatOptions</code>-ით გამოვიძახებთ — ზუსტად ისე, როგორც მე-3 ნაწილის ცხრილში დავგეგმეთ.</p></div></div></article>
+<article class="blk" data-slides="41"><span class="anchor" id="s-41"></span><div class="bh"><h3>🔮 4 ექსპერიმენტი — ჯერ გამოიცანი, მერე გაუშვი</h3><a class="chip" href="index.html#/41" data-go="41" title="პრეზენტაციაში გახსნა">სლაიდი 41</a></div>
+<p>ყოველ ექსპერიმენტზე ჯერ დაწერე შენი პროგნოზი, მერე შეამოწმე Swagger-ში.</p>
+<p><strong>1 · Temperature.</strong> <code>"prompt": "Invent a name for a new Georgian dish. Only the name."</code> — სამჯერ <code>"temperature": 0</code>, სამჯერ <code>"temperature": 1.5</code>.
+<em>რას ნახავ:</em> 0-ზე სახელები (თითქმის) ერთნაირია, 1.5-ზე ყოველ ჯერზე სხვა — ზოგჯერ უცნაურიც.</p>
+<p><strong>2 · Max Tokens.</strong> <code>"prompt": "Describe khachapuri"</code>, <code>"maxOutputTokens": 15</code>.
+<em>რას ნახავ:</em> ტექსტი შუაში წყდება, <code>"finishReason": "length"</code>, <code>outputTokens</code> = 15.</p>
+<p><strong>3 · Stateless.</strong> ჯერ <code>"prompt": "My name is Nino"</code>, მერე ცალკე მოთხოვნით <code>"prompt": "What is my name?"</code>.
+<em>რას ნახავ:</em> მოდელმა არ იცის — ყოველი მოთხოვნა დამოუკიდებელია. ისტორიის გაგზავნას <code>ChatMessage</code>-ების სიით ლექცია 2-ზე და 7-ზე ვისწავლით.</p>
+<p><strong>4 · ენა.</strong> ერთი და იგივე კითხვა ინგლისურად და ქართულად; შეადარე <code>inputTokens</code>.
+<em>რას ნახავ:</em> ქართული ბევრად მეტი ტოკენია — ეს 1-ელი თამაშის დადასტურებაა, ახლა უკვე ჩვენი კოდიდან.</p>
+<div class="callout tip"><span class="ci">👉</span><div><p>ამ ოთხ ექსპერიმენტს კლასში შენს პროექტში გაიმეორებ და შედეგს ცხრილში ჩაწერ — ეს არის დღევანდელი კლასის დავალება.</p></div></div></article>
+<article class="blk" data-slides="42"><span class="anchor" id="s-42"></span><div class="bh"><h3>ერთი ხაზი — სხვა პროვაიდერი: Gemini</h3><a class="chip" href="index.html#/42" data-go="42" title="პრეზენტაციაში გახსნა">სლაიდი 42</a></div>
+<p>ახლა იგივე endpoint-ს ღრუბლოვან მოდელზე ვცდით — <strong>Google Gemini</strong>. მას აქვს უფასო ლიმიტი სწავლისთვის და ქართულად ბევრად უკეთ წერს, ვიდრე პატარა ლოკალური მოდელი.</p>
+<ol>
+<li>NuGet: <strong>Google.GenAI</strong> — Google-ის ოფიციალური .NET SDK. მასში უკვე არის <code>AsIChatClient()</code> — ანუ Microsoft.Extensions.AI-ს მხარდაჭერა.</li>
+<li><a href="https://aistudio.google.com">aistudio.google.com</a> → <strong>Get API key</strong> → Create API key.</li>
+<li>key ჩაწერე <strong>გარემოს ცვლადში</strong> <code>GEMINI_API_KEY</code> (Windows, ტერმინალში; შემდეგ Visual Studio გადატვირთე):</li>
+</ol>
+<div class="codebox"><div class="ch"><span>bash</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln">setx<span class="w"> </span>GEMINI_API_KEY<span class="w"> </span><span class="s2">"AIza..."</span></span></code></pre></div>
+<ol start="4">
+<li>Controller-ში იცვლება <strong>მხოლოდ</strong> <code>_chat</code>-ის შექმნა:</li>
+</ol>
+<div class="codebox"><div class="ch"><span>Controllers/AiLabController.cs</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Google.GenAI</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">Client</span><span class="p">(</span><span class="p">)</span><span class="w">                            </span><span class="c1">// key — GEMINI_API_KEY ცვლადიდან</span></span><span class="ln"><span class="w">        </span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="s">"gemini-3.8-flash"</span><span class="p">)</span><span class="p">;</span><span class="w"> </span><span class="o">/</span><span class="o">/</span><span class="w"> </span><span class="n">სია</span><span class="p">:</span><span class="w"> </span><span class="n">ai</span><span class="p">.</span><span class="n">google</span><span class="p">.</span><span class="n">dev</span><span class="o">/</span><span class="n">gemini</span><span class="o">-</span><span class="n">api</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">models</span></span></code></pre></div>
+<p><code>new Client()</code> key-ს კოდში არ ითხოვს — თვითონ პოულობს <code>GEMINI_API_KEY</code> ცვლადში. <code>Ask</code> მეთოდი, DTO-ები, Swagger — <strong>არაფერი იცვლება</strong>. ესაა <code>IChatClient</code>-ის მთელი აზრი.</p>
+<p><strong>იგივე 4 ექსპერიმენტი Gemini-ზე</strong> — რა განსხვავდება? ყველაზე თვალსაჩინო: ქართული პასუხის ხარისხი და სიჩქარე.</p>
+<div class="callout warn"><span class="ci">⚠️</span><div><p><strong>API key = პაროლი.</strong> არასდროს ჩაწერო კოდში, <code>appsettings.json</code>-ში ან <code>launchSettings.json</code>-ში, რომლებიც Git-ში მიდის — GitHub-ზე გაჟონილ key-ს ბოტები წუთებში პოულობენ. ჯერჯერობით — გარემოს ცვლადი; User Secrets-ს და კონფიგურაციას ლექცია 3-ზე და 21-ზე ვნახავთ.</p></div></div>
+<div class="callout note"><span class="ci">💡</span><div><p>Gemini-ის ახალი მოდელები <strong>„ფიქრობენ“</strong> პასუხამდე (reasoning, მე-3 ნაწილი) — ფიქრის ტოკენები <code>maxOutputTokens</code>-ის ლიმიტშიც შეიძლება ჩაითვალოს. თუ ძალიან დაბალ ლიმიტზე (მაგ. 15) ტექსტი ცარიელი დაბრუნდა, ეს ამის ბრალია: მოდელმა ლიმიტი ფიქრზე დახარჯა. მოდელის სახელი ყოველთვის <a href="https://ai.google.dev/gemini-api/docs/models">მოდელების სიიდან</a> აიღე — ისინი იცვლება. სხვა OpenAI-compatible პროვაიდერი (OpenAI, Groq) იმავე პრინციპით ერთვება <code>Microsoft.Extensions.AI.OpenAI</code> package-ით.</p></div></div></article>
+<article class="blk" data-slides="43"><span class="anchor" id="s-43"></span><div class="bh"><h3>რა არის ცუდი ჩვენს კოდში?</h3><a class="chip" href="index.html#/43" data-go="43" title="პრეზენტაციაში გახსნა">სლაიდი 43</a></div>
+<p>დღევანდელი კოდი მუშაობს, მაგრამ DI-ის ლექციიდან გახსოვს, რატომ არ ვწერთ ასე:</p>
+<ul>
+<li><strong>Controller თვითონ ქმნის დამოკიდებულებას</strong> (<code>new OllamaApiClient(...)</code>). სხვა Controller-საც რომ დასჭირდეს მოდელი — ისიც თავისას შექმნის. პროვაიდერის შესაცვლელად ყველგან მოგვიწევს ხელის ხლება.</li>
+<li><strong>მისამართი და მოდელის სახელი კოდშია ჩაწერილი</strong> — სერვერზე სხვა მისამართი რომ იყოს?</li>
+<li><strong>ყოველ მოთხოვნაზე ახალი client იქმნება</strong> — Controller per-request ობიექტია; client-ს კი შიგნით HTTP კავშირი აქვს.</li>
+<li><strong>ტესტირება</strong> — Controller-ს ვერ გამოვცდით „ყალბი“ მოდელით (ლექცია 22: <code>IChatClient</code>-ის Mock).</li>
+</ul>
+<p>ლექცია 3-ზე ამას გამოვასწორებთ: <code>builder.Services.AddChatClient(...)</code> Program.cs-ში, Controller-ში კი <code>IChatClient</code> constructor-ით შემოვა — როგორც ნებისმიერი სხვა სერვისი.</p></article>
+<h2 class="sec" id="sec-8">პრაქტიკა</h2>
+<article class="blk" data-slides="44"><span class="anchor" id="s-44"></span><div class="bh"><h3>კლასში დავალება: AI ლაბორატორია — შენს პროექტში</h3><a class="chip" href="index.html#/44" data-go="44" title="პრეზენტაციაში გახსნა">სლაიდი 44</a></div>
+<p>დავალება · შენი API პროექტი</p>
+<h3>ნაბიჯები</h3>
+<ul>
+<li>NuGet: <strong>Microsoft.Extensions.AI</strong> და <strong>OllamaSharp</strong></li>
+<li><code>Dtos/AiLab/</code>: <strong>AskRequest</strong> და <strong>AskResponse</strong></li>
+<li><code>POST /api/ai-lab/ask</code> — <code>IChatClient</code> + <code>ChatOptions</code></li>
+<li><strong>4 ექსპერიმენტი შენი პროექტის თემაზე</strong> — ჯერ პროგნოზი, მერე Swagger</li>
+<li>შედეგები → <code>experiments.md</code> (მასალებში)</li>
+</ul>
+<h3>✓ მზადაა, როცა</h3>
+<p>პასუხს ტექსტთან ერთად ტოკენები და finishReason ახლავს, ცხრილში 4 შედეგი და შენი დასკვნა წერია</p>
+<h3>⭐ ბონუსი</h3>
+<ul>
+<li><code>AskResponse</code>-ს დაამატე <code>ElapsedMs</code> (<code>Stopwatch</code>) — რამდენი გრძელდება პირველი და მეორე მოთხოვნა?</li>
+<li>შეადარე <code>llama3.2:1b</code> და <code>llama3.2</code> (3B) ერთსა და იმავე ქართულ კითხვაზე: სიჩქარე და ხარისხი</li>
+</ul>
+<h3>💡 ექსპერიმენტები</h3>
+<ol>
+<li>ერთი კითხვა 3-ჯერ <code>"temperature": 0</code>-ით და 3-ჯერ <code>1.5</code>-ით</li>
+<li><code>"maxOutputTokens": 15</code> — რა <code>finishReason</code> დაბრუნდა?</li>
+<li>„ჩემი სახელია …“ → ცალკე მოთხოვნით „რა მქვია?“</li>
+<li>ერთი და იგივე კითხვა ინგლისურად და ქართულად — შეადარე <code>inputTokens</code></li>
+</ol>
+<p><code>AskRequest</code>: <code>Prompt</code>, <code>Temperature?</code>, <code>MaxOutputTokens?</code> · <code>AskResponse</code>: <code>Text</code>, <code>InputTokens</code>, <code>OutputTokens</code>, <code>FinishReason</code>. Ollama-ს შემოწმება: <code>ollama list</code>.</p>
+<h3>💡 რჩევა</h3>
+<p>ლექტორის კოდს ნუ გადაიწერ — დაწერე შენს პროექტში, შენი სახელებით და შენი თემის კითხვებით (მაგ. ბიბლიოთეკის, სპორტდარბაზის, მაღაზიის). თუ Ollama შენს ლეპტოპზე ძალიან ნელია, გამოიყენე Gemini (სლაიდი „ერთი ხაზი — სხვა პროვაიდერი“). ყოველ ექსპერიმენტზე <strong>ჯერ პროგნოზი ჩაწერე</strong>, მერე გაუშვი — მთავარი ის არის, სადაც შენი პროგნოზი არ გამართლდა.</p></article>
+<article class="blk" data-slides="45"><span class="anchor" id="s-45"></span><div class="bh"><h3>ხშირი შეცდომები</h3><a class="chip" href="index.html#/45" data-go="45" title="პრეზენტაციაში გახსნა">სლაიდი 45</a></div>
+<table>
+<thead>
+<tr>
+<th>რას ხედავ</th>
+<th>მიზეზი და გამოსწორება</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HttpRequestException</code> … connection refused / actively refused</td>
+<td>Ollama არ არის გაშვებული. გახსენი Ollama აპლიკაცია ან ტერმინალში <code>ollama serve</code></td>
+</tr>
+<tr>
+<td>404 … model "llama3.2" not found</td>
+<td>მოდელი არ არის ჩამოტვირთული ან სახელი არასწორია. <code>ollama pull llama3.2</code>, შეამოწმე <code>ollama list</code></td>
+</tr>
+<tr>
+<td>პირველი პასუხი ძალიან ნელია (20+ წამი)</td>
+<td>მოდელი პირველად იტვირთება მეხსიერებაში. მომდევნო მოთხოვნები სწრაფია</td>
+</tr>
+<tr>
+<td>ქართული პასუხი შეცდომებით ან ინგლისურად</td>
+<td>პატარა ლოკალური მოდელის შეზღუდვაა, არა კოდის. შეადარე ღრუბლოვან მოდელს</td>
+</tr>
+<tr>
+<td>API key not valid / 401 (Gemini)</td>
+<td>API key ვერ წაიკითხა. <code>setx</code>-ის შემდეგ Visual Studio-ს გადატვირთვა სჭირდება; შეამოწმე ცვლადის სახელი</td>
+</tr>
+<tr>
+<td>429 Too Many Requests / RESOURCE_EXHAUSTED (Gemini)</td>
+<td>უფასო ლიმიტი ამოიწურა წუთში/დღეში. დაელოდე — Retry-ს და Resilience-ს ლექცია 8-ზე ვისწავლით</td>
+</tr>
+</tbody>
+</table>
+<div class="prompt"><div class="ph"><span>🤖 როცა რამე არ მუშაობს</span><button class="copy" type="button">კოპირება</button></div><div class="pb">ვწერ ASP.NET Core Web API-ს .NET 10-ზე და ვიყენებ Microsoft.Extensions.AI-ს IChatClient-ს [Ollama-ს OllamaSharp-ით / Gemini-ს Google.GenAI-ით].
+პრობლემა: [აღწერე, რას ხედავ]
+კოდი: [ჩასვი Controller-ის შესაბამისი ნაწილი]
+შეცდომა: [ჩასვი შეცდომის სრული ტექსტი]
+ნუ დამიწერ გამოსწორებულ კოდს — ჯერ ამიხსენი, რა არის მიზეზი და სად ვეძებო, რომ თვითონ გავასწორო. ახსნა ქართულად.</div></div></article>
+<h2 class="sec" id="sec-9">შეჯამება</h2>
+<article class="blk" data-slides="46"><span class="anchor" id="s-46"></span><div class="bh"><h3>შეამოწმე, რა დაგამახსოვრდა</h3><a class="chip" href="index.html#/46" data-go="46" title="პრეზენტაციაში გახსნა">სლაიდი 46</a></div>
+<p>ეს კითხვები შემდეგი ლექციის დასაწყისშიც დაისმება.</p>
+<div class="selfcheck"><div class="sh">✅ შეამოწმე თავი <small>დაფიქრდი, მერე გახსენი პასუხი</small></div><details><summary>რა არის ტოკენი და რატომ გვაინტერესებს backend-ში?</summary><div class="ans">ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს · ფასი, context window-ის ლიმიტი და სიჩქარე ტოკენებით ითვლება; ქართული — მეტი ტოკენი</div></details><details><summary>როგორ წერს LLM პასუხს?</summary><div class="ans">next-token prediction: ითვლის შემდეგი ტოკენის ალბათობებს → ირჩევს ერთს → უმატებს → იმეორებს, სანამ არ დაასრულებს ან ლიმიტს არ მიაღწევს</div></details><details><summary>მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</summary><div class="ans">ჩვენი მენიუ არ უნახავს; წერს სავარაუდოს და არა ჭეშმარიტს — hallucination · ფასი ყოველთვის ბაზიდან</div></details><details><summary>რატომ „არ ახსოვს“ მოდელს წინა მოთხოვნა?</summary><div class="ans">stateless: ყოველი მოთხოვნა დამოუკიდებელია · ისტორია ჩვენ უნდა გავუგზავნოთ ყოველ ჯერზე</div></details><details><summary>შეკვეთის ტიპის დასადგენად რა Temperature-ს დავაყენებთ და რას ნიშნავს <code>finish_reason = length</code>?</summary><div class="ans">0 — ერთი სწორი პასუხი, ყოველ ჯერზე ერთნაირი · length — Max Tokens-ს მიაღწია, პასუხი მოიჭრა</div></details><details><summary>რატომ ვწერთ კოდს <code>IChatClient</code>-ზე და არა პირდაპირ Ollama-ს ან OpenAI-ს კლასზე?</summary><div class="ans">ერთი interface ყველა პროვაიდერისთვის (როგორც EF Core-ის provider) · პროვაიდერის შეცვლა = მხოლოდ ობიექტის შექმნის ადგილი</div></details></div></article>
+<article class="blk" data-slides="47"><span class="anchor" id="s-47"></span><div class="bh"><h3>შეჯამება · LLM = შემდეგი ტოკენი, ჩვენთვის — კიდევ ერთი API</h3><a class="chip" href="index.html#/47" data-go="47" title="პრეზენტაციაში გახსნა">სლაიდი 47</a></div>
+<p><strong>დაიმახსოვრე:</strong></p>
+<ol>
+<li><strong>ტოკენი</strong> — ტექსტის ნაჭერი; მისით ითვლება ფასი, context window-ის ლიმიტი და სიჩქარე. ქართული ტექსტი ბევრად მეტი ტოკენია.</li>
+<li><strong>Next-token prediction</strong> — მოდელი წერს სავარაუდო ტექსტს, არა აუცილებლად ჭეშმარიტს (hallucination). ფასი, მარაგი, ჯავშანი — ყოველთვის ჩვენი ბაზიდან.</li>
+<li><strong>Stateless</strong> — მოდელს წინა მოთხოვნა არ ახსოვს; ისტორიას ჩვენ ვუგზავნით და ჩვენ ვიხდით.</li>
+<li><strong>Temperature, Top-P, Max Tokens</strong> — მოთხოვნის პარამეტრები; ამოცანის მიხედვით ვირჩევთ. <code>finish_reason = length</code> → პასუხი მოიჭრა.</li>
+<li><strong>პროვაიდერი და ფასი</strong> — input იაფია, output ძვირი; მოდელებს შორის განსხვავება ათჯერადია. ლოკალური Ollama — უფასო ექსპერიმენტისთვის.</li>
+<li><strong><code>IChatClient</code></strong> — ერთი interface; პროვაიდერის შეცვლა = ობიექტის შექმნის ერთი ადგილი.</li>
+</ol>
+<h3>⏭️ შემდეგ ლექციაზე: Prompt Engineering</h3>
+<p>დღეს მოდელს უბრალო ტექსტი გავუგზავნეთ და უბრალო ტექსტი მივიღეთ. მაგრამ თუ კლიენტი წერს „ორი ხაჭაპური ჩამიმატე“, კალათაში დასამატებლად <code>dishId</code> და <code>quantity</code> გვჭირდება — <strong>C# ობიექტი</strong>, არა წინადადება. როგორ მივცეთ მოდელს მკაფიო ინსტრუქცია, მაგალითები და როგორ მივიღოთ პასუხი პირდაპირ C# ობიექტად (<code>GetResponseAsync&lt;T&gt;</code>)? ამას შემდეგ ლექციაზე ვნახავთ.</p>
+<div class="prompt"><div class="ph"><span>🤖 გამოცდა მთელ ლექციაზე</span><button class="copy" type="button">კოპირება</button></div><div class="pb">ვსწავლობ AI-ს .NET-ში. ლექციაზე გავიარეთ: რა არის LLM, ტოკენები და tokenizer, next-token prediction, hallucination, context window და stateless მოდელი, Temperature / Top-P / Max Tokens, finish_reason, reasoning მოდელები, პროვაიდერები (cloud vs Ollama), ფასის დათვლა input/output ტოკენებით, და Microsoft.Extensions.AI-ს IChatClient-ით პირველი გამოძახება ASP.NET Core Web API-დან.
+დამისვი 8 კითხვა სათითაოდ, მარტივიდან რთულისკენ, მათ შორის 2 პრაქტიკული სიტუაცია რესტორნის API-ზე. ყოველ ჩემს პასუხზე მითხარი, სწორია თუ არა და რატომ, მერე დასვი შემდეგი. ბოლოს მითხარი, რა უნდა გავიმეორო. კომუნიკაცია ქართულად.</div></div></article>
+<h2 class="sec" id="sec-10">საშინაო</h2>
+<article class="blk" data-slides="48"><span class="anchor" id="s-48"></span><div class="bh"><h3>საშინაო დავალება: ორი პროვაიდერი, ერთი endpoint — და ხარჯის გათვლა</h3><a class="chip" href="index.html#/48" data-go="48" title="პრეზენტაციაში გახსნა">სლაიდი 48</a></div>
+<p>შენი API პროექტის AI ლაბორატორია იზრდება</p>
+<h3>მოთხოვნები</h3>
+<ul>
+<li><code>AskRequest</code> + <strong>Provider</strong> (<code>ollama</code> / <code>gemini</code>) · <code>AskResponse</code> + <strong>Model</strong>, <strong>ElapsedMs</strong></li>
+<li>provider-ის მიხედვით — სხვა <code>IChatClient</code>; <code>Ask</code>-ის კოდი <strong>ერთი</strong> რჩება</li>
+<li>3 კითხვა შენს თემაზე, ორივე პროვაიდერზე (Ollama და Gemini) → შედარების ცხრილი <code>README.md</code>-ში</li>
+<li>თვის ხარჯი: <strong>გაზომილი</strong> ტოკენები × <strong>რეალური</strong> ფასი → <code>README.md</code></li>
+</ul>
+<h3>✓ მზადაა, როცა</h3>
+<p>ორივე პროვაიდერი მუშაობს მხოლოდ <code>"provider"</code> ველის შეცვლით; README-ში — ცხრილი და ხარჯის ფორმულა</p>
+<h3>⭐ ბონუსი</h3>
+<ul>
+<li>ვალიდაცია: უცნობი provider ან Temperature 0–2-ის გარეთ → <code>400 BadRequest</code></li>
+<li>Ollama გამორთულია → <code>503</code> გასაგები შეტყობინებით და არა 500</li>
+</ul>
+<h3>💡 დეტალები</h3>
+<ul>
+<li><code>Provider</code>-ის ნაგულისხმევი მნიშვნელობა — <code>"ollama"</code>; <code>ElapsedMs</code> — <code>Stopwatch</code>-ით</li>
+<li>შედარების ცხრილი: ყოველ კითხვაზე, ორივე პროვაიდერზე — დრო (ms), input/output ტოკენები, ქართულის ხარისხი 1–5</li>
+<li>ხარჯი: აირჩიე შენი პროექტის ერთი AI ფუნქცია, დაუშვი მოთხოვნების რაოდენობა დღეში, აიღე Swagger-ში გაზომილი საშუალო ტოკენები და Gemini-ის მოდელის ფასი მისი pricing გვერდიდან (ai.google.dev/pricing) — თითქოს უფასო ლიმიტი ამოიწურა</li>
+</ul>
+<h3>💡 მინიშნება</h3>
+<p>ობიექტის შექმნა ცალკე მეთოდში გაიტანე — <code>switch</code> expression-ით:</p>
+<div class="codebox"><div class="ch"><span>csharp</span><button class="copy" type="button">კოპირება</button></div><pre class="code"><code><span class="ln"><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="nf">CreateClient</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">provider</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">provider</span><span class="w"> </span><span class="k">switch</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="s">"ollama"</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OllamaApiClient</span><span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="s">"gemini"</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Client</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArgumentException</span><span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span></span><span class="ln"><span class="p">}</span><span class="p">;</span></span></code></pre></div>
+<p><code>IChatClient</code> არის <code>IDisposable</code> — თუ client-ს ყოველ მოთხოვნაზე ქმნი, <code>using</code> გამოიყენე. API key — მხოლოდ გარემოს ცვლადში (<code>GEMINI_API_KEY</code>), არასდროს კოდში ან Git-ში.</p></article>
+  </main>
+</div>
+<script>
+const DECK = "AI აგენტები .NET-ში · 1 — შესავალი Generative AI-სა და LLM API-ებში";
+if (matchMedia('(min-width:981px)').matches) document.getElementById('tocd').open = true;
+const blocks = [...document.querySelectorAll('.blk')];
+const tocLinks = [...document.querySelectorAll('nav.toc a[href^="#sec-"]')];
+const secOf = b => { let e = b; while (e && !(e.matches && e.matches('h2.sec'))) e = e.previousElementSibling; return e; };
+function mark(b, toc_only) {
+  if (!toc_only) blocks.forEach(x => x.classList.toggle('cur', x === b));
+  const s = b && secOf(b); tocLinks.forEach(a => a.classList.toggle('cur', s && a.getAttribute('href') === '#' + s.id));
+}
+const blockFor = n => blocks.find(b => b.dataset.slides.split(',').includes(String(n)));
+
+// copy buttons (code: one line per .ln)
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.copy'); if (!btn) return;
+  const box = btn.closest('.codebox, .prompt');
+  const text = box.matches('.prompt') ? box.querySelector('.pb').textContent : [...box.querySelectorAll('.ln')].map(l => l.textContent).join('\n');
+  navigator.clipboard.writeText(text).then(() => { btn.textContent = '✓ დაკოპირდა'; btn.classList.add('ok'); setTimeout(() => { btn.textContent = 'კოპირება'; btn.classList.remove('ok'); }, 1600); });
+});
+
+// live mode: opened from the deck with P — follow the projector
+const live = new URLSearchParams(location.search).has('live');
+let follow = true, bc = null;
+const liveBtn = document.getElementById('live');
+if (live) {
+  try { bc = new BroadcastChannel('deck-' + DECK); } catch (e) {}
+  liveBtn.classList.add('on');
+  liveBtn.onclick = () => { follow = !follow; liveBtn.classList.toggle('off', !follow); liveBtn.querySelector('.lt').textContent = follow ? 'მიჰყვება სლაიდებს' : 'თავისუფლად ვკითხულობ'; };
+  if (bc) {
+    bc.onmessage = ({ data }) => {
+      if (data.t !== 'state' || !follow) return;
+      const b = blockFor(data.i + 1); if (!b || b.classList.contains('cur')) return;
+      mark(b); b.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    bc.postMessage({ t: 'hello' });
+  }
+  document.addEventListener('click', e => {   // slide chip → move the projector deck
+    const c = e.target.closest('.chip[data-go]'); if (!c || !bc) return;
+    e.preventDefault(); bc.postMessage({ t: 'go', n: +c.dataset.go - 1 });
+  });
+}
+// deep link #s-12
+const h = location.hash.match(/^#s-(\d+)$/);
+if (h) { const b = blockFor(+h[1]); if (b) { mark(b); setTimeout(() => b.scrollIntoView({ block: 'start' }), 50); } }
+// highlight section in the TOC while reading
+const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting && !(live && follow)) mark(x.target, true); }), { rootMargin: '-30% 0px -60% 0px' });
+blocks.forEach(b => io.observe(b));
+</script>
+</body></html>

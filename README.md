@@ -68,32 +68,25 @@ build.py                     აწყობს საიტს
 
 1. `courses/ai/<NN-slug>/` — `deck.html`, `lecture.json`, `classwork.md`, `homework.md` (+ `materials/`).
 2. ზემოთ ცხრილში დაამატე ხაზი.
-3. ლოკალურად შეამოწმე (`build.py ai/NN`), შემდეგ commit + push `main`-ზე — GitHub Actions თავისით ააწყობს და გამოაქვეყნებს.
-
-## კოდი
-
-საიტი კოდით იხსნება: ყველა HTML გვერდი ბილდისას იშიფრება (AES-GCM, გასაღები კოდიდან). ერთხელ შეყვანილ კოდს ბრაუზერი იმახსოვრებს.
-
-- კოდი: GitHub-ზე secret **`LECTURES_CODE`** (Settings → Secrets and variables → Actions). ლოკალურად — ან ცვლადი `LECTURES_CODE`, ან `.access-code` ფაილი (ერთი ხაზი, git-ში არ შედის).
-- კოდის შესაცვლელად — შეცვალე secret და გაუშვი workflow (Actions → Pages → Run workflow). ძველი კოდი აღარ იმუშავებს.
+3. ლოკალურად შეამოწმე (`build.py ai/NN`), შემდეგ commit + push `main`-ზე `python3 build.py` → commit + push `main`-ზე.
 
 ## GitHub Pages
 
-`.github/workflows/pages.yml`: `main`-ზე ყოველ push-ზე აწყობს საიტს (`build.py` → `dist/`) და აქვეყნებს Pages-ზე. რეპოში ბილდის შედეგი არ ინახება.
+საიტი: https://ai-learnigy.github.io/lectures/ — Pages აქვეყნებს `main`-ის root-ს. `build.py` აწყობს `index.html`-ს და `ai/`-ს root-ში, და ისინი commit-დება.
 
-ერთხელ:
+ახალი ლექციის ან ცვლილების შემდეგ: `python3 build.py` → commit + push `main`-ზე. ერთ წუთში საიტზე ჩანს.
 
-1. Settings → Secrets and variables → Actions → **New repository secret**: `LECTURES_CODE` = კოდი.
-2. Settings → Pages → Source: **GitHub Actions**.
-3. Actions → Pages → **Run workflow** (ან ნებისმიერი push `main`-ზე).
+> `ai/` და root-ის `index.html` ბილდის შედეგია — ხელით არ შეცვალო, შეცვალე `courses/` და გაუშვი ბილდი.
 
-საიტი: https://ai-learnigy.github.io/lectures/
+## კოდი (არასავალდებულო)
+
+ახლა საიტი ღიაა. თუ `LECTURES_CODE` ცვლადი ან `.access-code` ფაილი (ერთი ხაზი, git-ში არ შედის) არსებობს, ბილდი ყველა გვერდს დაშიფრავს (AES-GCM) და საიტი კოდით გაიხსნება; ბრაუზერი კოდს ერთხელ იმახსოვრებს.
 
 ## ლოკალურად
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt   # ერთხელ
-.venv/bin/python build.py              # ყველაფერი → root (git-ში არ შედის)
+.venv/bin/python build.py              # ყველაფერი → root
 .venv/bin/python build.py ai/01        # მხოლოდ ერთი ლექცია
 python3 -m http.server 8000            # http://localhost:8000
 ```
