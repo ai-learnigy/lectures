@@ -585,9 +585,9 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
   <h2>ჩვენთვის LLM = <span class="c-api">კიდევ ერთი HTTP API</span></h2>
   <div class="grid2" style="grid-template-columns:1.15fr 1fr;gap:26px;align-items:start">
     <div class="col" style="gap:12px">
-      <div class="rq" style="--a:#49cc90"><span class="mth" style="--a:#49cc90">POST</span><span class="url">localhost:11434/v1/chat/completions</span></div>
+      <div class="rq" style="--a:#49cc90"><span class="mth" style="--a:#49cc90">POST</span><span class="url" style="font-size:16px">generativelanguage.googleapis.com/v1beta/openai/chat/completions</span></div>
       <div class="rs" style="--a:var(--api)"><div class="h">Request body</div><pre class="json">{
-  <span class="k">"model"</span>: <span class="s">"llama3.2"</span>,
+  <span class="k">"model"</span>: <span class="s">"gemini-3.8-flash"</span>,
   <span class="k">"messages"</span>: [
     { <span class="k">"role"</span>: <span class="s">"user"</span>,
       <span class="k">"content"</span>: <span class="s">"Suggest a light vegetarian dish"</span> }
@@ -935,7 +935,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
     <tr class="fade"><td>სწავლისთვის</td><td>API key, ლიმიტები</td><td>key არ სჭირდება — <b>იდეალურია ექსპერიმენტისთვის</b></td></tr>
   </table>
   <div class="callout ask mt">🙋 რესტორნის ასისტენტისთვის რომელს აირჩევდით და <b>რატომ</b>?</div>
-  <div class="callout step mt" style="--a:var(--mvc);font-size:22px">ჩვენი გეგმა: <b>ვსწავლობთ Ollama-ზე</b>, ხარისხს ვამოწმებთ <b>ღრუბელში</b> — კოდი ორივესთვის ერთია</div>
+  <div class="callout step mt" style="--a:var(--mvc);font-size:22px">ჩვენ ვიყენებთ <b>Gemini-ს</b> (ღრუბელი, უფასო ლიმიტით) — ლოკალური საჭიროა, როცა მონაცემი <b>არ უნდა გავიდეს</b></div>
   
 </section>
 
@@ -1010,7 +1010,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
     <div class="found step">
       <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>_chat.GetResponseAsync(…)</small></div>
       <div class="layer" style="--a:var(--net)">IChatClient · Microsoft.Extensions.AI<small>ერთი API</small></div>
-      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">OllamaSharp<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Google.GenAI<small>provider</small></div></div>
+      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">OpenAI<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Google.GenAI<small>provider</small></div></div>
     </div>
   </div>
   <div class="callout step mt2" data-with style="--a:var(--mvc);font-size:23px">ბაზის შეცვლისას LINQ არ იცვლება. პროვაიდერის შეცვლისას — <b>ჩვენი AI კოდი არ იცვლება</b></div>
@@ -1018,15 +1018,15 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
 </section>
 
 <section class="slide" data-section="5 · პირველი გამოძახება">
-  <div class="kicker">🧑‍💻 მომზადება · Ollama</div>
-  <h2>მოდელი <span class="c-net">ჩვენს კომპიუტერზე</span></h2>
+  <div class="kicker">🧑‍💻 მომზადება · Gemini API key</div>
+  <h2>key — <span class="c-net">პაროლივით</span></h2>
   <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
-    <div class="term"><div class="bar"><i></i><i></i><i></i><span>Terminal</span></div>
-      <div class="body"><div class="cmd">ollama pull llama3.2</div><div class="out">pulling manifest… success  (~2 GB)</div><div class="cmd">ollama list</div><div class="out">NAME              SIZE</div><div class="out">llama3.2:latest   2.0 GB</div><div class="cmd">ollama run llama3.2 "Say hi to a restaurant guest"</div><div class="ok">Welcome! We're so glad you're here…</div></div></div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i><span>Terminal (Windows)</span></div>
+      <div class="body"><div class="cmd">setx GEMINI_API_KEY "AIza…"</div><div class="ok">SUCCESS: Specified value was saved.</div><div class="out"># → Visual Studio გადატვირთე</div></div></div>
     <div class="col" style="gap:16px">
-      <div class="card accent" style="--a:var(--net)"><h3><span class="ico">1</span>ollama.com → Download</h3><p class="small">Windows / macOS / Linux. ეშვება ფონურად</p></div>
-      <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">2</span>მოდელის ჩამოტვირთვა</h3><p class="small"><code class="i">ollama pull llama3.2</code> — 3B, ~2 GB</p></div>
-      <div class="callout" style="--a:var(--api)">API უსმენს: <b class="mono">http://localhost:11434</b></div>
+      <div class="card accent" style="--a:var(--net)"><h3><span class="ico">1</span>aistudio.google.com</h3><p class="small"><b>Get API key</b> → Create API key. აქვს უფასო ლიმიტი</p></div>
+      <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">2</span>გარემოს ცვლადი</h3><p class="small"><code class="i">GEMINI_API_KEY</code> — კოდში და Git-ში <b>არასდროს</b></p></div>
+      <div class="callout ask">🙋 რატომ არ ვწერთ key-ს <b>appsettings.json</b>-ში?</div>
     </div>
   </div>
   
@@ -1037,7 +1037,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
   <h2>ორი package</h2>
   <div class="col" style="gap:16px;max-width:1100px;margin-top:10px">
     <div class="nuget"><div class="logo">M.E.AI</div><div><div class="nm">Microsoft.Extensions.AI</div><div class="ds">IChatClient, ChatOptions, ChatResponse — ერთი API ყველა მოდელისთვის</div></div></div>
-    <div class="nuget"><div class="logo" style="background:linear-gradient(135deg,#0d9488,#2563eb)">OLM</div><div><div class="nm">OllamaSharp</div><div class="ds">provider: <code class="i">OllamaApiClient</code> თვითონ არის <code class="i">IChatClient</code></div></div></div>
+    <div class="nuget"><div class="logo" style="background:linear-gradient(135deg,#2563eb,#16a34a)">G</div><div><div class="nm">Google.GenAI</div><div class="ds">Google-ის ოფიციალური SDK — <code class="i">AsIChatClient()</code>-ით გვაძლევს <code class="i">IChatClient</code>-ს</div></div></div>
   </div>
   <div class="callout mt2" style="--a:var(--net)">Visual Studio → პროექტზე მარჯვენა ღილაკი → <b>Manage NuGet Packages</b> → Browse → ორივე → Install</div>
   
@@ -1047,11 +1047,11 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
   <div class="kicker">🧑‍💻 ვწერთ · AiLabController</div>
   <h2>პირველი endpoint: <span class="mono c-api">POST /api/ai-lab/ask</span></h2>
   <div class="grid2" style="grid-template-columns:1.35fr 1fr;align-items:start;gap:26px">
-    <pre class="code sm" id="c1"><span class="ttl">Controllers/AiLabController.cs</span><code><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.Extensions.AI</span><span class="p">;</span></span><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">OllamaSharp</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="na">[ApiController]</span></span><span class="ln"><span class="na">[Route("api/ai-lab")]</span></span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AiLabController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="c1">// დროებით აქვე ვქმნით — ლექცია 3-ზე DI-ში გადავა</span></span><span class="ln"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="nf">OllamaApiClient</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"http://localhost:11434"</span><span class="p">)</span><span class="p">,</span><span class="w"> </span><span class="s">"llama3.2"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">    </span><span class="na">[HttpPost("ask")]</span></span><span class="ln"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IActionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Ask</span><span class="p">(</span><span class="n">AskRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span></span><span class="ln"><span class="w">    </span><span class="p">{</span></span><span class="ln"><span class="w">        </span><span class="n">ChatResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_chat</span><span class="p">.</span><span class="n">GetResponseAsync</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Prompt</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">InputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">OutputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">FinishReason</span><span class="o">?.</span><span class="n">Value</span><span class="p">)</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span><span class="p">}</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
+    <pre class="code sm" id="c1"><span class="ttl">Controllers/AiLabController.cs</span><code><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Google.GenAI</span><span class="p">;</span></span><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.Extensions.AI</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="na">[ApiController]</span></span><span class="ln"><span class="na">[Route("api/ai-lab")]</span></span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AiLabController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="c1">// დროებით აქვე ვქმნით — ლექცია 3-ზე DI-ში გადავა</span></span><span class="ln"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="nf">Client</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="s">"gemini-3.8-flash"</span><span class="p">)</span><span class="p">;</span><span class="w"> </span><span class="c1">// key — GEMINI_API_KEY</span></span><span class="ln"> </span><span class="ln"><span class="w">    </span><span class="na">[HttpPost("ask")]</span></span><span class="ln"><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IActionResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Ask</span><span class="p">(</span><span class="n">AskRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span></span><span class="ln"><span class="w">    </span><span class="p">{</span></span><span class="ln"><span class="w">        </span><span class="n">ChatResponse</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_chat</span><span class="p">.</span><span class="n">GetResponseAsync</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Prompt</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">InputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">Usage</span><span class="o">?.</span><span class="n">OutputTokenCount</span><span class="p">,</span></span><span class="ln"><span class="w">            </span><span class="n">response</span><span class="p">.</span><span class="n">FinishReason</span><span class="o">?.</span><span class="n">Value</span><span class="p">)</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span><span class="p">}</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
     <div class="col" style="gap:14px">
       <pre class="code sm"><span class="ttl">Dtos/AiLab/AskDtos.cs</span><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskRequest</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Prompt</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">AskResponse</span><span class="p">(</span></span><span class="ln"><span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">Text</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">long?</span><span class="w"> </span><span class="n">InputTokens</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">long?</span><span class="w"> </span><span class="n">OutputTokens</span><span class="p">,</span></span><span class="ln"><span class="w">    </span><span class="kt">string?</span><span class="w"> </span><span class="n">FinishReason</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">      </span></span></code></pre>
       <i class="codestep" data-for="c1" data-lines="9-10"></i>
-      <div class="callout step" data-with style="--a:var(--net)">ცვლადის ტიპი — <b>IChatClient</b>, ობიექტი — Ollama-ს</div>
+      <div class="callout step" data-with style="--a:var(--net)">ცვლადის ტიპი — <b>IChatClient</b>, ობიექტი — Gemini-ს. key — ცვლადიდან</div>
       <i class="codestep" data-for="c1" data-lines="15"></i>
       <div class="callout step" data-with style="--a:var(--api)">ერთი ხაზი = HTTP მოთხოვნა მოდელთან</div>
       <i class="codestep" data-for="c1" data-lines="17-21"></i>
@@ -1105,7 +1105,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
   <h2>4 ექსპერიმენტი</h2>
   <div class="grid2" style="grid-template-columns:1fr 1fr;gap:20px;margin-top:6px">
     <div class="card accent" style="--a:var(--api)"><h3><span class="ico">🎲</span>1 · Temperature</h3><p class="small">„სახელი მოუფიქრე ახალ ქართულ კერძს“ — 3-ჯერ <code class="i">0</code>-ით, 3-ჯერ <code class="i">1.5</code>-ით. <b>რა განსხვავება იქნება?</b></p></div>
-    <div class="card accent" style="--a:var(--red)"><h3><span class="ico">✂️</span>2 · Max Tokens</h3><p class="small">„აღწერე ხაჭაპური“ + <code class="i">maxOutputTokens: 15</code>. <b>რას დააბრუნებს finishReason?</b></p></div>
+    <div class="card accent" style="--a:var(--red)"><h3><span class="ico">✂️</span>2 · Max Tokens</h3><p class="small">„აღწერე ხაჭაპური“ + <code class="i">maxOutputTokens: 15</code>. <b>მოიჭრება? ცარიელი იქნება? რა finishReason?</b></p></div>
     <div class="card accent" style="--a:var(--net)"><h3><span class="ico">🐟</span>3 · Stateless</h3><p class="small">ჯერ: „ჩემი სახელია ნინო“. მერე, <b>ცალკე</b> მოთხოვნით: „რა მქვია?“ <b>გაიხსენებს?</b></p></div>
     <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🇬🇪</span>4 · ენა</h3><p class="small">ერთი და იგივე კითხვა ინგლისურად და ქართულად. <b>რამდენჯერ მეტი იქნება inputTokens?</b></p></div>
   </div>
@@ -1115,15 +1115,13 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
 
 <section class="slide" data-section="5 · პირველი გამოძახება">
   <div class="kicker">ერთი ხაზი — სხვა პროვაიდერი</div>
-  <h2>Ollama → <span class="c-api">Gemini</span>: იცვლება <span class="c-mvc">ერთი ადგილი</span></h2>
+  <h2>სხვა პროვაიდერი = <span class="c-mvc">ერთი ადგილი</span></h2>
   <div class="grid2" style="grid-template-columns:1.35fr 1fr;align-items:start;gap:26px">
-    <pre class="code sm" id="c3"><span class="ttl">Controllers/AiLabController.cs</span><code><span class="ln"><span class="k">using</span><span class="w"> </span><span class="nn">Google.GenAI</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="c1">// იყო: new OllamaApiClient(…, "llama3.2")</span></span><span class="ln"><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">Client</span><span class="p">(</span><span class="p">)</span><span class="w">                   </span><span class="c1">// GEMINI_API_KEY</span></span><span class="ln"><span class="w">        </span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="s">"gemini-3.8-flash"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="c1">// Ask(...) — ერთი ასოც არ შეცვლილა</span></span><span class="ln"><span class="w">    </span></span></code></pre>
+    <pre class="code sm"><span class="ttl">AiLabController.cs · _chat</span><code><span class="ln"><span class="c1">// დღეს — Gemini (Google.GenAI)</span></span><span class="ln"><span class="n">IChatClient</span><span class="w"> </span><span class="n">chat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Client</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="s">"gemini-3.8-flash"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="c1">// OpenAI რომ ყოფილიყო (Microsoft.Extensions.AI.OpenAI)</span></span><span class="ln"><span class="n">IChatClient</span><span class="w"> </span><span class="n">chat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OpenAI</span><span class="p">.</span><span class="n">Chat</span><span class="p">.</span><span class="n">ChatClient</span><span class="p">(</span><span class="s">"&lt;model&gt;"</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="p">)</span><span class="p">;</span></span><span class="ln"> </span><span class="ln"><span class="c1">// ლოკალური მოდელი Ollama-თი (OllamaSharp)</span></span><span class="ln"><span class="n">IChatClient</span><span class="w"> </span><span class="n">chat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OllamaApiClient</span><span class="p">(</span><span class="n">ollamaUri</span><span class="p">,</span><span class="w"> </span><span class="s">"&lt;model&gt;"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span></span></code></pre>
     <div class="col" style="gap:14px">
-      <div class="nuget"><div class="logo" style="background:linear-gradient(135deg,#2563eb,#16a34a)">G</div><div><div class="nm">Google.GenAI</div><div class="ds">Google-ის ოფიციალური .NET SDK — აქვს <code class="i">IChatClient</code></div></div></div>
-      <div class="callout" style="--a:var(--api)"><b>new Client()</b> key-ს თვითონ კითხულობს <b>GEMINI_API_KEY</b> გარემოს ცვლადიდან</div>
-      <div class="callout" style="--a:var(--net)"><b>.AsIChatClient()</b> — ისევ ჩვენი ნაცნობი interface</div>
-      <div class="callout" style="--a:var(--mvc)">იგივე 4 ექსპერიმენტი — და <b>შეადარეთ ქართული</b> 🇬🇪</div>
-      <div class="problem" style="font-size:19px">API key — <b>არასდროს კოდში და Git-ში</b></div>
+      <div class="callout ask">🙋 OpenAI-ზე რომ გადავიდეთ, <b>რა შეიცვლება</b> Ask მეთოდში?</div>
+      <div class="solve step" style="font-size:22px"><b>არაფერი.</b> Ask, DTO-ები, Swagger — იგივე</div>
+      <div class="callout step" data-with style="--a:var(--net)">ყველა <b>IChatClient</b>-ს აბრუნებს — ესაა მთელი აზრი</div>
     </div>
   </div>
   
@@ -1133,7 +1131,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
   <div class="kicker">🤔 კითხვა კლასს</div>
   <h2>რა არის <span class="c-red">ცუდი</span> ჩვენს კოდში?</h2>
   <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
-    <pre class="code sm"><span class="ttl">AiLabController.cs</span><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AiLabController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="nf">OllamaApiClient</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"http://localhost:11434"</span><span class="p">)</span><span class="p">,</span><span class="w"> </span><span class="s">"llama3.2"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span><span class="err">…</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
+    <pre class="code sm"><span class="ttl">AiLabController.cs</span><code><span class="ln"><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AiLabController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ControllerBase</span></span><span class="ln"><span class="p">{</span></span><span class="ln"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IChatClient</span><span class="w"> </span><span class="n">_chat</span><span class="w"> </span><span class="o">=</span></span><span class="ln"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="nf">Client</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="n">AsIChatClient</span><span class="p">(</span><span class="s">"gemini-3.8-flash"</span><span class="p">)</span><span class="p">;</span></span><span class="ln"><span class="w">    </span><span class="err">…</span></span><span class="ln"><span class="p">}</span></span><span class="ln"><span class="w">    </span></span></code></pre>
     <div class="col" style="gap:14px">
       <div class="callout ask">🙋 გაიხსენეთ DI-ის ლექცია. <b>1 წუთი</b> — მეზობელთან ერთად</div>
       <div class="problem step">Controller <b>თვითონ ქმნის</b> დამოკიდებულებას — <code class="i">new</code></div>
@@ -1152,7 +1150,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
     <div class="card accent" style="--a:var(--mvc)">
       <h3><span class="ico">📝</span>დავალება · შენი API პროექტი</h3>
       <ul class="clean small">
-<li>NuGet: <strong>Microsoft.Extensions.AI</strong> და <strong>OllamaSharp</strong></li>
+<li>NuGet: <strong>Microsoft.Extensions.AI</strong> და <strong>Google.GenAI</strong>; key — <code class="i">GEMINI_API_KEY</code></li>
 <li><code class="i">Dtos/AiLab/</code>: <strong>AskRequest</strong> და <strong>AskResponse</strong></li>
 <li><code class="i">POST /api/ai-lab/ask</code> — <code class="i">IChatClient</code> + <code class="i">ChatOptions</code></li>
 <li><strong>4 ექსპერიმენტი შენი პროექტის თემაზე</strong> — ჯერ პროგნოზი, მერე Swagger</li>
@@ -1162,7 +1160,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
     </div>
     <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3><ul class="clean small">
 <li><code class="i">AskResponse</code>-ს დაამატე <code class="i">ElapsedMs</code> (<code class="i">Stopwatch</code>) — რამდენი გრძელდება პირველი და მეორე მოთხოვნა?</li>
-<li>შეადარე <code class="i">llama3.2:1b</code> და <code class="i">llama3.2</code> (3B) ერთსა და იმავე ქართულ კითხვაზე: სიჩქარე და ხარისხი</li>
+<li>სცადე სხვა Gemini მოდელი (<a href="https://ai.google.dev/gemini-api/docs/models">სიიდან</a>) იმავე ქართულ კითხვაზე: სიჩქარე, ტოკენები, ხარისხი</li>
 </ul></div>
   </div>
   <div class="callout mt" style="--a:var(--api)">წესი: <b>ჯერ ცდი თვითონ</b> → გვერდით მჯდომს ჰკითხე → მერე მე</div>
@@ -1173,11 +1171,10 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
   <div class="kicker">ყურადღება</div>
   <h2>ხშირი <span class="c-red">შეცდომები</span></h2>
   <div class="col" style="gap:14px">
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem"><code class="i">HttpRequestException</code>: connection refused</div><div class="solve">Ollama არ არის გაშვებული → გახსენი Ollama / <code class="i">ollama serve</code></div></div>
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">404 · model "llama3.2" not found</div><div class="solve">მოდელი არ არის ჩამოტვირთული → <code class="i">ollama pull llama3.2</code></div></div>
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">პირველი პასუხი 20+ წამი</div><div class="solve">მოდელი მეხსიერებაში იტვირთება — მეორე მოთხოვნა სწრაფია</div></div>
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">ქართული პასუხი შეცდომებით</div><div class="solve">პატარა მოდელია — შეადარე ღრუბლოვანს. ეს <b>ბაგი არ არის</b></div></div>
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">API key not valid (Gemini)</div><div class="solve">key არ ჩანს → <code class="i">setx</code>-ის შემდეგ <b>Visual Studio გადატვირთე</b></div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">API key not valid / 401</div><div class="solve">key არ ჩანს → <code class="i">setx</code>-ის შემდეგ <b>Visual Studio გადატვირთე</b></div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">404 · model not found</div><div class="solve">მოდელის სახელი არასწორია → <b>მოდელების სიიდან</b> დააკოპირე</div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">429 · RESOURCE_EXHAUSTED</div><div class="solve">უფასო ლიმიტი ამოიწურა → დაელოდე წუთი</div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">text ცარიელია, finishReason = length</div><div class="solve">მოდელმა ლიმიტი <b>ფიქრზე</b> დახარჯა → გაზარდე maxOutputTokens</div></div>
   </div>
   
 </section>
@@ -1185,7 +1182,7 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
 <section class="slide" data-section="შეჯამება">
   <div class="kicker">შევამოწმოთ</div>
   <h2>6 კითხვა</h2>
-  <div class="qa"><span class="n">1</span><span class="q">რა არის ტოკენი და რატომ გვაინტერესებს backend-ში?</span><span class="a step">ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს · ფასი, context window-ის ლიმიტი და სიჩქარე ტოკენებით ითვლება; ქართული — მეტი ტოკენი</span></div><div class="qa"><span class="n">2</span><span class="q">როგორ წერს LLM პასუხს?</span><span class="a step">next-token prediction: ითვლის შემდეგი ტოკენის ალბათობებს → ირჩევს ერთს → უმატებს → იმეორებს, სანამ არ დაასრულებს ან ლიმიტს არ მიაღწევს</span></div><div class="qa"><span class="n">3</span><span class="q">მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</span><span class="a step">ჩვენი მენიუ არ უნახავს; წერს სავარაუდოს და არა ჭეშმარიტს — hallucination · ფასი ყოველთვის ბაზიდან</span></div><div class="qa"><span class="n">4</span><span class="q">რატომ „არ ახსოვს“ მოდელს წინა მოთხოვნა?</span><span class="a step">stateless: ყოველი მოთხოვნა დამოუკიდებელია · ისტორია ჩვენ უნდა გავუგზავნოთ ყოველ ჯერზე</span></div><div class="qa"><span class="n">5</span><span class="q">შეკვეთის ტიპის დასადგენად რა Temperature-ს დავაყენებთ და რას ნიშნავს <code class="i">finish_reason = length</code>?</span><span class="a step">0 — ერთი სწორი პასუხი, ყოველ ჯერზე ერთნაირი · length — Max Tokens-ს მიაღწია, პასუხი მოიჭრა</span></div><div class="qa"><span class="n">6</span><span class="q">რატომ ვწერთ კოდს <code class="i">IChatClient</code>-ზე და არა პირდაპირ Ollama-ს ან OpenAI-ს კლასზე?</span><span class="a step">ერთი interface ყველა პროვაიდერისთვის (როგორც EF Core-ის provider) · პროვაიდერის შეცვლა = მხოლოდ ობიექტის შექმნის ადგილი</span></div>
+  <div class="qa"><span class="n">1</span><span class="q">რა არის ტოკენი და რატომ გვაინტერესებს backend-ში?</span><span class="a step">ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს · ფასი, context window-ის ლიმიტი და სიჩქარე ტოკენებით ითვლება; ქართული — მეტი ტოკენი</span></div><div class="qa"><span class="n">2</span><span class="q">როგორ წერს LLM პასუხს?</span><span class="a step">next-token prediction: ითვლის შემდეგი ტოკენის ალბათობებს → ირჩევს ერთს → უმატებს → იმეორებს, სანამ არ დაასრულებს ან ლიმიტს არ მიაღწევს</span></div><div class="qa"><span class="n">3</span><span class="q">მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</span><span class="a step">ჩვენი მენიუ არ უნახავს; წერს სავარაუდოს და არა ჭეშმარიტს — hallucination · ფასი ყოველთვის ბაზიდან</span></div><div class="qa"><span class="n">4</span><span class="q">რატომ „არ ახსოვს“ მოდელს წინა მოთხოვნა?</span><span class="a step">stateless: ყოველი მოთხოვნა დამოუკიდებელია · ისტორია ჩვენ უნდა გავუგზავნოთ ყოველ ჯერზე</span></div><div class="qa"><span class="n">5</span><span class="q">შეკვეთის ტიპის დასადგენად რა Temperature-ს დავაყენებთ და რას ნიშნავს <code class="i">finish_reason = length</code>?</span><span class="a step">0 — ერთი სწორი პასუხი, ყოველ ჯერზე ერთნაირი · length — Max Tokens-ს მიაღწია, პასუხი მოიჭრა</span></div><div class="qa"><span class="n">6</span><span class="q">რატომ ვწერთ კოდს <code class="i">IChatClient</code>-ზე და არა პირდაპირ Gemini-ს ან OpenAI-ს კლასზე?</span><span class="a step">ერთი interface ყველა პროვაიდერისთვის (როგორც EF Core-ის provider) · პროვაიდერის შეცვლა = მხოლოდ ობიექტის შექმნის ადგილი</span></div>
   
 </section>
 
@@ -1212,21 +1209,21 @@ background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11p
 
 <section class="slide" data-section="საშინაო">
   <div class="kicker">🏠 საშინაო დავალება</div>
-  <h2>ორი პროვაიდერი, ერთი endpoint — და ხარჯის გათვლა</h2>
+  <h2>ორი Gemini მოდელი, ერთი endpoint — და ხარჯის გათვლა</h2>
   <div class="grid2" style="grid-template-columns:1.5fr 1fr;align-items:start">
     <div class="card accent" style="--a:var(--net)">
       <h3><span class="ico">🏠</span>შენი API პროექტის AI ლაბორატორია იზრდება</h3>
       <ul class="clean small">
-<li><code class="i">AskRequest</code> + <strong>Provider</strong> (<code class="i">ollama</code> / <code class="i">gemini</code>) · <code class="i">AskResponse</code> + <strong>Model</strong>, <strong>ElapsedMs</strong></li>
-<li>provider-ის მიხედვით — სხვა <code class="i">IChatClient</code>; <code class="i">Ask</code>-ის კოდი <strong>ერთი</strong> რჩება</li>
-<li>3 კითხვა შენს თემაზე, ორივე პროვაიდერზე (Ollama და Gemini) → შედარების ცხრილი <code class="i">README.md</code>-ში</li>
-<li>თვის ხარჯი: <strong>გაზომილი</strong> ტოკენები × <strong>რეალური</strong> ფასი → <code class="i">README.md</code></li>
+<li><code class="i">AskRequest</code> + <strong>Model</strong> (არასავალდებულო) → <code class="i">ChatOptions.ModelId</code> · <code class="i">AskResponse</code> + <strong>Model</strong>, <strong>ElapsedMs</strong></li>
+<li>დაშვებულია <strong>2 მოდელი</strong> სიიდან: ერთი სწრაფი/იაფი, ერთი ძლიერი; client ერთია</li>
+<li>3 კითხვა შენს თემაზე, ორივე მოდელზე → შედარების ცხრილი <code class="i">README.md</code>-ში</li>
+<li>თვის ხარჯი ორივე მოდელზე: <strong>გაზომილი</strong> ტოკენები × <strong>რეალური</strong> ფასი → <code class="i">README.md</code></li>
 </ul>
-      <p class="tiny" style="margin-top:14px">✓ მზადაა, როცა: ორივე პროვაიდერი მუშაობს მხოლოდ <code>"provider"</code> ველის შეცვლით; README-ში — ცხრილი და ხარჯის ფორმულა</p>
+      <p class="tiny" style="margin-top:14px">✓ მზადაა, როცა: ერთი endpoint ორივე მოდელით მუშაობს მხოლოდ <code>"model"</code> ველის შეცვლით; README-ში — ცხრილი და ხარჯის ფორმულა</p>
     </div>
     <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">⭐</span>ბონუსი</h3><ul class="clean small">
-<li>ვალიდაცია: უცნობი provider ან Temperature 0–2-ის გარეთ → <code class="i">400 BadRequest</code></li>
-<li>Ollama გამორთულია → <code class="i">503</code> გასაგები შეტყობინებით და არა 500</li>
+<li>ვალიდაცია: დაუშვებელი მოდელი ან Temperature 0–2-ის გარეთ → <code class="i">400 BadRequest</code></li>
+<li>Gemini-ს შეცდომა (key, ლიმიტი) → გასაგები პასუხი და არა 500</li>
 </ul></div>
   </div>
   <div class="callout mt" style="--a:var(--api)">შემდეგი ლექციის დასაწყისში ამ დავალებას <b>ერთად განვიხილავთ</b></div>

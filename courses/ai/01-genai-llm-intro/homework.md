@@ -1,43 +1,39 @@
-# ორი პროვაიდერი, ერთი endpoint — და ხარჯის გათვლა
+# ორი Gemini მოდელი, ერთი endpoint — და ხარჯის გათვლა
 
 შენი API პროექტის AI ლაბორატორია იზრდება
 
 ## მოთხოვნები
 
-- `AskRequest` + **Provider** (`ollama` / `gemini`) · `AskResponse` + **Model**, **ElapsedMs**
-- provider-ის მიხედვით — სხვა `IChatClient`; `Ask`-ის კოდი **ერთი** რჩება
-- 3 კითხვა შენს თემაზე, ორივე პროვაიდერზე (Ollama და Gemini) → შედარების ცხრილი `README.md`-ში
-- თვის ხარჯი: **გაზომილი** ტოკენები × **რეალური** ფასი → `README.md`
+- `AskRequest` + **Model** (არასავალდებულო) → `ChatOptions.ModelId` · `AskResponse` + **Model**, **ElapsedMs**
+- დაშვებულია **2 მოდელი** სიიდან: ერთი სწრაფი/იაფი, ერთი ძლიერი; client ერთია
+- 3 კითხვა შენს თემაზე, ორივე მოდელზე → შედარების ცხრილი `README.md`-ში
+- თვის ხარჯი ორივე მოდელზე: **გაზომილი** ტოკენები × **რეალური** ფასი → `README.md`
 
 ## ✓ მზადაა, როცა
 
-ორივე პროვაიდერი მუშაობს მხოლოდ `"provider"` ველის შეცვლით; README-ში — ცხრილი და ხარჯის ფორმულა
+ერთი endpoint ორივე მოდელით მუშაობს მხოლოდ `"model"` ველის შეცვლით; README-ში — ცხრილი და ხარჯის ფორმულა
 
 ## ⭐ ბონუსი
 
-- ვალიდაცია: უცნობი provider ან Temperature 0–2-ის გარეთ → `400 BadRequest`
-- Ollama გამორთულია → `503` გასაგები შეტყობინებით და არა 500
+- ვალიდაცია: დაუშვებელი მოდელი ან Temperature 0–2-ის გარეთ → `400 BadRequest`
+- Gemini-ს შეცდომა (key, ლიმიტი) → გასაგები პასუხი და არა 500
 
 ## 💡 დეტალები
 
-- `Provider`-ის ნაგულისხმევი მნიშვნელობა — `"ollama"`; `ElapsedMs` — `Stopwatch`-ით
-- შედარების ცხრილი: ყოველ კითხვაზე, ორივე პროვაიდერზე — დრო (ms), input/output ტოკენები, ქართულის ხარისხი 1–5
-- ხარჯი: აირჩიე შენი პროექტის ერთი AI ფუნქცია, დაუშვი მოთხოვნების რაოდენობა დღეში, აიღე Swagger-ში გაზომილი საშუალო ტოკენები და Gemini-ის მოდელის ფასი მისი pricing გვერდიდან (ai.google.dev/pricing) — თითქოს უფასო ლიმიტი ამოიწურა
+- მოდელების სახელები და ფასები: [მოდელები](https://ai.google.dev/gemini-api/docs/models) · [ფასები](https://ai.google.dev/gemini-api/docs/pricing)
+- `Model`-ის ნაგულისხმევი — ის, რაც `AsIChatClient("...")`-ში წერია; `ElapsedMs` — `Stopwatch`-ით
+- ცხრილი: ყოველ კითხვაზე, ორივე მოდელზე — დრო (ms), input/output ტოკენები, ქართულის ხარისხი 1–5
+- ხარჯი: აირჩიე შენი პროექტის ერთი AI ფუნქცია, დაუშვი მოთხოვნების რაოდენობა დღეში, აიღე Swagger-ში გაზომილი საშუალო ტოკენები და ორივე მოდელის ფასი pricing გვერდიდან (თითქოს უფასო ლიმიტი ამოიწურა)
 
 ## 💡 მინიშნება
 
-ობიექტის შექმნა ცალკე მეთოდში გაიტანე — `switch` expression-ით:
+client-ს `AsIChatClient("…")`-ში ნაგულისხმევი მოდელი აქვს, მაგრამ ცალკეულ მოთხოვნაში მოდელი შეიძლება შეცვალო `ChatOptions`-ით — ახალი client არ გჭირდება:
 
 ```csharp
-private static IChatClient CreateClient(string provider) => provider switch
-{
-    "ollama" => new OllamaApiClient(...),
-    "gemini" => new Client().AsIChatClient(...),
-    _ => throw new ArgumentException(...)
-};
+var options = new ChatOptions { ModelId = "…" };
 ```
 
-`IChatClient` არის `IDisposable` — თუ client-ს ყოველ მოთხოვნაზე ქმნი, `using` გამოიყენე. API key — მხოლოდ გარემოს ცვლადში (`GEMINI_API_KEY`), არასდროს კოდში ან Git-ში.
+API key — მხოლოდ გარემოს ცვლადში (`GEMINI_API_KEY`), არასდროს კოდში ან Git-ში.
 
 ## ამოხსნა
 
@@ -46,7 +42,7 @@ DTO-ები: ახალი ველები ბოლოშია და �
 ```csharp Dtos/AiLab/AskDtos.cs
 public record AskRequest(
     string Prompt,
-    string Provider = "ollama",
+    string? Model = null,
     float? Temperature = null,
     int? MaxOutputTokens = null);
 
@@ -59,60 +55,75 @@ public record AskResponse(
     long ElapsedMs);
 ```
 
-პროვაიდერის არჩევა — ერთ ადგილას. ეს არის ერთადერთი კოდი, რომელმაც იცის Ollama-ს და Gemini-ის შესახებ:
+მოდელის არჩევა — `ChatOptions`-ით. client ერთია, იცვლება მხოლოდ `ModelId`:
 
 ```csharp Controllers/AiLabController.cs !
-private static IChatClient CreateClient(string provider) => provider switch
+private const string DefaultModel = "gemini-3.8-flash";
+private static readonly string[] AllowedModels = [DefaultModel, "gemini-3.8-pro"];
+
+// Ask-ში:
+string model = request.Model ?? DefaultModel;
+if (!AllowedModels.Contains(model))
+    return BadRequest($"Model: {string.Join(" ან ", AllowedModels)}");
+
+var options = new ChatOptions
 {
-    "ollama" => new OllamaApiClient(
-        new Uri("http://localhost:11434"), "llama3.2"),
-
-    "gemini" => new Client()                 // key — GEMINI_API_KEY ცვლადიდან
-        .AsIChatClient("gemini-3.8-flash"),
-
-    _ => throw new ArgumentException($"უცნობი პროვაიდერი: {provider}")
+    ModelId = model,
+    Temperature = request.Temperature,
+    MaxOutputTokens = request.MaxOutputTokens
 };
 ```
 
-`Ask` — ბონუსით:
+მთლიანი Controller, ბონუსით:
 
 ```csharp Controllers/AiLabController.cs
-[HttpPost("ask")]
-public async Task<IActionResult> Ask(AskRequest request)
+[ApiController]
+[Route("api/ai-lab")]
+public class AiLabController : ControllerBase
 {
-    if (request.Provider is not ("ollama" or "gemini"))
-        return BadRequest("Provider: ollama ან gemini");
-    if (request.Temperature is < 0 or > 2)
-        return BadRequest("Temperature: 0-დან 2-მდე");
+    private const string DefaultModel = "gemini-3.8-flash";
+    private static readonly string[] AllowedModels = [DefaultModel, "gemini-3.8-pro"];
 
-    using IChatClient chat = CreateClient(request.Provider);
-    var options = new ChatOptions
-    {
-        Temperature = request.Temperature,
-        MaxOutputTokens = request.MaxOutputTokens
-    };
+    private readonly IChatClient _chat = new Client().AsIChatClient(DefaultModel);
 
-    var stopwatch = Stopwatch.StartNew();
-    try
+    [HttpPost("ask")]
+    public async Task<IActionResult> Ask(AskRequest request)
     {
-        ChatResponse response = await chat.GetResponseAsync(request.Prompt, options);
+        string model = request.Model ?? DefaultModel;
+        if (!AllowedModels.Contains(model))
+            return BadRequest($"Model: {string.Join(" ან ", AllowedModels)}");
+        if (request.Temperature is < 0 or > 2)
+            return BadRequest("Temperature: 0-დან 2-მდე");
 
-        return Ok(new AskResponse(
-            response.Text,
-            response.ModelId ?? request.Provider,
-            response.Usage?.InputTokenCount,
-            response.Usage?.OutputTokenCount,
-            response.FinishReason?.Value,
-            stopwatch.ElapsedMilliseconds));
-    }
-    catch (HttpRequestException)
-    {
-        return StatusCode(503, "მოდელი მიუწვდომელია — გაშვებულია Ollama?");
+        var options = new ChatOptions
+        {
+            ModelId = model,
+            Temperature = request.Temperature,
+            MaxOutputTokens = request.MaxOutputTokens
+        };
+
+        var stopwatch = Stopwatch.StartNew();
+        try
+        {
+            ChatResponse response = await _chat.GetResponseAsync(request.Prompt, options);
+
+            return Ok(new AskResponse(
+                response.Text,
+                response.ModelId ?? model,
+                response.Usage?.InputTokenCount,
+                response.Usage?.OutputTokenCount,
+                response.FinishReason?.Value,
+                stopwatch.ElapsedMilliseconds));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(503, $"Gemini-მ ვერ უპასუხა: {ex.Message}");
+        }
     }
 }
 ```
 
-საჭირო `using`-ები: `System.Diagnostics` (Stopwatch), `Microsoft.Extensions.AI`, `OllamaSharp`, `Google.GenAI`. NuGet: `Google.GenAI`.
+საჭირო `using`-ები: `System.Diagnostics` (Stopwatch), `Microsoft.Extensions.AI`, `Google.GenAI`.
 
 ხარჯის გათვლის ნიმუში README-სთვის:
 
@@ -122,9 +133,9 @@ public async Task<IActionResult> Ask(AskRequest request)
 გაზომილი საშუალო: input 180 ტოკენი, output 120 ტოკენი
 input:  6 000 × 180 = 1 080 000 ტოკენი = 1.08M
 output: 6 000 × 120 =   720 000 ტოკენი = 0.72M
-ხარჯი = 1.08 × [input ფასი 1M-ზე] + 0.72 × [output ფასი 1M-ზე]
+ხარჯი = 1.08 × [input ფასი 1M-ზე] + 0.72 × [output ფასი 1M-ზე]   ← ორივე მოდელზე ცალ-ცალკე
 ```
 
 ```note
-`response.ModelId` ზოგი provider-ისთვის `null`-ია, ამიტომ `?? request.Provider`. ამოხსნაში client ყოველ მოთხოვნაზე იქმნება და `using`-ით იხურება — ეს დროებითი გადაწყვეტაა. ლექცია 3-ზე ორივე client DI-ში დარეგისტრირდება და Controller-ს constructor-ით შემოვა.
+მოდელების სახელები (`gemini-3.8-flash`, `gemini-3.8-pro`) აქ ნიმუშია — ზუსტი სახელები მოდელების სიიდან აიღე, ისინი იცვლება. `catch (Exception)` ლაბორატორიისთვის საკმარისია; შეცდომების სწორ დამუშავებას (Retry, 429, Fallback მოდელი) ლექცია 8-ზე ვისწავლით. Gemini-ს მოდელები „ფიქრობენ“ — ფიქრის ტოკენებსაც ვიხდით, ამიტომ output შეიძლება მეტი გამოვიდეს, ვიდრე პასუხის ტექსტი.
 ```

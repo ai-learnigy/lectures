@@ -4,7 +4,7 @@
 
 ## ნაბიჯები
 
-- NuGet: **Microsoft.Extensions.AI** და **OllamaSharp**
+- NuGet: **Microsoft.Extensions.AI** და **Google.GenAI**; key — `GEMINI_API_KEY`
 - `Dtos/AiLab/`: **AskRequest** და **AskResponse**
 - `POST /api/ai-lab/ask` — `IChatClient` + `ChatOptions`
 - **4 ექსპერიმენტი შენი პროექტის თემაზე** — ჯერ პროგნოზი, მერე Swagger
@@ -17,16 +17,16 @@
 ## ⭐ ბონუსი
 
 - `AskResponse`-ს დაამატე `ElapsedMs` (`Stopwatch`) — რამდენი გრძელდება პირველი და მეორე მოთხოვნა?
-- შეადარე `llama3.2:1b` და `llama3.2` (3B) ერთსა და იმავე ქართულ კითხვაზე: სიჩქარე და ხარისხი
+- სცადე სხვა Gemini მოდელი ([სიიდან](https://ai.google.dev/gemini-api/docs/models)) იმავე ქართულ კითხვაზე: სიჩქარე, ტოკენები, ხარისხი
 
 ## 💡 ექსპერიმენტები
 
 1. ერთი კითხვა 3-ჯერ `"temperature": 0`-ით და 3-ჯერ `1.5`-ით
-2. `"maxOutputTokens": 15` — რა `finishReason` დაბრუნდა?
+2. `"maxOutputTokens": 15` — რა `finishReason` დაბრუნდა? ტექსტი მოიჭრა თუ ცარიელია? მერე სცადე `150`
 3. „ჩემი სახელია …“ → ცალკე მოთხოვნით „რა მქვია?“
 4. ერთი და იგივე კითხვა ინგლისურად და ქართულად — შეადარე `inputTokens`
 
-`AskRequest`: `Prompt`, `Temperature?`, `MaxOutputTokens?` · `AskResponse`: `Text`, `InputTokens`, `OutputTokens`, `FinishReason`. Ollama-ს შემოწმება: `ollama list`.
+`AskRequest`: `Prompt`, `Temperature?`, `MaxOutputTokens?` · `AskResponse`: `Text`, `InputTokens`, `OutputTokens`, `FinishReason`. key-ის შემოწმება: თუ `API key not valid` — Visual Studio გადატვირთე `setx`-ის შემდეგ.
 
 ## 💡 ექსპერიმენტების ცხრილი
 
@@ -45,4 +45,4 @@
 
 ## 💡 რჩევა
 
-ლექტორის კოდს ნუ გადაიწერ — დაწერე შენს პროექტში, შენი სახელებით და შენი თემის კითხვებით (მაგ. ბიბლიოთეკის, სპორტდარბაზის, მაღაზიის). თუ Ollama შენს ლეპტოპზე ძალიან ნელია, გამოიყენე Gemini (სლაიდი „ერთი ხაზი — სხვა პროვაიდერი“). ყოველ ექსპერიმენტზე **ჯერ პროგნოზი ჩაწერე**, მერე გაუშვი — მთავარი ის არის, სადაც შენი პროგნოზი არ გამართლდა.
+ლექტორის კოდს ნუ გადაიწერ — დაწერე შენს პროექტში, შენი სახელებით და შენი თემის კითხვებით (მაგ. ბიბლიოთეკის, სპორტდარბაზის, მაღაზიის). Gemini key [aistudio.google.com](https://aistudio.google.com)-ზე აიღება და უფასო ლიმიტი აქვს; თუ ლიმიტი ამოიწურა (429), დაელოდე წუთი. ყოველ ექსპერიმენტზე **ჯერ პროგნოზი ჩაწერე**, მერე გაუშვი — მთავარი ის არის, სადაც შენი პროგნოზი არ გამართლდა.

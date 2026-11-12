@@ -305,9 +305,9 @@ API კურსზე ავაწყვეთ რესტორნის API:
   <h2>ჩვენთვის LLM = <span class="c-api">კიდევ ერთი HTTP API</span></h2>
   <div class="grid2" style="grid-template-columns:1.15fr 1fr;gap:26px;align-items:start">
     <div class="col" style="gap:12px">
-      <div class="rq" style="--a:#49cc90"><span class="mth" style="--a:#49cc90">POST</span><span class="url">localhost:11434/v1/chat/completions</span></div>
+      <div class="rq" style="--a:#49cc90"><span class="mth" style="--a:#49cc90">POST</span><span class="url" style="font-size:16px">generativelanguage.googleapis.com/v1beta/openai/chat/completions</span></div>
       <div class="rs" style="--a:var(--api)"><div class="h">Request body</div><pre class="json">{
-  <span class="k">"model"</span>: <span class="s">"llama3.2"</span>,
+  <span class="k">"model"</span>: <span class="s">"gemini-3.8-flash"</span>,
   <span class="k">"messages"</span>: [
     { <span class="k">"role"</span>: <span class="s">"user"</span>,
       <span class="k">"content"</span>: <span class="s">"Suggest a light vegetarian dish"</span> }
@@ -333,7 +333,7 @@ API კურსზე ავაწყვეთ რესტორნის API:
   <aside class="study">
 ### ჩვენთვის LLM = კიდევ ერთი HTTP API
 
-Backend დეველოპერისთვის LLM ჯადოსნური არაფერია: ის **გარე სერვისია**, რომელსაც HTTP მოთხოვნას ვუგზავნით — ისევე, როგორც ამინდის ან გადახდის API-ს. თითქმის ყველა პროვაიდერი ერთნაირ ფორმატს იყენებს (ე.წ. **OpenAI-compatible** API). ზემოთ — ლოკალური Ollama-ს მისამართი, მაგრამ OpenAI-ზე, Groq-ზე ან Gemini-ზე მოთხოვნა თითქმის იდენტურია.
+Backend დეველოპერისთვის LLM ჯადოსნური არაფერია: ის **გარე სერვისია**, რომელსაც HTTP მოთხოვნას ვუგზავნით — ისევე, როგორც ამინდის ან გადახდის API-ს. თითქმის ყველა პროვაიდერი ერთნაირ ფორმატს იყენებს (ე.წ. **OpenAI-compatible** API). ზემოთ — Gemini-ს OpenAI-compatible მისამართი; OpenAI-ზე, Groq-ზე ან ლოკალურ Ollama-ზე მოთხოვნა თითქმის იდენტურია.
 
 **Request:**
 
@@ -439,7 +439,7 @@ tokenizer — პროგრამა, რომელიც ტექსტს
 - 💸 ქართული მოთხოვნა **უფრო ძვირია** — ფასი ტოკენზეა
 - ⏱️ ქართული პასუხი **უფრო ნელა** იწერება — მეტი ტოკენი უნდა დაიწეროს
 - 📏 context window-ში ქართული ტექსტი **ნაკლები ეტევა**
-- 🎯 პატარა მოდელები ქართულად ხშირად **უარესად** წერენ — ეს დღესვე ვნახავთ ლოკალურ მოდელზე
+- 🎯 პატარა მოდელები ქართულად ხშირად **უარესად** წერენ — Gemini ქართულად კარგად წერს, მაგრამ ყოველ ახალ მოდელს ქართულით ვამოწმებთ
 
 ```tip
 ეს არ ნიშნავს, რომ ქართული არ გამოვიყენოთ — კლიენტი ქართულად წერს. ნიშნავს, რომ ხარჯის დათვლისას და მოდელის არჩევისას **ქართული ტექსტით** ვამოწმებთ და არა ინგლისურით. ზოგი გამოცდილი გუნდი შიდა ინსტრუქციებს (system prompt) ინგლისურად წერს, მომხმარებელს კი ქართულად პასუხობს.
@@ -948,7 +948,7 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
     <tr class="fade"><td>სწავლისთვის</td><td>API key, ლიმიტები</td><td>key არ სჭირდება — <b>იდეალურია ექსპერიმენტისთვის</b></td></tr>
   </table>
   <div class="callout ask mt">🙋 რესტორნის ასისტენტისთვის რომელს აირჩევდით და <b>რატომ</b>?</div>
-  <div class="callout step mt" style="--a:var(--mvc);font-size:22px">ჩვენი გეგმა: <b>ვსწავლობთ Ollama-ზე</b>, ხარისხს ვამოწმებთ <b>ღრუბელში</b> — კოდი ორივესთვის ერთია</div>
+  <div class="callout step mt" style="--a:var(--mvc);font-size:22px">ჩვენ ვიყენებთ <b>Gemini-ს</b> (ღრუბელი, უფასო ლიმიტით) — ლოკალური საჭიროა, როცა მონაცემი <b>არ უნდა გავიდეს</b></div>
   <aside class="study">
 ### Cloud API თუ ლოკალური მოდელი?
 
@@ -960,7 +960,7 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
 | მონაცემი | პროვაიდერთან მიდის | კომპიუტერს არ ტოვებს |
 | სწავლისთვის | API key, ლიმიტები, ზოგჯერ ბარათი | key არ სჭირდება — იდეალურია ექსპერიმენტისთვის |
 
-**ჩვენი გეგმა კურსზე:** ექსპერიმენტებს ვაკეთებთ **Ollama-ზე** (უფასოა და key არ სჭირდება), ხოლო როცა ქართული პასუხის ხარისხი მნიშვნელოვანია, ვამოწმებთ **ღრუბლოვან** მოდელზე (Gemini — უფასო ლიმიტი აქვს). C# კოდი ორივესთვის ერთნაირია — ამის მიზეზს მე-5 ნაწილში ვნახავთ.
+**ჩვენი არჩევანი კურსზე:** ვიყენებთ **Google Gemini**-ს — ღრუბლოვანი მოდელია, ქართულად კარგად წერს და სწავლისთვის აქვს უფასო ლიმიტი (მეტი თუ დაგჭირდა — ფასიანი ტარიფი). ლოკალური მოდელი (Ollama) მაშინ ღირს, როცა მონაცემი კომპანიიდან არ უნდა გავიდეს. C# კოდი ორივესთვის ერთნაირია — ამის მიზეზს მე-5 ნაწილში ვნახავთ.
 
 ```tip
 რეალურ კომპანიაში არჩევანს ხშირად **მონაცემი** წყვეტს: ბანკი ან კლინიკა შეიძლება ვერ აგზავნიდეს კლიენტის მონაცემს გარე პროვაიდერთან. მაშინ ღია მოდელი საკუთარ სერვერზე ეშვება.
@@ -1104,7 +1104,7 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
     <div class="found step">
       <div class="layer" style="--a:var(--api)">ჩვენი კოდი<small>_chat.GetResponseAsync(…)</small></div>
       <div class="layer" style="--a:var(--net)">IChatClient · Microsoft.Extensions.AI<small>ერთი API</small></div>
-      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">OllamaSharp<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Google.GenAI<small>provider</small></div></div>
+      <div class="row" style="gap:10px"><div class="layer" style="--a:var(--muted);flex:1">OpenAI<small>provider</small></div><div class="layer" style="--a:var(--muted);flex:1">Google.GenAI<small>provider</small></div></div>
     </div>
   </div>
   <div class="callout step mt2" data-with style="--a:var(--mvc);font-size:23px">ბაზის შეცვლისას LINQ არ იცვლება. პროვაიდერის შეცვლისას — <b>ჩვენი AI კოდი არ იცვლება</b></div>
@@ -1118,7 +1118,7 @@ EF Core-იდან ეს იდეა უკვე იცი: კოდს `D
 - `IChatClient` — ერთი interface ყველა ჩატ-მოდელისთვის; მთავარი მეთოდია `GetResponseAsync`
 - provider package-ები ამ interface-ს ახორციელებენ: **OllamaSharp** (Ollama), **Google.GenAI** (Gemini), **Microsoft.Extensions.AI.OpenAI** (OpenAI და ყველა OpenAI-compatible: Groq და სხვ.)
 
-ჩვენი კოდი მხოლოდ `IChatClient`-ს იცნობს. Ollama-დან Gemini-ზე გადასვლა = **ერთი ხაზის** შეცვლა — დღესვე ვნახავთ.
+ჩვენი კოდი მხოლოდ `IChatClient`-ს იცნობს. Gemini-დან OpenAI-ზე ან სხვა პროვაიდერზე გადასვლა = **ერთი ხაზის** შეცვლა — დღესვე ვნახავთ.
 
 ```note
 Microsoft.Extensions.AI .NET-ის ოფიციალური „AI ფენაა“ — ისევე, როგორც `ILogger` ლოგირებისთვის. მასზე დგას Microsoft Agent Framework-იც (ლექცია 14). დეტალურად (DI, კონფიგურაცია) — ლექცია 3-ზე.
@@ -1127,40 +1127,38 @@ Microsoft.Extensions.AI .NET-ის ოფიციალური „AI ფე�
 </section>
 
 <section class="slide" data-section="5 · პირველი გამოძახება">
-  <div class="kicker">🧑‍💻 მომზადება · Ollama</div>
-  <h2>მოდელი <span class="c-net">ჩვენს კომპიუტერზე</span></h2>
+  <div class="kicker">🧑‍💻 მომზადება · Gemini API key</div>
+  <h2>key — <span class="c-net">პაროლივით</span></h2>
   <div class="grid2" style="grid-template-columns:1.2fr 1fr;gap:30px;align-items:start">
-    <div class="term"><div class="bar"><i></i><i></i><i></i><span>Terminal</span></div>
-      <div class="body"><div class="cmd">ollama pull llama3.2</div><div class="out">pulling manifest… success  (~2 GB)</div><div class="cmd">ollama list</div><div class="out">NAME              SIZE</div><div class="out">llama3.2:latest   2.0 GB</div><div class="cmd">ollama run llama3.2 "Say hi to a restaurant guest"</div><div class="ok">Welcome! We're so glad you're here…</div></div></div>
+    <div class="term"><div class="bar"><i></i><i></i><i></i><span>Terminal (Windows)</span></div>
+      <div class="body"><div class="cmd">setx GEMINI_API_KEY "AIza…"</div><div class="ok">SUCCESS: Specified value was saved.</div><div class="out"># → Visual Studio გადატვირთე</div></div></div>
     <div class="col" style="gap:16px">
-      <div class="card accent" style="--a:var(--net)"><h3><span class="ico">1</span>ollama.com → Download</h3><p class="small">Windows / macOS / Linux. ეშვება ფონურად</p></div>
-      <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">2</span>მოდელის ჩამოტვირთვა</h3><p class="small"><code class="i">ollama pull llama3.2</code> — 3B, ~2 GB</p></div>
-      <div class="callout" style="--a:var(--api)">API უსმენს: <b class="mono">http://localhost:11434</b></div>
+      <div class="card accent" style="--a:var(--net)"><h3><span class="ico">1</span>aistudio.google.com</h3><p class="small"><b>Get API key</b> → Create API key. აქვს უფასო ლიმიტი</p></div>
+      <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">2</span>გარემოს ცვლადი</h3><p class="small"><code class="i">GEMINI_API_KEY</code> — კოდში და Git-ში <b>არასდროს</b></p></div>
+      <div class="callout ask">🙋 რატომ არ ვწერთ key-ს <b>appsettings.json</b>-ში?</div>
     </div>
   </div>
   <aside class="study">
-### მომზადება — Ollama
+### მომზადება — Gemini API key
 
-**Ollama** ღია მოდელებს შენს კომპიუტერზე უშვებს და მათ ლოკალურ HTTP API-ს უკეთებს.
+ლექციაზე ვიყენებთ **Google Gemini**-ს. მოდელს Google-ის სერვერზე ვიძახებთ, ამიტომ გვჭირდება **API key** — „პაროლი“, რომლითაც Google გვცნობს და ხარჯს გვიწერს.
 
-1. გადმოწერე [ollama.com](https://ollama.com)-დან და დააყენე (Windows / macOS / Linux). ფონურად ეშვება.
-2. ტერმინალში ჩამოტვირთე მოდელი:
+1. გახსენი [aistudio.google.com](https://aistudio.google.com) → **Get API key** → **Create API key**. სწავლისთვის Gemini-ს აქვს უფასო ლიმიტი (მოთხოვნები წუთში/დღეში); მეტი თუ დაგჭირდა — ფასიან ტარიფზე გადადიხარ.
+2. key ჩაწერე **გარემოს ცვლადში** `GEMINI_API_KEY` (Windows, ტერმინალში):
 
 ```bash
-ollama pull llama3.2        # ~2 GB, ერთხელ
-ollama list                 # რა მოდელები გაქვს
-ollama run llama3.2 "Say hi to a restaurant guest"   # სწრაფი შემოწმება
+setx GEMINI_API_KEY "AIza..."
 ```
 
-3. Ollama-ს API უსმენს მისამართს **`http://localhost:11434`** — ჩვენი C# კოდი აქ დაუკავშირდება.
+3. **Visual Studio გადატვირთე** — ის ცვლადებს მხოლოდ გახსნისას კითხულობს.
 
 ```warn
-**ლექციამდე** დააყენე Ollama და ჩამოტვირთე მოდელი — კლასში 2 GB-ის ერთად გადმოწერა ქსელს „დაახრჩობს“. სუსტ ლეპტოპზე (8 GB RAM-ზე ნაკლები) ცადე უფრო პატარა `llama3.2:1b`, ან გამოიყენე ღრუბლოვანი პროვაიდერი (იხ. სლაიდი „ერთი ხაზი — სხვა პროვაიდერი“).
+**API key = პაროლი.** არასდროს ჩაწერო კოდში, `appsettings.json`-ში ან `launchSettings.json`-ში — ისინი Git-ში მიდის, და GitHub-ზე გაჟონილ key-ს ბოტები წუთებში პოულობენ და შენს ანგარიშზე ხარჯავენ. ჯერჯერობით — გარემოს ცვლადი; User Secrets-ს და კონფიგურაციას ლექცია 3-ზე და 21-ზე ვნახავთ.
 ```
 
 ```terms
-Ollama — პროგრამა, რომელიც ღია LLM-ებს ლოკალურად უშვებს და HTTP API-ს აძლევს
-3B — მოდელის ზომა: 3 მილიარდი პარამეტრი. მეტი = ჭკვიანი, მაგრამ მძიმე და ნელი
+API key — საიდუმლო სტრიქონი, რომლითაც პროვაიდერი გცნობს და ხარჯს გიწერს
+გარემოს ცვლადი (environment variable) — მნიშვნელობა, რომელიც ოპერაციულ სისტემაში ინახება და პროგრამა მას გაშვებისას კითხულობს
 ```
   </aside>
 </section>
@@ -1170,7 +1168,7 @@ Ollama — პროგრამა, რომელიც ღია LLM-ებ�
   <h2>ორი package</h2>
   <div class="col" style="gap:16px;max-width:1100px;margin-top:10px">
     <div class="nuget"><div class="logo">M.E.AI</div><div><div class="nm">Microsoft.Extensions.AI</div><div class="ds">IChatClient, ChatOptions, ChatResponse — ერთი API ყველა მოდელისთვის</div></div></div>
-    <div class="nuget"><div class="logo" style="background:linear-gradient(135deg,#0d9488,#2563eb)">OLM</div><div><div class="nm">OllamaSharp</div><div class="ds">provider: <code class="i">OllamaApiClient</code> თვითონ არის <code class="i">IChatClient</code></div></div></div>
+    <div class="nuget"><div class="logo" style="background:linear-gradient(135deg,#2563eb,#16a34a)">G</div><div><div class="nm">Google.GenAI</div><div class="ds">Google-ის ოფიციალური SDK — <code class="i">AsIChatClient()</code>-ით გვაძლევს <code class="i">IChatClient</code>-ს</div></div></div>
   </div>
   <div class="callout mt2" style="--a:var(--net)">Visual Studio → პროექტზე მარჯვენა ღილაკი → <b>Manage NuGet Packages</b> → Browse → ორივე → Install</div>
   <aside class="study">
@@ -1181,13 +1179,13 @@ RestaurantApi-ში ვაყენებთ:
 | Package | რისთვის |
 |---|---|
 | **Microsoft.Extensions.AI** | `IChatClient`, `ChatOptions`, `ChatResponse` და (მოგვიანებით) middleware — ერთი API ყველა მოდელისთვის |
-| **OllamaSharp** | Ollama-ს provider. მისი `OllamaApiClient` კლასი პირდაპირ ახორციელებს `IChatClient`-ს |
+| **Google.GenAI** | Google-ის ოფიციალური .NET SDK Gemini-სთვის. `AsIChatClient()` მეთოდით გვაძლევს `IChatClient`-ს |
 
 Visual Studio-ში: პროექტზე მარჯვენა ღილაკი → **Manage NuGet Packages** → **Browse** → მოძებნე და დააყენე ორივე. ან ტერმინალიდან:
 
 ```bash
 dotnet add package Microsoft.Extensions.AI
-dotnet add package OllamaSharp
+dotnet add package Google.GenAI
 ```
   </aside>
 </section>
@@ -1197,8 +1195,8 @@ dotnet add package OllamaSharp
   <h2>პირველი endpoint: <span class="mono c-api">POST /api/ai-lab/ask</span></h2>
   <div class="grid2" style="grid-template-columns:1.35fr 1fr;align-items:start;gap:26px">
     <code-block id="c1" lang="csharp" cls="sm" title="Controllers/AiLabController.cs">
+using Google.GenAI;
 using Microsoft.Extensions.AI;
-using OllamaSharp;
 
 [ApiController]
 [Route("api/ai-lab")]
@@ -1206,7 +1204,7 @@ public class AiLabController : ControllerBase
 {
     // დროებით აქვე ვქმნით — ლექცია 3-ზე DI-ში გადავა
     private readonly IChatClient _chat =
-        new OllamaApiClient(new Uri("http://localhost:11434"), "llama3.2");
+        new Client().AsIChatClient("gemini-3.8-flash"); // key — GEMINI_API_KEY
 
     [HttpPost("ask")]
     public async Task<IActionResult> Ask(AskRequest request)
@@ -1232,7 +1230,7 @@ public record AskResponse(
     string? FinishReason);
       </code-block>
       <i class="codestep" data-for="c1" data-lines="9-10"></i>
-      <div class="callout step" data-with style="--a:var(--net)">ცვლადის ტიპი — <b>IChatClient</b>, ობიექტი — Ollama-ს</div>
+      <div class="callout step" data-with style="--a:var(--net)">ცვლადის ტიპი — <b>IChatClient</b>, ობიექტი — Gemini-ს. key — ცვლადიდან</div>
       <i class="codestep" data-for="c1" data-lines="15"></i>
       <div class="callout step" data-with style="--a:var(--api)">ერთი ხაზი = HTTP მოთხოვნა მოდელთან</div>
       <i class="codestep" data-for="c1" data-lines="17-21"></i>
@@ -1259,8 +1257,8 @@ public record AskResponse(
 Controller:
 
 ```csharp Controllers/AiLabController.cs
+using Google.GenAI;
 using Microsoft.Extensions.AI;
-using OllamaSharp;
 
 [ApiController]
 [Route("api/ai-lab")]
@@ -1268,7 +1266,7 @@ public class AiLabController : ControllerBase
 {
     // დროებით აქვე ვქმნით — ლექცია 3-ზე DI-ში გადავა
     private readonly IChatClient _chat =
-        new OllamaApiClient(new Uri("http://localhost:11434"), "llama3.2");
+        new Client().AsIChatClient("gemini-3.8-flash"); // key — GEMINI_API_KEY
 
     [HttpPost("ask")]
     public async Task<IActionResult> Ask(AskRequest request)
@@ -1286,13 +1284,13 @@ public class AiLabController : ControllerBase
 
 ხაზ-ხაზ:
 
-- **`IChatClient _chat = new OllamaApiClient(...)`** — ცვლადის ტიპი interface-ია, ობიექტი კი Ollama-ს provider. პარამეტრები: Ollama-ს მისამართი და მოდელის სახელი.
+- **`IChatClient _chat = new Client().AsIChatClient("gemini-3.8-flash")`** — `Client` Google-ის SDK-ა; key-ს თვითონ კითხულობს `GEMINI_API_KEY` ცვლადიდან. `AsIChatClient` მას ჩვენს interface-ად აქცევს; პარამეტრი — მოდელის სახელი ([სია](https://ai.google.dev/gemini-api/docs/models)). ცვლადის ტიპი interface-ია, ობიექტი კი Gemini-ს provider.
 - **`GetResponseAsync(request.Prompt)`** — აგზავნის HTTP მოთხოვნას (ზუსტად ისეთს, როგორიც 1-ელ ნაწილში ვნახეთ) და ელოდება პასუხს. `async`, რადგან ეს ქსელის ოპერაციაა.
 - **`ChatResponse`** — პასუხი: `Text` (ტექსტი), `Usage` (ტოკენები: `InputTokenCount`, `OutputTokenCount`), `FinishReason` (`stop` / `length`).
 - **`?.`** — `Usage` და `FinishReason` შეიძლება `null` იყოს (ყველა provider ყოველთვის არ აბრუნებს), ამიტომ null-conditional ოპერატორი.
 
 ```warn
-`new OllamaApiClient(...)` Controller-ის შიგნით — ესაა ის, რასაც DI-ზე **ვერიდებოდით**: Controller თვითონ ქმნის თავის დამოკიდებულებას, ყოველ მოთხოვნაზე ახალს. დღეს ეს შეგნებულად ასეა, რომ ყურადღება მოდელზე იყოს. ლექცია 3-ზე `IChatClient`-ს DI-ში დავარეგისტრირებთ (`AddChatClient`) და Controller-ში constructor-ით მივიღებთ.
+`new Client().AsIChatClient(...)` Controller-ის შიგნით — ესაა ის, რასაც DI-ზე **ვერიდებოდით**: Controller თვითონ ქმნის თავის დამოკიდებულებას, ყოველ მოთხოვნაზე ახალს. დღეს ეს შეგნებულად ასეა, რომ ყურადღება მოდელზე იყოს. ლექცია 3-ზე `IChatClient`-ს DI-ში დავარეგისტრირებთ (`AddChatClient`) და Controller-ში constructor-ით მივიღებთ.
 ```
   </aside>
 </section>
@@ -1341,7 +1339,7 @@ public class AiLabController : ControllerBase
 
 **რატომ არის input უფრო მეტი, ვიდრე ჩვენი სიტყვები?** მოდელს მხოლოდ ჩვენი ტექსტი არ მიდის: provider შეტყობინებას ახვევს სპეციალურ **ჩატის შაბლონში** — role-ის ნიშნები (`user`, `assistant`), დასაწყისის/დასასრულის ტოკენები. ეს ტოკენებიც ითვლება და ფასდება.
 
-**ახლა იგივე ქართულად:** „მირჩიე ერთი მსუბუქი ვეგეტარიანული კერძი. ერთი წინადადებით.“ — შეადარე `inputTokens` და პასუხის ხარისხი. პატარა ლოკალური მოდელი ქართულად ხშირად შეცდომებით წერს — ეს ნორმალურია და სწორედ ამიტომ ვამოწმებთ ღრუბლოვან მოდელსაც.
+**ახლა იგივე ქართულად:** „მირჩიე ერთი მსუბუქი ვეგეტარიანული კერძი. ერთი წინადადებით.“ — შეადარე `inputTokens` და პასუხის ხარისხი. ქართული ბევრად მეტი ტოკენია — ეს 1-ელი თამაშის დადასტურებაა, ახლა უკვე ჩვენი კოდიდან.
   </aside>
 </section>
 
@@ -1427,7 +1425,7 @@ ChatResponse response =
   <h2>4 ექსპერიმენტი</h2>
   <div class="grid2" style="grid-template-columns:1fr 1fr;gap:20px;margin-top:6px">
     <div class="card accent" style="--a:var(--api)"><h3><span class="ico">🎲</span>1 · Temperature</h3><p class="small">„სახელი მოუფიქრე ახალ ქართულ კერძს“ — 3-ჯერ <code class="i">0</code>-ით, 3-ჯერ <code class="i">1.5</code>-ით. <b>რა განსხვავება იქნება?</b></p></div>
-    <div class="card accent" style="--a:var(--red)"><h3><span class="ico">✂️</span>2 · Max Tokens</h3><p class="small">„აღწერე ხაჭაპური“ + <code class="i">maxOutputTokens: 15</code>. <b>რას დააბრუნებს finishReason?</b></p></div>
+    <div class="card accent" style="--a:var(--red)"><h3><span class="ico">✂️</span>2 · Max Tokens</h3><p class="small">„აღწერე ხაჭაპური“ + <code class="i">maxOutputTokens: 15</code>. <b>მოიჭრება? ცარიელი იქნება? რა finishReason?</b></p></div>
     <div class="card accent" style="--a:var(--net)"><h3><span class="ico">🐟</span>3 · Stateless</h3><p class="small">ჯერ: „ჩემი სახელია ნინო“. მერე, <b>ცალკე</b> მოთხოვნით: „რა მქვია?“ <b>გაიხსენებს?</b></p></div>
     <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🇬🇪</span>4 · ენა</h3><p class="small">ერთი და იგივე კითხვა ინგლისურად და ქართულად. <b>რამდენჯერ მეტი იქნება inputTokens?</b></p></div>
   </div>
@@ -1441,7 +1439,7 @@ ChatResponse response =
 *რას ნახავ:* 0-ზე სახელები (თითქმის) ერთნაირია, 1.5-ზე ყოველ ჯერზე სხვა — ზოგჯერ უცნაურიც.
 
 **2 · Max Tokens.** `"prompt": "Describe khachapuri"`, `"maxOutputTokens": 15`.
-*რას ნახავ:* ტექსტი შუაში წყდება, `"finishReason": "length"`, `outputTokens` = 15.
+*რას ნახავ:* `"finishReason": "length"`. ტექსტი ან შუაში წყდება, ან **საერთოდ ცარიელია** — Gemini პასუხამდე „ფიქრობს“ (reasoning, მე-3 ნაწილი) და ფიქრის ტოკენებიც ამ ლიმიტში ითვლება. სცადე `150` და შეადარე.
 
 **3 · Stateless.** ჯერ `"prompt": "My name is Nino"`, მერე ცალკე მოთხოვნით `"prompt": "What is my name?"`.
 *რას ნახავ:* მოდელმა არ იცის — ყოველი მოთხოვნა დამოუკიდებელია. ისტორიის გაგზავნას `ChatMessage`-ების სიით ლექცია 2-ზე და 7-ზე ვისწავლით.
@@ -1457,59 +1455,44 @@ ChatResponse response =
 
 <section class="slide" data-section="5 · პირველი გამოძახება">
   <div class="kicker">ერთი ხაზი — სხვა პროვაიდერი</div>
-  <h2>Ollama → <span class="c-api">Gemini</span>: იცვლება <span class="c-mvc">ერთი ადგილი</span></h2>
+  <h2>სხვა პროვაიდერი = <span class="c-mvc">ერთი ადგილი</span></h2>
   <div class="grid2" style="grid-template-columns:1.35fr 1fr;align-items:start;gap:26px">
-    <code-block id="c3" lang="csharp" cls="sm" title="Controllers/AiLabController.cs">
-using Google.GenAI;
+    <code-block lang="csharp" cls="sm" title="AiLabController.cs · _chat">
+// დღეს — Gemini (Google.GenAI)
+IChatClient chat = new Client().AsIChatClient("gemini-3.8-flash");
 
-// იყო: new OllamaApiClient(…, "llama3.2")
-private readonly IChatClient _chat =
-    new Client()                   // GEMINI_API_KEY
-        .AsIChatClient("gemini-3.8-flash");
+// OpenAI რომ ყოფილიყო (Microsoft.Extensions.AI.OpenAI)
+IChatClient chat = new OpenAI.Chat.ChatClient("<model>", key).AsIChatClient();
 
-// Ask(...) — ერთი ასოც არ შეცვლილა
+// ლოკალური მოდელი Ollama-თი (OllamaSharp)
+IChatClient chat = new OllamaApiClient(ollamaUri, "<model>");
     </code-block>
     <div class="col" style="gap:14px">
-      <div class="nuget"><div class="logo" style="background:linear-gradient(135deg,#2563eb,#16a34a)">G</div><div><div class="nm">Google.GenAI</div><div class="ds">Google-ის ოფიციალური .NET SDK — აქვს <code class="i">IChatClient</code></div></div></div>
-      <div class="callout" style="--a:var(--api)"><b>new Client()</b> key-ს თვითონ კითხულობს <b>GEMINI_API_KEY</b> გარემოს ცვლადიდან</div>
-      <div class="callout" style="--a:var(--net)"><b>.AsIChatClient()</b> — ისევ ჩვენი ნაცნობი interface</div>
-      <div class="callout" style="--a:var(--mvc)">იგივე 4 ექსპერიმენტი — და <b>შეადარეთ ქართული</b> 🇬🇪</div>
-      <div class="problem" style="font-size:19px">API key — <b>არასდროს კოდში და Git-ში</b></div>
+      <div class="callout ask">🙋 OpenAI-ზე რომ გადავიდეთ, <b>რა შეიცვლება</b> Ask მეთოდში?</div>
+      <div class="solve step" style="font-size:22px"><b>არაფერი.</b> Ask, DTO-ები, Swagger — იგივე</div>
+      <div class="callout step" data-with style="--a:var(--net)">ყველა <b>IChatClient</b>-ს აბრუნებს — ესაა მთელი აზრი</div>
     </div>
   </div>
   <aside class="study">
-### ერთი ხაზი — სხვა პროვაიდერი: Gemini
+### სხვა პროვაიდერი = ერთი ადგილი
 
-ახლა იგივე endpoint-ს ღრუბლოვან მოდელზე ვცდით — **Google Gemini**. მას აქვს უფასო ლიმიტი სწავლისთვის და ქართულად ბევრად უკეთ წერს, ვიდრე პატარა ლოკალური მოდელი.
+ჩვენ Gemini-ს ვიყენებთ, მაგრამ კოდი Gemini-ზე „მიბმული“ არ არის. სხვა პროვაიდერზე გადასვლისას იცვლება **მხოლოდ** `IChatClient`-ის შექმნა:
 
-1. NuGet: **Google.GenAI** — Google-ის ოფიციალური .NET SDK. მასში უკვე არის `AsIChatClient()` — ანუ Microsoft.Extensions.AI-ს მხარდაჭერა.
-2. [aistudio.google.com](https://aistudio.google.com) → **Get API key** → Create API key.
-3. key ჩაწერე **გარემოს ცვლადში** `GEMINI_API_KEY` (Windows, ტერმინალში; შემდეგ Visual Studio გადატვირთე):
+```csharp
+// დღეს — Gemini (Google.GenAI)
+IChatClient chat = new Client().AsIChatClient("gemini-3.8-flash");
 
-```bash
-setx GEMINI_API_KEY "AIza..."
+// OpenAI რომ ყოფილიყო (NuGet: Microsoft.Extensions.AI.OpenAI)
+IChatClient chat = new OpenAI.Chat.ChatClient("<model>", key).AsIChatClient();
+
+// ლოკალური მოდელი Ollama-თი (NuGet: OllamaSharp)
+IChatClient chat = new OllamaApiClient(new Uri("http://localhost:11434"), "<model>");
 ```
 
-4. Controller-ში იცვლება **მხოლოდ** `_chat`-ის შექმნა:
-
-```csharp Controllers/AiLabController.cs
-using Google.GenAI;
-
-private readonly IChatClient _chat =
-    new Client()                            // key — GEMINI_API_KEY ცვლადიდან
-        .AsIChatClient("gemini-3.8-flash"); // სია: ai.google.dev/gemini-api/docs/models
-```
-
-`new Client()` key-ს კოდში არ ითხოვს — თვითონ პოულობს `GEMINI_API_KEY` ცვლადში. `Ask` მეთოდი, DTO-ები, Swagger — **არაფერი იცვლება**. ესაა `IChatClient`-ის მთელი აზრი.
-
-**იგივე 4 ექსპერიმენტი Gemini-ზე** — რა განსხვავდება? ყველაზე თვალსაჩინო: ქართული პასუხის ხარისხი და სიჩქარე.
-
-```warn
-**API key = პაროლი.** არასდროს ჩაწერო კოდში, `appsettings.json`-ში ან `launchSettings.json`-ში, რომლებიც Git-ში მიდის — GitHub-ზე გაჟონილ key-ს ბოტები წუთებში პოულობენ. ჯერჯერობით — გარემოს ცვლადი; User Secrets-ს და კონფიგურაციას ლექცია 3-ზე და 21-ზე ვნახავთ.
-```
+`Ask` მეთოდი, DTO-ები, Swagger — **არაფერი იცვლება**: სამივე `IChatClient`-ს აბრუნებს. ზუსტად ისე, როგორც EF Core-ში SQL Server-იდან PostgreSQL-ზე გადასვლისას LINQ არ იცვლება.
 
 ```note
-Gemini-ის ახალი მოდელები **„ფიქრობენ“** პასუხამდე (reasoning, მე-3 ნაწილი) — ფიქრის ტოკენები `maxOutputTokens`-ის ლიმიტშიც შეიძლება ჩაითვალოს. თუ ძალიან დაბალ ლიმიტზე (მაგ. 15) ტექსტი ცარიელი დაბრუნდა, ეს ამის ბრალია: მოდელმა ლიმიტი ფიქრზე დახარჯა. მოდელის სახელი ყოველთვის [მოდელების სიიდან](https://ai.google.dev/gemini-api/docs/models) აიღე — ისინი იცვლება. სხვა OpenAI-compatible პროვაიდერი (OpenAI, Groq) იმავე პრინციპით ერთვება `Microsoft.Extensions.AI.OpenAI` package-ით.
+ამ სლაიდის კოდს არ ვუშვებთ — ის აჩვენებს, რომ არჩევანი იაფია. ლექცია 3-ზე `IChatClient`-ს DI-ში დავარეგისტრირებთ და პროვაიდერი საერთოდ Program.cs-ის ერთ ხაზში იქნება.
 ```
   </aside>
 </section>
@@ -1522,7 +1505,7 @@ Gemini-ის ახალი მოდელები **„ფიქრობ�
 public class AiLabController : ControllerBase
 {
     private readonly IChatClient _chat =
-        new OllamaApiClient(new Uri("http://localhost:11434"), "llama3.2");
+        new Client().AsIChatClient("gemini-3.8-flash");
     …
 }
     </code-block>
@@ -1539,7 +1522,7 @@ public class AiLabController : ControllerBase
 
 დღევანდელი კოდი მუშაობს, მაგრამ DI-ის ლექციიდან გახსოვს, რატომ არ ვწერთ ასე:
 
-- **Controller თვითონ ქმნის დამოკიდებულებას** (`new OllamaApiClient(...)`). სხვა Controller-საც რომ დასჭირდეს მოდელი — ისიც თავისას შექმნის. პროვაიდერის შესაცვლელად ყველგან მოგვიწევს ხელის ხლება.
+- **Controller თვითონ ქმნის დამოკიდებულებას** (`new Client().AsIChatClient(...)`). სხვა Controller-საც რომ დასჭირდეს მოდელი — ისიც თავისას შექმნის. პროვაიდერის შესაცვლელად ყველგან მოგვიწევს ხელის ხლება.
 - **მისამართი და მოდელის სახელი კოდშია ჩაწერილი** — სერვერზე სხვა მისამართი რომ იყოს?
 - **ყოველ მოთხოვნაზე ახალი client იქმნება** — Controller per-request ობიექტია; client-ს კი შიგნით HTTP კავშირი აქვს.
 - **ტესტირება** — Controller-ს ვერ გამოვცდით „ყალბი“ მოდელით (ლექცია 22: `IChatClient`-ის Mock).
@@ -1554,26 +1537,24 @@ public class AiLabController : ControllerBase
   <div class="kicker">ყურადღება</div>
   <h2>ხშირი <span class="c-red">შეცდომები</span></h2>
   <div class="col" style="gap:14px">
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem"><code class="i">HttpRequestException</code>: connection refused</div><div class="solve">Ollama არ არის გაშვებული → გახსენი Ollama / <code class="i">ollama serve</code></div></div>
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">404 · model "llama3.2" not found</div><div class="solve">მოდელი არ არის ჩამოტვირთული → <code class="i">ollama pull llama3.2</code></div></div>
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">პირველი პასუხი 20+ წამი</div><div class="solve">მოდელი მეხსიერებაში იტვირთება — მეორე მოთხოვნა სწრაფია</div></div>
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">ქართული პასუხი შეცდომებით</div><div class="solve">პატარა მოდელია — შეადარე ღრუბლოვანს. ეს <b>ბაგი არ არის</b></div></div>
-    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">API key not valid (Gemini)</div><div class="solve">key არ ჩანს → <code class="i">setx</code>-ის შემდეგ <b>Visual Studio გადატვირთე</b></div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">API key not valid / 401</div><div class="solve">key არ ჩანს → <code class="i">setx</code>-ის შემდეგ <b>Visual Studio გადატვირთე</b></div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">404 · model not found</div><div class="solve">მოდელის სახელი არასწორია → <b>მოდელების სიიდან</b> დააკოპირე</div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">429 · RESOURCE_EXHAUSTED</div><div class="solve">უფასო ლიმიტი ამოიწურა → დაელოდე წუთი</div></div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr;gap:18px"><div class="problem">text ცარიელია, finishReason = length</div><div class="solve">მოდელმა ლიმიტი <b>ფიქრზე</b> დახარჯა → გაზარდე maxOutputTokens</div></div>
   </div>
   <aside class="study">
 ### ხშირი შეცდომები
 
 | რას ხედავ | მიზეზი და გამოსწორება |
 |---|---|
-| `HttpRequestException` … connection refused / actively refused | Ollama არ არის გაშვებული. გახსენი Ollama აპლიკაცია ან ტერმინალში `ollama serve` |
-| 404 … model "llama3.2" not found | მოდელი არ არის ჩამოტვირთული ან სახელი არასწორია. `ollama pull llama3.2`, შეამოწმე `ollama list` |
-| პირველი პასუხი ძალიან ნელია (20+ წამი) | მოდელი პირველად იტვირთება მეხსიერებაში. მომდევნო მოთხოვნები სწრაფია |
-| ქართული პასუხი შეცდომებით ან ინგლისურად | პატარა ლოკალური მოდელის შეზღუდვაა, არა კოდის. შეადარე ღრუბლოვან მოდელს |
-| API key not valid / 401 (Gemini) | API key ვერ წაიკითხა. `setx`-ის შემდეგ Visual Studio-ს გადატვირთვა სჭირდება; შეამოწმე ცვლადის სახელი |
-| 429 Too Many Requests / RESOURCE_EXHAUSTED (Gemini) | უფასო ლიმიტი ამოიწურა წუთში/დღეში. დაელოდე — Retry-ს და Resilience-ს ლექცია 8-ზე ვისწავლით |
+| API key not valid / 401 | key ვერ წაიკითხა. `setx`-ის შემდეგ Visual Studio-ს გადატვირთვა სჭირდება; შეამოწმე, რომ ცვლადის სახელი ზუსტად `GEMINI_API_KEY`-ია |
+| 404 … model not found | მოდელის სახელი არასწორია ან მოძველდა — აიღე [მოდელების სიიდან](https://ai.google.dev/gemini-api/docs/models) |
+| 429 / RESOURCE_EXHAUSTED | უფასო ლიმიტი (წუთში/დღეში) ამოიწურა. დაელოდე — Retry-ს და Resilience-ს ლექცია 8-ზე ვისწავლით |
+| `text` ცარიელია, `finishReason` = `length` | Gemini პასუხამდე „ფიქრობს“ და ფიქრის ტოკენები `maxOutputTokens`-ში ითვლება. ძალიან დაბალ ლიმიტზე ყველაფერი ფიქრზე იხარჯება — გაზარდე ლიმიტი |
+| კავშირის შეცდომა / timeout | ინტერნეტი ან პროქსი. Gemini ღრუბელშია — ქსელი აუცილებელია |
 
 ```prompt როცა რამე არ მუშაობს
-ვწერ ASP.NET Core Web API-ს .NET 10-ზე და ვიყენებ Microsoft.Extensions.AI-ს IChatClient-ს [Ollama-ს OllamaSharp-ით / Gemini-ს Google.GenAI-ით].
+ვწერ ASP.NET Core Web API-ს .NET 10-ზე და ვიყენებ Microsoft.Extensions.AI-ს IChatClient-ს Gemini-ს Google.GenAI-ით.
 პრობლემა: [აღწერე, რას ხედავ]
 კოდი: [ჩასვი Controller-ის შესაბამისი ნაწილი]
 შეცდომა: [ჩასვი შეცდომის სრული ტექსტი]
@@ -1611,7 +1592,7 @@ public class AiLabController : ControllerBase
 2. **Next-token prediction** — მოდელი წერს სავარაუდო ტექსტს, არა აუცილებლად ჭეშმარიტს (hallucination). ფასი, მარაგი, ჯავშანი — ყოველთვის ჩვენი ბაზიდან.
 3. **Stateless** — მოდელს წინა მოთხოვნა არ ახსოვს; ისტორიას ჩვენ ვუგზავნით და ჩვენ ვიხდით.
 4. **Temperature, Top-P, Max Tokens** — მოთხოვნის პარამეტრები; ამოცანის მიხედვით ვირჩევთ. `finish_reason = length` → პასუხი მოიჭრა.
-5. **პროვაიდერი და ფასი** — input იაფია, output ძვირი; მოდელებს შორის განსხვავება ათჯერადია. ლოკალური Ollama — უფასო ექსპერიმენტისთვის.
+5. **პროვაიდერი და ფასი** — input იაფია, output ძვირი; მოდელებს შორის განსხვავება ათჯერადია. ჩვენ ვიყენებთ Gemini-ს; ლოკალური მოდელი — როცა მონაცემი არ უნდა გავიდეს.
 6. **`IChatClient`** — ერთი interface; პროვაიდერის შეცვლა = ობიექტის შექმნის ერთი ადგილი.
 
 ### ⏭️ შემდეგ ლექციაზე: Prompt Engineering
@@ -1619,7 +1600,7 @@ public class AiLabController : ControllerBase
 დღეს მოდელს უბრალო ტექსტი გავუგზავნეთ და უბრალო ტექსტი მივიღეთ. მაგრამ თუ კლიენტი წერს „ორი ხაჭაპური ჩამიმატე“, კალათაში დასამატებლად `dishId` და `quantity` გვჭირდება — **C# ობიექტი**, არა წინადადება. როგორ მივცეთ მოდელს მკაფიო ინსტრუქცია, მაგალითები და როგორ მივიღოთ პასუხი პირდაპირ C# ობიექტად (`GetResponseAsync<T>`)? ამას შემდეგ ლექციაზე ვნახავთ.
 
 ```prompt გამოცდა მთელ ლექციაზე
-ვსწავლობ AI-ს .NET-ში. ლექციაზე გავიარეთ: რა არის LLM, ტოკენები და tokenizer, next-token prediction, hallucination, context window და stateless მოდელი, Temperature / Top-P / Max Tokens, finish_reason, reasoning მოდელები, პროვაიდერები (cloud vs Ollama), ფასის დათვლა input/output ტოკენებით, და Microsoft.Extensions.AI-ს IChatClient-ით პირველი გამოძახება ASP.NET Core Web API-დან.
+ვსწავლობ AI-ს .NET-ში. ლექციაზე გავიარეთ: რა არის LLM, ტოკენები და tokenizer, next-token prediction, hallucination, context window და stateless მოდელი, Temperature / Top-P / Max Tokens, finish_reason, reasoning მოდელები, პროვაიდერები (cloud vs ლოკალური, Gemini), ფასის დათვლა input/output ტოკენებით, და Microsoft.Extensions.AI-ს IChatClient-ით პირველი გამოძახება ASP.NET Core Web API-დან.
 დამისვი 8 კითხვა სათითაოდ, მარტივიდან რთულისკენ, მათ შორის 2 პრაქტიკული სიტუაცია რესტორნის API-ზე. ყოველ ჩემს პასუხზე მითხარი, სწორია თუ არა და რატომ, მერე დასვი შემდეგი. ბოლოს მითხარი, რა უნდა გავიმეორო. კომუნიკაცია ქართულად.
 ```
   </aside>
