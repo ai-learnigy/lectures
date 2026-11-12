@@ -57,6 +57,21 @@ def access_key():
         _key = (salt, kdf.derive(code.encode()))
     return _key
 
+LECTURER_FILE = ROOT / '.lecturer-code'
+
+def lecturer_code():
+    return os.environ.get('LECTURER_CODE') or (LECTURER_FILE.read_text().strip() if LECTURER_FILE.exists() else '')
+
+def write_locked(path, page, code, key_name, heading):
+    """ცალკე კოდით დაშიფრული გვერდი (ლექტორისთვის) — სტუდენტის გვერდები ამაზე არ არის დამოკიდებული"""
+    salt, iv = os.urandom(16), os.urandom(12)
+    key = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=PBKDF2_ITERATIONS).derive(code.encode())
+    b = lambda x: base64.b64encode(x).decode()
+    payload = {'s': b(salt), 'i': b(iv), 'n': PBKDF2_ITERATIONS, 'c': b(AESGCM(key).encrypt(iv, page.encode(), None))}
+    gate = (ENGINE / 'gate.html').read_text().replace("const KEY = 'lectures:code';", f"const KEY = '{key_name}';")
+    gate = gate.replace('<h1>ლექციები</h1>', f'<h1>{heading}</h1>').replace('<title>ლექციები</title>', f'<title>{heading}</title>')
+    path.write_text(gate.replace('/*PAYLOAD*/{}', json.dumps(payload)))
+
 def has_code():
     return bool(os.environ.get('LECTURES_CODE') or (CODE_FILE.exists() and CODE_FILE.read_text().strip()))
 
@@ -337,7 +352,10 @@ padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .25s}
 #studybtn{position:fixed;right:16px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:#fff;
 background:var(--net);border:0;border-radius:10px;padding:7px 13px;cursor:pointer;opacity:.9;box-shadow:0 4px 14px rgba(109,40,217,.25)}
 #studybtn:hover{opacity:1}#studybtn kbd{font:600 11px var(--mono);background:rgba(255,255,255,.22);border-radius:5px;padding:1px 6px}
-body[data-study] #help{right:190px}'''
+body[data-study] #help{right:250px}
+#lectbtn{position:fixed;right:170px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:var(--ink2);
+background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.85}
+#lectbtn:hover{opacity:1}#lectbtn kbd{font:600 11px var(--mono);background:var(--bg2);border-radius:5px;padding:1px 6px}'''
 
 def heading(sl):
     h = re.search(r'<h[12][^>]*>(.*?)</h[12]>', sl, re.S)
@@ -374,7 +392,7 @@ def build_lecture(course, cdir, ldir, meta, prev):
 <style>{CSS}
 {HOME_CSS}</style></head>
 <body{' data-study="1"' if has_study else ''}>
-<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a>{'<button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>' if has_study else ''}
+<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a>{'<button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>' if has_study else ''}{'<button id="lectbtn" type="button" title="ლექტორის გვერდი — გეგმა, კითხვები, ამოხსნები">🎓 <kbd>L</kbd></button>' if (ldir / 'lecturer.md').exists() else ''}
 <div id="stage"><div id="deck">
 {src}
 <div id="hud"><span class="sec"></span><span class="dots"></span><span class="num"></span></div><div id="bar"></div>
@@ -383,7 +401,7 @@ def build_lecture(course, cdir, ldir, meta, prev):
 <div id="help">← → · F</div>
 <script>{JS}</script>
 </body></html>''')
-    for stale in ('script.html', 'study.html'):
+    for stale in ('script.html', 'study.html', 'lecturer.html'):
         (out / stale).unlink(missing_ok=True)
 
     materials = []
@@ -392,9 +410,52 @@ def build_lecture(course, cdir, ldir, meta, prev):
         materials = sorted(p.name for p in (ldir / 'materials').iterdir() if p.is_file())
     if has_study:
         write_study(out, course, meta, num, title, study, materials, ldir, len(slides))
+    has_lecturer = write_lecturer(out, course, meta, num, title, ldir)
     print(f'  {cdir.name}/{ldir.name}: {len(slides)} slides' + (f', study {sum(1 for s in study if s["html"])} blocks' if has_study else ''))
     return {'num': num, 'slug': ldir.name, 'title': meta['title'], 'slides': len(slides), 'materials': materials, 'study': has_study,
-            'classwork': (ldir / 'classwork.md').exists(), 'homework': (ldir / 'homework.md').exists(), 'quiz': len(meta.get('quiz', []))}, []
+            'classwork': (ldir / 'classwork.md').exists(), 'homework': (ldir / 'homework.md').exists(), 'quiz': len(meta.get('quiz', [])), 'lecturer': has_lecturer}, []
+
+STUDY_NOTE = ('წაიკითხე ლექციის შემდეგ, ან პრეზენტაციასთან ერთად: პრეზენტაციაში დააჭირე <kbd>P</kbd> და ეს გვერდი სლაიდებს გაჰყვება. '
+              'კოდი და AI-ს პრომპტები კოპირდება ერთი დაჭერით.')
+
+def write_lecturer(out, course, meta, num, deck_title, ldir):
+    """lecturer.md + კლასის/საშინაოს სრული ტექსტი ამოხსნით + კითხვები და ტესტის პასუხები → lecturer.html (ცალკე კოდით)"""
+    src = ldir / 'lecturer.md'
+    code = lecturer_code()
+    if not src.exists():
+        return False
+    if not code:
+        print('  ⚠ ლექტორის გვერდი არ აიწყო: .lecturer-code ფაილი ან LECTURER_CODE ცვლადი არ არის')
+        return False
+    t = src.read_text()
+    t = re.sub(r'^# .+\n', '', t, count=1, flags=re.M)
+    chunks = re.split(r'^## (.+)$', t, flags=re.M)
+    parts = [(chunks[i].strip(), chunks[i + 1]) for i in range(1, len(chunks), 2)]
+    intro = chunks[0].strip()
+    cw, hw = ldir / 'classwork.md', ldir / 'homework.md'
+    if cw.exists():
+        parts.append(('📝 კლასის დავალება — სრული ტექსტი', re.sub(r'^# (.+)$', r'### \1', cw.read_text(), count=1, flags=re.M).replace('\n## ', '\n#### ')))
+    if hw.exists():
+        parts.append(('🏠 საშინაო — სრული ტექსტი და ამოხსნა', re.sub(r'^# (.+)$', r'### \1', hw.read_text(), count=1, flags=re.M).replace('\n## ', '\n#### ')))
+    if meta.get('review'):
+        parts.append(('❓ შემოწმების კითხვები (ლექციის ბოლოს და შემდეგის დასაწყისში)', check_md(meta['review'])))
+    if meta.get('quiz'):
+        rows = '\n'.join(f'{n}. **{x["q"]}** → {x["options"][x["answer"]]}' for n, x in enumerate(meta['quiz'], 1))
+        parts.append(('✅ სტუდენტის ტესტი — სწორი პასუხები', 'კონსპექტის ბოლოს სტუდენტი ამ კითხვებს თვითონ პასუხობს.\n\n' + rows))
+    toc, body = [], []
+    for n, (h, b) in enumerate(parts, 1):
+        toc.append(f'<a href="#sec-{n}">{esc(h)}</a>')
+        body.append(f'<h2 class="sec" id="sec-{n}">{esc(h)}</h2><article class="blk" data-slides="">{md(b)}</article>')
+    page = (ENGINE / 'study.html').read_text()
+    for k, v in {'{{KIND}}': '🎓 ლექტორისთვის', '{{HERO_NOTE}}': md_inline(intro) if intro else '',
+                 '{{TOP_LINK}}': '<a class="btn" href="study.html">📖 კონსპექტი</a>',
+                 '{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num),
+                 '{{DECK_TITLE_JSON}}': json.dumps(deck_title + ' · lecturer', ensure_ascii=False), '{{TOC}}': ''.join(toc),
+                 '{{BODY}}': '\n'.join(body), '{{RESOURCES}}': '', '{{MATERIALS}}': '', '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS}.items():
+        page = page.replace(k, v)
+    page = page.replace('<title>📖 ', '<title>🎓 ').replace('— კონსპექტი</title>', '— ლექტორისთვის</title>')
+    write_locked(out / 'lecturer.html', page, code, 'lectures:lecturer', 'ლექტორის გვერდი')
+    return True
 
 def render_resources(meta, ldir, materials, n_slides, n_quiz):
     """კონსპექტის თავში: ლექციის ყველა რესურსი ერთ ადგილას"""
@@ -461,7 +522,7 @@ def write_study(out, course, meta, num, deck_title, study, materials, ldir, n_sl
         toc.append('<a href="#quiz">✅ შეამოწმე ცოდნა</a>')
     resources = render_resources(meta, ldir, materials, n_slides, len(quiz))
     page = (ENGINE / 'study.html').read_text()
-    for k, v in {'{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num),
+    for k, v in {'{{KIND}}': '📖 კონსპექტი', '{{HERO_NOTE}}': STUDY_NOTE, '{{TOP_LINK}}': '','{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num),
                  '{{DECK_TITLE_JSON}}': json.dumps(deck_title, ensure_ascii=False), '{{TOC}}': ''.join(toc),
                  '{{BODY}}': '\n'.join(body) + render_quiz(quiz), '{{RESOURCES}}': resources, '{{MATERIALS}}': mats, '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS}.items():
         page = page.replace(k, v)

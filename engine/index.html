@@ -60,6 +60,7 @@ footer kbd{font:500 12px var(--mono);border:1px solid var(--line);border-radius:
   h1{font-size:28px}.search{flex-basis:100%}
 }
 .card .links{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font:600 13px var(--mono, ui-monospace, monospace)}
+.card .links a.lect{color:#7b8096}
 .card .links a{color:#0d9488;text-decoration:none}.card .links a:hover{text-decoration:underline}
 </style></head>
 <body><main>
@@ -92,7 +93,7 @@ const card = c => l => {
     <a class="title" href="${href}" data-open="${name}">${esc(l.title)}</a>
     ${mats}
     <div class="acts"><a class="btn play" href="${href}" data-open="${name}">▶ პრეზენტაცია</a>${l.study ? `<a class="btn" href="${href}study.html">📖 კონსპექტი</a>` : ``}</div>
-    ${l.study ? `<div class="links">${l.classwork ? `<a href="${href}study.html#classwork">📝 კლასის დავალება</a>` : ''}${l.homework ? `<a href="${href}study.html#homework">🏠 საშინაო</a>` : ''}${l.quiz ? `<a href="${href}study.html#quiz">✅ ტესტი · ${l.quiz}</a>` : ''}</div>` : ''}
+    ${l.study ? `<div class="links">${l.classwork ? `<a href="${href}study.html#classwork">📝 კლასის დავალება</a>` : ''}${l.homework ? `<a href="${href}study.html#homework">🏠 საშინაო</a>` : ''}${l.quiz ? `<a href="${href}study.html#quiz">✅ ტესტი · ${l.quiz}</a>` : ''}${l.lecturer ? `<a class="lect" href="${href}lecturer.html">🎓 ლექტორისთვის</a>` : ''}</div>` : ''}
   </article>`;
 };
 document.getElementById('courses').innerHTML = courses.map(c => `

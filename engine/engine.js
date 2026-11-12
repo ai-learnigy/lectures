@@ -102,6 +102,8 @@
     window.open('study.html?live#s-' + (i + 1), 'study-' + document.title);
   };
   document.getElementById('studybtn')?.addEventListener('click', e => { e.currentTarget.blur(); openStudy(); });
+  const openLecturer = () => window.open('lecturer.html', 'lecturer-' + document.title);
+  document.getElementById('lectbtn')?.addEventListener('click', e => { e.currentTarget.blur(); openLecturer(); });
 
   document.addEventListener('keydown', e => {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -115,6 +117,7 @@
     else if (code === 'KeyF') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
     else if (code === 'KeyA') { k = groups[i].length; render(true); }
     else if (code === 'KeyP' && document.body.dataset.study) { e.preventDefault(); openStudy(); }
+    else if (code === 'KeyL' && document.getElementById('lectbtn')) { e.preventDefault(); openLecturer(); }
   });
   addEventListener('hashchange', () => { const oi = i, ok = k; parseHash(); if (oi !== i || ok !== k) render(true); });
 

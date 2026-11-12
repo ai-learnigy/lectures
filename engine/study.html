@@ -140,15 +140,15 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
   <a class="back" href="../../">← ლექციები</a>
   <div class="ttl"><small>{{COURSE}} · {{NUM}}</small>{{TITLE}}</div>
   <button class="live" id="live" type="button" title="ჩართული: ტექსტი პრეზენტაციას მიჰყვება"><span class="dot"></span><span class="lt">მიჰყვება სლაიდებს</span></button>
-  <a class="btn play" href="index.html">▶ პრეზენტაცია</a>
+  {{TOP_LINK}}<a class="btn play" href="index.html">▶ პრეზენტაცია</a>
 </div>
 <div class="wrap">
   <nav class="toc"><details id="tocd"><summary>სარჩევი</summary><div class="h">სარჩევი</div>{{TOC}}<div class="mats">{{MATERIALS}}</div></details></nav>
   <main>
     <header class="hero">
-      <div class="k">📖 კონსპექტი · {{COURSE}} · ლექცია {{NUM}}</div>
+      <div class="k">{{KIND}} · {{COURSE}} · ლექცია {{NUM}}</div>
       <h1>{{TITLE}}</h1>
-      <p>წაიკითხე ლექციის შემდეგ, ან პრეზენტაციასთან ერთად: პრეზენტაციაში დააჭირე <kbd>P</kbd> და ეს გვერდი სლაიდებს გაჰყვება. კოდი და AI-ს პრომპტები კოპირდება ერთი დაჭერით.</p>
+      <p>{{HERO_NOTE}}</p>
     </header>
     {{RESOURCES}}
     {{BODY}}

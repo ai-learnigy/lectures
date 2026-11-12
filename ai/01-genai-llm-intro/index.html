@@ -347,9 +347,12 @@ padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .25s}
 #studybtn{position:fixed;right:16px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:#fff;
 background:var(--net);border:0;border-radius:10px;padding:7px 13px;cursor:pointer;opacity:.9;box-shadow:0 4px 14px rgba(109,40,217,.25)}
 #studybtn:hover{opacity:1}#studybtn kbd{font:600 11px var(--mono);background:rgba(255,255,255,.22);border-radius:5px;padding:1px 6px}
-body[data-study] #help{right:190px}</style></head>
+body[data-study] #help{right:250px}
+#lectbtn{position:fixed;right:170px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:var(--ink2);
+background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.85}
+#lectbtn:hover{opacity:1}#lectbtn kbd{font:600 11px var(--mono);background:var(--bg2);border-radius:5px;padding:1px 6px}</style></head>
 <body data-study="1">
-<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a><button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>
+<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a><button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button><button id="lectbtn" type="button" title="ლექტორის გვერდი — გეგმა, კითხვები, ამოხსნები">🎓 <kbd>L</kbd></button>
 <div id="stage"><div id="deck">
 <style>
 .mono{font-family:var(--mono)}
@@ -1153,7 +1156,7 @@ body[data-study] #help{right:190px}</style></head>
 <li><code class="i">Dtos/AiLab/</code>: <strong>AskRequest</strong> და <strong>AskResponse</strong></li>
 <li><code class="i">POST /api/ai-lab/ask</code> — <code class="i">IChatClient</code> + <code class="i">ChatOptions</code></li>
 <li><strong>4 ექსპერიმენტი შენი პროექტის თემაზე</strong> — ჯერ პროგნოზი, მერე Swagger</li>
-<li>შედეგები → <code class="i">experiments.md</code> (მასალებში)</li>
+<li>შედეგები ჩაწერე ცხრილში (კონსპექტში — „ექსპერიმენტების ცხრილი“)</li>
 </ul>
       <p class="tiny" style="margin-top:14px">✓ მზადაა, როცა: პასუხს ტექსტთან ერთად ტოკენები და finishReason ახლავს, ცხრილში 4 შედეგი და შენი დასკვნა წერია</p>
     </div>
@@ -1338,6 +1341,8 @@ body[data-study] #help{right:190px}</style></head>
     window.open('study.html?live#s-' + (i + 1), 'study-' + document.title);
   };
   document.getElementById('studybtn')?.addEventListener('click', e => { e.currentTarget.blur(); openStudy(); });
+  const openLecturer = () => window.open('lecturer.html', 'lecturer-' + document.title);
+  document.getElementById('lectbtn')?.addEventListener('click', e => { e.currentTarget.blur(); openLecturer(); });
 
   document.addEventListener('keydown', e => {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -1351,6 +1356,7 @@ body[data-study] #help{right:190px}</style></head>
     else if (code === 'KeyF') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
     else if (code === 'KeyA') { k = groups[i].length; render(true); }
     else if (code === 'KeyP' && document.body.dataset.study) { e.preventDefault(); openStudy(); }
+    else if (code === 'KeyL' && document.getElementById('lectbtn')) { e.preventDefault(); openLecturer(); }
   });
   addEventListener('hashchange', () => { const oi = i, ok = k; parseHash(); if (oi !== i || ok !== k) render(true); });
 
