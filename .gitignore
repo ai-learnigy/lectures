@@ -2,8 +2,7 @@ __pycache__/
 .venv/
 .access-code
 dist/
-.vercel/
-# ლოკალური ბილდის შედეგი (საიტს Vercel აწყობს)
+# ლოკალური ბილდის შედეგი (საიტს GitHub Actions აწყობს)
 /index.html
 /ai/
 /.generated

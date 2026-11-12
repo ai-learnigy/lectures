@@ -68,22 +68,26 @@ build.py                     აწყობს საიტს
 
 1. `courses/ai/<NN-slug>/` — `deck.html`, `lecture.json`, `classwork.md`, `homework.md` (+ `materials/`).
 2. ზემოთ ცხრილში დაამატე ხაზი.
-3. ლოკალურად შეამოწმე (`build.py ai/NN`), შემდეგ commit + push `main`-ზე — Vercel თავისით ააწყობს.
+3. ლოკალურად შეამოწმე (`build.py ai/NN`), შემდეგ commit + push `main`-ზე — GitHub Actions თავისით ააწყობს და გამოაქვეყნებს.
 
 ## კოდი
 
 საიტი კოდით იხსნება: ყველა HTML გვერდი ბილდისას იშიფრება (AES-GCM, გასაღები კოდიდან). ერთხელ შეყვანილ კოდს ბრაუზერი იმახსოვრებს.
 
-- კოდი: გარემოს ცვლადი **`LECTURES_CODE`** (Vercel-ზე — Project Settings → Environment Variables). ლოკალურად — ან ცვლადი, ან `.access-code` ფაილი (ერთი ხაზი, git-ში არ შედის).
-- კოდის შესაცვლელად — შეცვალე ცვლადი და Redeploy. ძველი კოდი აღარ იმუშავებს.
+- კოდი: GitHub-ზე secret **`LECTURES_CODE`** (Settings → Secrets and variables → Actions). ლოკალურად — ან ცვლადი `LECTURES_CODE`, ან `.access-code` ფაილი (ერთი ხაზი, git-ში არ შედის).
+- კოდის შესაცვლელად — შეცვალე secret და გაუშვი workflow (Actions → Pages → Run workflow). ძველი კოდი აღარ იმუშავებს.
 
-## Vercel
+## GitHub Pages
 
-`vercel.json` მზადაა: Vercel აყენებს `requirements.txt`-ს, უშვებს `LECTURES_OUT=dist python3 build.py`-ს და აქვეყნებს **მხოლოდ** `dist/`-ს (`courses/`, `build.py` საიტზე არ ხვდება).
+`.github/workflows/pages.yml`: `main`-ზე ყოველ push-ზე აწყობს საიტს (`build.py` → `dist/`) და აქვეყნებს Pages-ზე. რეპოში ბილდის შედეგი არ ინახება.
 
-1. vercel.com → Add New → Project → `ai-learnigy/lectures`.
-2. Environment Variables: `LECTURES_CODE` = კოდი.
-3. Deploy.
+ერთხელ:
+
+1. Settings → Secrets and variables → Actions → **New repository secret**: `LECTURES_CODE` = კოდი.
+2. Settings → Pages → Source: **GitHub Actions**.
+3. Actions → Pages → **Run workflow** (ან ნებისმიერი push `main`-ზე).
+
+საიტი: https://ai-learnigy.github.io/lectures/
 
 ## ლოკალურად
 
