@@ -163,7 +163,7 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
       <h1>შესავალი Generative AI-სა და LLM API-ებში</h1>
       <p>წაიკითხე ლექციის შემდეგ, ან პრეზენტაციასთან ერთად: პრეზენტაციაში დააჭირე <kbd>P</kbd> და ეს გვერდი სლაიდებს გაჰყვება. კოდი და AI-ს პრომპტები კოპირდება ერთი დაჭერით.</p>
     </header>
-    <section class="res" id="resources"><h2>📚 ლექციის რესურსები</h2><div class="rgrid"><a class="rc" href="index.html"><b>▶ პრეზენტაცია</b><span>43 სლაიდი</span></a><a class="rc" href="#classwork"><b>📝 კლასის დავალება</b><span>AI ფუნქციის დაგეგმვა — წყვილებში</span></a><a class="rc" href="#homework"><b>🏠 საშინაო დავალება</b><span>შენი პროექტის AI გეგმა — და მომზადება კოდისთვის</span></a><a class="rc" href="#quiz"><b>✅ შეამოწმე ცოდნა</b><span>12 კითხვა · ქულით</span></a></div><div class="rsub">🔗 სასარგებლო ბმულები</div><ul class="rlinks"><li><a href="index.html#/20" target="_blank" rel="noopener">ლაივ ტოკენაიზერი (ჩვენი პრეზენტაცია)</a> — ნებისმიერი ტექსტის ტოკენებად დაშლა — საშინაოსთვის</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener">Google AI Studio</a> — Gemini API key-ს აღება</li><li><a href="https://ai.google.dev/gemini-api/docs/models" target="_blank" rel="noopener">Gemini — მოდელების სია</a> — მიმდინარე მოდელების სახელები</li><li><a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Gemini — ფასები</a> — საშინაოს ხარჯის გათვლისთვის</li><li><a href="https://tiktokenizer.vercel.app" target="_blank" rel="noopener">Tiktokenizer</a> — ნახე, როგორ იშლება ტექსტი ტოკენებად</li></ul></section>
+    <section class="res" id="resources"><h2>📚 ლექციის რესურსები</h2><div class="rgrid"><a class="rc" href="index.html"><b>▶ პრეზენტაცია</b><span>44 სლაიდი</span></a><a class="rc" href="#classwork"><b>📝 კლასის დავალება</b><span>AI ფუნქციის დაგეგმვა — წყვილებში</span></a><a class="rc" href="#homework"><b>🏠 საშინაო დავალება</b><span>შენი პროექტის AI გეგმა — და მომზადება კოდისთვის</span></a><a class="rc" href="#quiz"><b>✅ შეამოწმე ცოდნა</b><span>12 კითხვა · ქულით</span></a></div><div class="rsub">🔗 სასარგებლო ბმულები</div><ul class="rlinks"><li><a href="index.html#/20" target="_blank" rel="noopener">ლაივ ტოკენაიზერი (ჩვენი პრეზენტაცია)</a> — ნებისმიერი ტექსტის ტოკენებად დაშლა — საშინაოსთვის</li><li><a href="https://aistudio.google.com" target="_blank" rel="noopener">Google AI Studio</a> — Gemini API key-ს აღება</li><li><a href="https://ai.google.dev/gemini-api/docs/models" target="_blank" rel="noopener">Gemini — მოდელების სია</a> — მიმდინარე მოდელების სახელები</li><li><a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Gemini — ფასები</a> — საშინაოს ხარჯის გათვლისთვის</li><li><a href="https://tiktokenizer.vercel.app" target="_blank" rel="noopener">Tiktokenizer</a> — ნახე, როგორ იშლება ტექსტი ტოკენებად</li></ul></section>
     <h2 class="sec" id="sec-1">მოდული</h2>
 <article class="blk" data-slides="1"><span class="anchor" id="s-1"></span><div class="bh"><h3>მოდული: AI აგენტების შექმნა და მართვა .NET-ში</h3><a class="chip" href="index.html#/1" data-go="1" title="პრეზენტაციაში გახსნა">სლაიდი 1</a></div>
 <p>24 ლექცია. მოდულის ბოლოს შენი API ადამიანის ენას „გაიგებს“ და მის მაგივრად იმოქმედებს: მოძებნის მენიუში, დაამატებს კალათაში, დაჯავშნის მაგიდას. პირველ ლექციაზე ვნახავთ მთელ სურათს — რას ვისწავლით, რისი აწყობა შეგეძლება და ვინ გახდები — შემდეგ კი ვიგებთ, როგორ მუშაობს ენობრივი მოდელი შიგნიდან.</p></article>
@@ -508,7 +508,7 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 </tr>
 </tbody>
 </table>
-<div class="callout warn"><span class="ci">⚠️</span><div><p>ლიმიტი ძალიან დაბალი რომ იყოს, მომხმარებელი მოჭრილ წინადადებას მიიღებს. ამიტომ backend-ში <code>finish_reason == length</code> ყოველთვის უნდა შევამოწმოთ (დალოგოთ, ან ლიმიტი გავზარდოთ). დღეს ამას კოდშიც ვნახავთ.</p></div></div></article>
+<div class="callout warn"><span class="ci">⚠️</span><div><p>ლიმიტი ძალიან დაბალი რომ იყოს, მომხმარებელი მოჭრილ წინადადებას მიიღებს. ამიტომ backend-ში <code>finish_reason == length</code> ყოველთვის უნდა შევამოწმოთ (დალოგოთ, ან ლიმიტი გავზარდოთ). ამას ლექცია 2-ზე კოდშიც ვნახავთ.</p></div></div></article>
 <article class="blk" data-slides="31"><span class="anchor" id="s-31"></span><div class="bh"><h3>ერთი პროექტი — სხვადასხვა პარამეტრი</h3><a class="chip" href="index.html#/31" data-go="31" title="პრეზენტაციაში გახსნა">სლაიდი 31</a></div>
 <p>RestaurantApi-ში LLM რამდენიმე სხვადასხვა საქმეს გააკეთებს, და თითოს თავისი პარამეტრები სჭირდება:</p>
 <table>
@@ -691,24 +691,8 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 <article class="blk" data-slides="39"><span class="anchor" id="s-39"></span><div class="bh"><h3>❓ შეამოწმე თავი · ნაწილი 4</h3><a class="chip" href="index.html#/39" data-go="39" title="პრეზენტაციაში გახსნა">სლაიდი 39</a></div>
 <div class="selfcheck"><div class="sh">✅ შეამოწმე თავი <small>დაფიქრდი, მერე გახსენი პასუხი</small></div><details><summary>რატომ არის output ტოკენი input-ზე ძვირი?</summary><div class="ans">input-ის ტოკენებს მოდელი ერთად ამუშავებს, output-ის თითო ტოკენი კი მოდელის ცალკე სრული გაშვებაა (next-token prediction).</div></details><details><summary>მფლობელი ამბობს: „კლიენტების მონაცემი გარეთ არ უნდა გავიდეს“. რას შესთავაზებდი?</summary><div class="ans">ღია მოდელს, რომელიც საკუთარ სერვერზე ეშვება (მაგ. Ollama-თი ან სხვა inference სერვერით). მონაცემი სისტემას არ ტოვებს; სამაგიეროდ, ხარისხი შეიძლება ღრუბლოვანზე დაბალი იყოს და სერვერი უფრო ძლიერი დაგვჭირდეს.</div></details><details><summary>რა ზრდის ყველაზე მეტად ხარჯს ჩატში?</summary><div class="ans">ძვირი მოდელის არჩევა და მზარდი საუბრის ისტორია, რომელიც ყოველ მოთხოვნაზე თავიდან იგზავნება. ქართული ტექსტიც ზრდის ტოკენების რაოდენობას.</div></details></div></article>
 <h2 class="sec" id="sec-8">პრაქტიკა</h2>
-<article class="blk" data-slides="40"><span class="anchor" id="s-40"></span><span class="anchor" id="classwork"></span><div class="bh"><h3>კლასში დავალება: AI ფუნქციის დაგეგმვა — წყვილებში</h3><a class="chip" href="index.html#/40" data-go="40" title="პრეზენტაციაში გახსნა">სლაიდი 40</a></div>
-<p>დავალება · RestaurantApi ან შენი პროექტი · კოდის გარეშე</p>
-<h3>ნაბიჯები</h3>
-<ul>
-<li>აირჩიეთ <strong>2 AI ფუნქცია</strong> (RestaurantApi-დან ან თქვენი პროექტიდან)</li>
-<li>თითოზე: <strong>რა შედის</strong> და <strong>რა გამოდის</strong></li>
-<li>რა მონაცემი უნდა მოვიდეს <strong>ბაზიდან</strong> და არა მოდელის „მეხსიერებიდან“?</li>
-<li><strong>Temperature</strong> და <strong>Max Tokens</strong> — და რატომ</li>
-<li>ლაივ ტოკენაიზერით: რამდენი ტოკენია ტიპური მოთხოვნა ქართულად?</li>
-</ul>
-<h3>✓ მზადაა, როცა</h3>
-<p>ორივე ფუნქციაზე 5-ვე პასუხი წერია; ერთი წყვილი კლასს წარუდგენს და დანარჩენები ეკითხებიან</p>
-<h3>⭐ ბონუსი</h3>
-<ul>
-<li>რომელ ფუნქციას დასჭირდება reasoning მოდელი, რომელს — არა?</li>
-<li>რა შეიძლება ცუდად წავიდეს: რას იტყვის მოდელი, თუ ბაზის მონაცემი არ მივეცით?</li>
-</ul>
-<h3>💡 ნიმუში — RestaurantApi, „მენიუს რეკომენდაცია“</h3>
+<article class="blk" data-slides="40"><span class="anchor" id="s-40"></span><span class="anchor" id="classwork"></span><div class="bh"><h3>ნიმუში: როგორ ვგეგმავთ AI ფუნქციას</h3><a class="chip" href="index.html#/40" data-go="40" title="პრეზენტაციაში გახსნა">სლაიდი 40</a></div>
+<p>კოდის დაწერამდე AI ინჟინერი ფუნქციას ორ ნაბიჯად გეგმავს: <strong>1 — რა ფუნქციაა</strong> და <strong>2 — როგორ იმუშავებს</strong>. ლექციაზე ერთად დავგეგმეთ „მენიუს რეკომენდაცია“:</p>
 <table>
 <thead>
 <tr>
@@ -718,11 +702,11 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 </thead>
 <tbody>
 <tr>
-<td>შედის</td>
+<td>რა შედის</td>
 <td>კლიენტის ტექსტი: „რამე მსუბუქი, ხორცის გარეშე, ორისთვის“</td>
 </tr>
 <tr>
-<td>გამოდის</td>
+<td>რა გამოდის</td>
 <td>2–3 კერძის რეკომენდაცია მოკლე ახსნით</td>
 </tr>
 <tr>
@@ -739,13 +723,35 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 </tr>
 </tbody>
 </table>
+<p>ყველაზე მნიშვნელოვანი ხაზი <strong>„ბაზიდან“</strong> არის: ყველაფერი, რაც ფაქტია (ფასი, მარაგი, ჯავშანი), ჩვენი კოდი ბაზიდან იღებს და მოდელს აწვდის. მოდელი მხოლოდ ტექსტს აყალიბებს.</p></article>
+<article class="blk" data-slides="41"><span class="anchor" id="s-41"></span><div class="bh"><h3>კლასში დავალება: AI ფუნქციის დაგეგმვა — წყვილებში</h3><a class="chip" href="index.html#/41" data-go="41" title="პრეზენტაციაში გახსნა">სლაიდი 41</a></div>
+<p>დავალება · RestaurantApi ან შენი პროექტი · კოდის გარეშე: ცხრილს ავსებთ რვეულში</p>
+<h3>ნაბიჯები</h3>
+<ul>
+<li><strong>1 · მოიფიქრეთ 2 AI ფუნქცია</strong> — თქვენი პროექტისთვის ან RestaurantApi-სთვის (მენიუს რეკომენდაციის გარდა — ის ერთად გავაკეთეთ)</li>
+<li><strong>2 · თითოზე შეავსეთ ცხრილი</strong>, როგორც ნიმუშში: რა შედის · რა გამოდის · რა მოდის <strong>ბაზიდან</strong> · Temperature და Max Tokens · რამდენი ტოკენია (ლაივ ტოკენაიზერით)</li>
+</ul>
+<h3>✓ მზადაა, როცა</h3>
+<p>ორივე ფუნქციის ცხრილი შევსებულია; ერთი წყვილი კლასს წარუდგენს და დანარჩენები ეკითხებიან</p>
+<h3>⭐ ბონუსი</h3>
+<ul>
+<li>რომელ ფუნქციას დასჭირდება reasoning მოდელი, რომელს — არა?</li>
+<li>რა შეიძლება ცუდად წავიდეს: რას იტყვის მოდელი, თუ ბაზის მონაცემი არ მივეცით?</li>
+</ul>
+<h3>💡 იდეები, თუ ვერ მოიფიქრეთ</h3>
+<ul>
+<li><strong>ჯავშანი ჩატიდან:</strong> „ხვალ 8-ზე ოთხნი ვიქნებით“ → თარიღი, დრო, სტუმრები</li>
+<li><strong>შეფასებების შეჯამება:</strong> 50 კომენტარი → „რა მოსწონთ, რას უჩივიან“</li>
+<li><strong>შეკვეთის სტატუსი:</strong> „სად არის ჩემი შეკვეთა?“</li>
+<li><strong>კერძის აღწერა მენიუსთვის:</strong> ინგრედიენტები → მიმზიდველი ტექსტი</li>
+</ul>
 <h3>💡 რჩევა</h3>
 <p>კოდს დღეს არ ვწერთ — ვფიქრობთ როგორც AI ინჟინერი: რას აკეთებს მოდელი, რას — ჩვენი კოდი, რა ღირს. ეს გეგმა საშინაოში გაგრძელდება და მოდულის მანძილზე ააწყობ.</p></article>
 <h2 class="sec" id="sec-9">შეჯამება</h2>
-<article class="blk" data-slides="41"><span class="anchor" id="s-41"></span><div class="bh"><h3>შეამოწმე, რა დაგამახსოვრდა</h3><a class="chip" href="index.html#/41" data-go="41" title="პრეზენტაციაში გახსნა">სლაიდი 41</a></div>
+<article class="blk" data-slides="42"><span class="anchor" id="s-42"></span><div class="bh"><h3>შეამოწმე, რა დაგამახსოვრდა</h3><a class="chip" href="index.html#/42" data-go="42" title="პრეზენტაციაში გახსნა">სლაიდი 42</a></div>
 <p>ეს კითხვები შემდეგი ლექციის დასაწყისშიც დაისმება.</p>
 <div class="selfcheck"><div class="sh">✅ შეამოწმე თავი <small>დაფიქრდი, მერე გახსენი პასუხი</small></div><details><summary>რა არის ტოკენი და რატომ გვაინტერესებს backend-ში?</summary><div class="ans">ტექსტის ნაჭერი, რომლითაც მოდელი კითხულობს და წერს · ფასი, context window-ის ლიმიტი და სიჩქარე ტოკენებით ითვლება; ქართული — მეტი ტოკენი</div></details><details><summary>როგორ წერს LLM პასუხს?</summary><div class="ans">next-token prediction: ითვლის შემდეგი ტოკენის ალბათობებს → ირჩევს ერთს → უმატებს → იმეორებს, სანამ არ დაასრულებს ან ლიმიტს არ მიაღწევს</div></details><details><summary>მოდელმა ჩვენი კერძის ფასი დაასახელა. რატომ არ ვენდობით?</summary><div class="ans">ჩვენი მენიუ არ უნახავს; წერს სავარაუდოს და არა ჭეშმარიტს — hallucination · ფასი ყოველთვის ბაზიდან</div></details><details><summary>რატომ „არ ახსოვს“ მოდელს წინა მოთხოვნა?</summary><div class="ans">stateless: ყოველი მოთხოვნა დამოუკიდებელია · ისტორია ჩვენ უნდა გავუგზავნოთ ყოველ ჯერზე</div></details><details><summary>შეკვეთის ტიპის დასადგენად რა Temperature-ს დავაყენებთ და რას ნიშნავს <code>finish_reason = length</code>?</summary><div class="ans">0 — ერთი სწორი პასუხი, ყოველ ჯერზე ერთნაირი · length — Max Tokens-ს მიაღწია, პასუხი მოიჭრა</div></details><details><summary>რესტორნის ჩატს 300 საუბარი აქვს დღეში. რა ზრდის ყველაზე მეტად ხარჯს?</summary><div class="ans">ძვირი მოდელი (ფასი ათჯერ განსხვავდება) · მზარდი ისტორია, რომელიც ყოველ ჯერზე თავიდან იგზავნება · ქართული ტექსტი — მეტი ტოკენი</div></details></div></article>
-<article class="blk" data-slides="42"><span class="anchor" id="s-42"></span><div class="bh"><h3>შეჯამება</h3><a class="chip" href="index.html#/42" data-go="42" title="პრეზენტაციაში გახსნა">სლაიდი 42</a></div>
+<article class="blk" data-slides="43"><span class="anchor" id="s-43"></span><div class="bh"><h3>შეჯამება</h3><a class="chip" href="index.html#/43" data-go="43" title="პრეზენტაციაში გახსნა">სლაიდი 43</a></div>
 <p><strong>მოდული:</strong> 24 ლექციაში RestaurantApi-ში (და შენს პროექტში) ჩნდება AI აგენტი, რომელიც ადამიანის ენას იგებს და ჩვენი C# კოდით მოქმედებს: ეძებს მენიუში, ჯავშნის მაგიდას, ამატებს კალათაში — დაცულად და გაზომვადად. შენ ხდები .NET დეველოპერი, რომელიც AI სისტემებს აწყობს.</p>
 <p><strong>დაიმახსოვრე:</strong></p>
 <ol>
@@ -760,7 +766,7 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 <div class="prompt"><div class="ph"><span>🤖 გამოცდა მთელ ლექციაზე</span><button class="copy" type="button">კოპირება</button></div><div class="pb">ვსწავლობ AI-ს .NET-ში. პირველ ლექციაზე გავიარეთ: რა არის LLM, ტოკენები და tokenizer (როგორ ინახება: UTF-8 ბაიტები, ლექსიკონი, ID-ები), next-token prediction, hallucination, context window და stateless მოდელი, Temperature / Top-P / Max Tokens, finish_reason, reasoning მოდელები, პროვაიდერები (cloud vs ლოკალური, Gemini) და ფასის დათვლა input/output ტოკენებით.
 დამისვი 8 კითხვა სათითაოდ, მარტივიდან რთულისკენ, მათ შორის 2 პრაქტიკული სიტუაცია რესტორნის API-ზე. ყოველ ჩემს პასუხზე მითხარი, სწორია თუ არა და რატომ, მერე დასვი შემდეგი. ბოლოს მითხარი, რა უნდა გავიმეორო. კომუნიკაცია ქართულად.</div></div></article>
 <h2 class="sec" id="sec-10">საშინაო</h2>
-<article class="blk" data-slides="43"><span class="anchor" id="s-43"></span><span class="anchor" id="homework"></span><div class="bh"><h3>საშინაო დავალება: შენი პროექტის AI გეგმა — და მომზადება კოდისთვის</h3><a class="chip" href="index.html#/43" data-go="43" title="პრეზენტაციაში გახსნა">სლაიდი 43</a></div>
+<article class="blk" data-slides="44"><span class="anchor" id="s-44"></span><span class="anchor" id="homework"></span><div class="bh"><h3>საშინაო დავალება: შენი პროექტის AI გეგმა — და მომზადება კოდისთვის</h3><a class="chip" href="index.html#/44" data-go="44" title="პრეზენტაციაში გახსნა">სლაიდი 44</a></div>
 <p>კოდის გარეშე · შედეგი — დოკუმენტი შენი პროექტის README-ში</p>
 <h3>მოთხოვნები</h3>
 <ul>

@@ -967,7 +967,7 @@ softmax — ფორმულა, რომელიც ქულებს ა�
 | `length` | Max Tokens-ს მიაღწია — **პასუხი მოჭრილია** |
 
 ```warn
-ლიმიტი ძალიან დაბალი რომ იყოს, მომხმარებელი მოჭრილ წინადადებას მიიღებს. ამიტომ backend-ში `finish_reason == length` ყოველთვის უნდა შევამოწმოთ (დალოგოთ, ან ლიმიტი გავზარდოთ). დღეს ამას კოდშიც ვნახავთ.
+ლიმიტი ძალიან დაბალი რომ იყოს, მომხმარებელი მოჭრილ წინადადებას მიიღებს. ამიტომ backend-ში `finish_reason == length` ყოველთვის უნდა შევამოწმოთ (დალოგოთ, ან ლიმიტი გავზარდოთ). ამას ლექცია 2-ზე კოდშიც ვნახავთ.
 ```
   </aside>
 </section>
@@ -1238,6 +1238,44 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
 </section>
 
 
+
+<section class="slide" data-section="პრაქტიკა">
+  <div class="kicker">👨‍🏫 ჯერ ერთად · ნიმუში</div>
+  <h2>როგორ ვგეგმავთ <span class="grad">AI ფუნქციას</span></h2>
+  <div class="grid2" style="grid-template-columns:.8fr 1.2fr;gap:36px;align-items:start">
+    <div>
+      <div class="card accent" style="--a:var(--net)"><h3><span class="ico">1</span>ფუნქცია</h3>
+        <p style="font-size:24px;margin:6px 0 0"><b>მენიუს რეკომენდაცია</b> RestaurantApi-ში</p></div>
+      <div class="bubble mt" style="font-size:21px"><span class="who">კლიენტი წერს</span>რამე მსუბუქი, ხორცის გარეშე, ორისთვის</div>
+      <div class="callout ask mt">🙋 ყოველ ხაზზე ჯერ თქვენ მიპასუხეთ</div>
+    </div>
+    <div>
+      <div class="card accent" style="--a:var(--mvc);padding-bottom:10px"><h3><span class="ico">2</span>როგორ იმუშავებს</h3>
+      <table class="t" style="margin-top:6px;font-size:20px">
+        <tr><td style="width:34%"><b>რა შედის</b></td><td><span class="step fade">კლიენტის ტექსტი</span></td></tr>
+        <tr><td><b>რა გამოდის</b></td><td><span class="step fade">2–3 კერძი მოკლე ახსნით</span></td></tr>
+        <tr><td><b>ბაზიდან</b> 🔒</td><td><span class="step fade">კერძები, ფასები, ვეგეტარიანულია თუ არა, დღეს არის თუ არა — <b>არასდროს</b> მოდელიდან</span></td></tr>
+        <tr><td><b>Temperature · Max Tokens</b></td><td><span class="step fade"><span class="mono">~0.6 · ~200</span> — ბუნებრივი, მაგრამ არა ფანტაზია</span></td></tr>
+        <tr><td><b>ტოკენები</b></td><td><span class="step fade">ტექსტი ~20 + მენიუ და ინსტრუქცია — რამდენიმე ასეული</span></td></tr>
+      </table></div>
+    </div>
+  </div>
+  <aside class="study">
+### ნიმუში: როგორ ვგეგმავთ AI ფუნქციას
+
+კოდის დაწერამდე AI ინჟინერი ფუნქციას ორ ნაბიჯად გეგმავს: **1 — რა ფუნქციაა** და **2 — როგორ იმუშავებს**. ლექციაზე ერთად დავგეგმეთ „მენიუს რეკომენდაცია“:
+
+| კითხვა | პასუხი |
+|---|---|
+| რა შედის | კლიენტის ტექსტი: „რამე მსუბუქი, ხორცის გარეშე, ორისთვის“ |
+| რა გამოდის | 2–3 კერძის რეკომენდაცია მოკლე ახსნით |
+| ბაზიდან | კერძები, ფასები, ვეგეტარიანულობა, ხელმისაწვდომობა — **არასდროს** მოდელიდან |
+| Temperature · Max Tokens | ~0.6 (ბუნებრივი, მაგრამ არა ფანტაზია) · ~200 |
+| ტოკენები | კლიენტის ტექსტი ~15–25; მენიუს ნაწილი + ინსტრუქცია — რამდენიმე ასეული |
+
+ყველაზე მნიშვნელოვანი ხაზი **„ბაზიდან“** არის: ყველაფერი, რაც ფაქტია (ფასი, მარაგი, ჯავშანი), ჩვენი კოდი ბაზიდან იღებს და მოდელს აწვდის. მოდელი მხოლოდ ტექსტს აყალიბებს.
+  </aside>
+</section>
 
 <lecture-classwork/>
 
