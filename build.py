@@ -634,7 +634,7 @@ def main(filters):
         for d in marker.read_text().split():
             if (OUT / d).is_dir() and d not in ('courses', 'engine', '.git', '.github'):
                 shutil.rmtree(OUT / d)
-    if (ENGINE / 'assets').is_dir():   # საერთო ფაილები (მაგ. სლაიდზე ლაივ ტოკენაიზერი) → /assets/
+    if (ENGINE / 'assets').is_dir():   # საერთო ფაილები (თუ არის) → /assets/
         shutil.copytree(ENGINE / 'assets', OUT / 'assets', dirs_exist_ok=True)
     catalog, problems = [], []
     for cdir in sorted((ROOT / 'courses').iterdir()):

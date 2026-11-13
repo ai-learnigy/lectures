@@ -35,11 +35,6 @@
   ],
   "resources": [
     {
-      "title": "ლაივ ტოკენაიზერი (ჩვენი პრეზენტაცია)",
-      "url": "index.html#/20",
-      "note": "ნებისმიერი ტექსტის ტოკენებად დაშლა — საშინაოსთვის"
-    },
-    {
       "title": "Google AI Studio",
       "url": "https://aistudio.google.com",
       "note": "Gemini API key-ს აღება"
@@ -55,7 +50,7 @@
       "note": "საშინაოს ხარჯის გათვლისთვის"
     },
     {
-      "title": "Tiktokenizer",
+      "title": "Tiktokenizer — ტექსტი ტოკენებად (აირჩიე gpt-4o)",
       "url": "https://tiktokenizer.vercel.app",
       "note": "ნახე, როგორ იშლება ტექსტი ტოკენებად"
     }

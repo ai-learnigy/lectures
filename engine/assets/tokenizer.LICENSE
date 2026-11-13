@@ -1,2 +1,0 @@
-tokenizer.js — js-tiktoken (https://github.com/dqbd/tiktoken), MIT License.
-შეიცავს OpenAI-ს ღია tokenizer-ებს: o200k_base (GPT-4o) და cl100k_base (GPT-4).

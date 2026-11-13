@@ -90,24 +90,6 @@
 .sc .sn{font-size:17px;color:var(--muted);margin-top:auto}
 .vocab{font:600 19px/1.6 var(--mono);color:var(--ink2);margin:0;background:var(--bg2);border-radius:8px;padding:8px 10px}
 .vocab b{color:var(--net);background:color-mix(in srgb,var(--net) 12%,#fff);border-radius:4px}
-.lt{margin-top:10px;display:flex;flex-direction:column;gap:12px}
-.lt-top{display:grid;grid-template-columns:1fr 330px;gap:14px}
-.lt-in{font:600 24px/1.45 var(--font);color:var(--ink);border:2px solid var(--line2);border-radius:14px;padding:12px 16px;resize:none;background:#fff;outline:none}
-.lt-in:focus{border-color:var(--net)}
-.lt-side{display:flex;flex-direction:column;gap:10px}
-.lt-seg{display:flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden}
-.lt-seg button,.lt-pre button,.tp-roll,.cc-pre button{font:700 16px var(--font);border:0;background:#fff;color:var(--ink2);padding:10px 12px;cursor:pointer;flex:1}
-.lt-seg button.on{background:var(--net);color:#fff}
-.lt-pre{display:flex;gap:8px}
-.lt-pre button,.cc-pre button{border:1px solid var(--line2);border-radius:10px;font-size:20px}
-.lt-stats{display:flex;gap:26px;font-size:19px;color:var(--muted)}
-.lt-stats b{font:800 30px var(--mono);color:var(--ink);margin-right:6px}
-.lt-out{max-height:250px;overflow:auto;padding:4px 2px}
-.lt-out .tk{font-size:26px}
-.lt-out .tk.raw{font-family:var(--mono);font-size:16px;color:var(--muted)}
-.lt-ids{font-size:15px;color:var(--muted);max-height:64px;overflow:auto;background:var(--bg2);border-radius:10px;padding:8px 12px}
-.lt-load{display:none;font:600 16px var(--mono);color:var(--muted)}
-.lt.loading .lt-load{display:block}
 .tp{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;align-items:start;margin-top:12px}
 .tp .pb{transition:opacity .3s}
 .tp-ctl{display:flex;flex-direction:column;gap:18px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
@@ -337,7 +319,7 @@
     <g class="zoom" style="transform-origin:800px 140px"><circle cx="800" cy="135" r="46" fill="#123321" stroke="#22c55e" stroke-width="3"/><text x="800" y="151" text-anchor="middle" font-size="40">💸</text><text x="800" y="58" text-anchor="middle" class="tw b" font-size="21">პროვაიდერები და ფასი</text><text x="800" y="32" text-anchor="middle" class="tm" font-size="16">ვინ, სად, რამდენად</text></g>
     <g class="zoom" style="transform-origin:1340px 200px"><circle cx="1340" cy="200" r="52" fill="#0e2a33" stroke="#22d3ee" stroke-width="4" class="pulse"/><text x="1340" y="218" text-anchor="middle" font-size="44">🧭</text><text x="1340" y="292" text-anchor="middle" class="ta b" font-size="21">შეჯამება</text><text x="1340" y="318" text-anchor="middle" class="tm" font-size="16">დაგეგმვა წყვილებში · კითხვები</text></g>
   </svg>
-  <div class="callout" style="--a:var(--pink);font-size:22px">🎮 გზაში: <b>ლაივ ტოკენაიზერი</b>, „იყავი LLM“, <b>Temperature-ის სლაიდერი</b> და ხარჯის კალკულატორი</div>
+  <div class="callout" style="--a:var(--pink);font-size:22px">🎮 გზაში: <b>ტოკენაიზერი</b>, „იყავი LLM“, <b>Temperature-ის სლაიდერი</b> და ხარჯის კალკულატორი</div>
   <aside class="study">
 ### ლექციის გეგმა — 5 გაჩერება
 
@@ -347,7 +329,7 @@
 4. 💸 **პროვაიდერები და ფასი** — ღრუბელი თუ ლოკალური, როგორ ითვლება ხარჯი.
 5. 🧭 **შეჯამება** — AI ფუნქციის დაგეგმვა წყვილებში და შემაჯამებელი კითხვები.
 
-გზაში: ლაივ ტოკენაიზერი (ნებისმიერი ტექსტი), „იყავი LLM“, Temperature-ის სლაიდერი და ხარჯის კალკულატორი.
+გზაში: ტოკენაიზერი (ნებისმიერი ტექსტი), „იყავი LLM“, Temperature-ის სლაიდერი და ხარჯის კალკულატორი.
   </aside>
 </section>
 
@@ -586,80 +568,83 @@ tokenizer — პროგრამა, რომელიც ტექსტს
 **შედეგი ჩვენთვის:** ქართული ტექსტი მეტი ტოკენია → უფრო ძვირი, უფრო ნელი და context-ში ნაკლები ეტევა.
 
 ```note
-სხვადასხვა მოდელს სხვადასხვა tokenizer აქვს (Gemini-საც საკუთარი), ამიტომ რიცხვები მოდელიდან მოდელამდე განსხვავდება — მაგრამ ტენდენცია იგივეა. ამას შემდეგ სლაიდზე ლაივ ვნახავთ.
+სხვადასხვა მოდელს სხვადასხვა tokenizer აქვს (Gemini-საც საკუთარი), ამიტომ რიცხვები მოდელიდან მოდელამდე განსხვავდება — მაგრამ ტენდენცია იგივეა. ამას Tiktokenizer-ში თვითონ ნახავთ.
 ```
   </aside>
 </section>
 
 <section class="slide" data-section="2 · როგორ მუშაობს">
-  <div class="kicker">შიგნიდან · როგორ ინახება ტოკენი</div>
-  <h2>ტექსტი → <span class="c-asp">ბაიტები</span> → <span class="c-net">ლექსიკონი</span> → <span class="c-api">რიცხვები</span></h2>
-  <div class="store">
-    <div class="sc" style="--a:var(--muted)"><div class="sh">① ტექსტი</div><div class="sv mono">" table"</div><div class="sn">ჩვენ ვწერთ</div></div>
+  <div class="kicker">შიგნიდან · ტოკენი → რიცხვი</div>
+  <h2>მოდელი <span class="c-api">მხოლოდ რიცხვებს</span> ხედავს</h2>
+  <div class="store" style="min-height:240px">
+    <div class="sc" style="--a:var(--muted)"><div class="sh">① ტექსტი</div><div class="sv" style="font-size:24px">Book a table for two</div><div class="sn">ჩვენ ვწერთ</div></div>
     <div class="arr">→</div>
-    <div class="sc" style="--a:var(--asp)"><div class="sh">② UTF-8 ბაიტები</div><div class="sv mono">20 74 61 62 6C 65</div><div class="sn">ქართული ასო = <b>3 ბაიტი</b>: „დ“ = E1 83 93</div></div>
+    <div class="sc" style="--a:var(--asp)"><div class="sh">② ნაჭრები</div><div class="toks" style="justify-content:center"><span class="tk">Book</span><span class="tk"> a</span><span class="tk"> table</span><span class="tk"> for</span><span class="tk"> two</span></div><div class="sn">tokenizer ჭრის</div></div>
     <div class="arr">→</div>
-    <div class="sc" style="--a:var(--net)"><div class="sh">③ ლექსიკონი · o200k_base</div><pre class="vocab">Qm9vaw==  6904
-IGE=      261
-<b>IHRhYmxl  3293</b>
-IGZvcg==  395
-4YOT      3797</pre><div class="sn">~200 000 ხაზი: <b>ბაიტები (base64) → ID</b></div></div>
+    <div class="sc" style="--a:var(--net)"><div class="sh">③ ლექსიკონი</div><pre class="vocab">Book   → 6904
+ a     → 261
+<b> table → 3293</b>
+ for   → 395
+ two   → 1920</pre><div class="sn">~200 000 ნაჭერი, თითოს თავისი <b>ნომერი</b></div></div>
     <div class="arr">→</div>
-    <div class="sc" style="--a:var(--api)"><div class="sh">④ მოდელში შედის</div><div class="sv mono" style="font-size:20px">int[] { 6904, 261,<br><b>3293</b>, 395, 1920 }</div><div class="sn">მხოლოდ <b>რიცხვები</b></div></div>
+    <div class="sc" style="--a:var(--api)"><div class="sh">④ მოდელში შედის</div><div class="sv mono" style="font-size:20px">[ 6904, 261,<br><b>3293</b>, 395, 1920 ]</div><div class="sn">მხოლოდ <b>რიცხვები</b></div></div>
   </div>
-  <div class="callout ask mt2">🙋 თუ მოდელი მხოლოდ რიცხვებს ხედავს — როგორ „იცის“, რომ table მაგიდაა? <span class="step" style="color:var(--ink2)">→ თითო ID-ს მოდელში <b>ვექტორი</b> შეესაბამება (ასობით რიცხვი) — ამას ლექცია 9-ზე, embeddings-ში დავუბრუნდებით</span></div>
+  <div class="callout ask mt2">🙋 თუ მოდელი მხოლოდ რიცხვებს ხედავს — როგორ „იცის“, რომ table მაგიდაა? <span class="step" style="color:var(--ink2)">→ თითო ნომერს მოდელში <b>ვექტორი</b> შეესაბამება (ასობით რიცხვი) — ამას ლექცია 9-ზე, embeddings-ში დავუბრუნდებით</span></div>
   <aside class="study">
-### როგორ ინახება ტოკენი — შიგნიდან
+### მოდელი მხოლოდ რიცხვებს ხედავს
 
-ოთხი ფენა, რომლებსაც ტექსტი გადის, სანამ მოდელამდე მივა:
+ტექსტი მოდელამდე ასე მიდის:
 
-1. **ტექსტი** — მაგ. `" table"` (ჰარით).
-2. **UTF-8 ბაიტები** — კომპიუტერში ტექსტი ბაიტებადაა: `20 74 61 62 6C 65`. ლათინური ასო 1 ბაიტია, **ქართული ასო — 3 ბაიტი** (მაგ. „დ“ = `E1 83 93`). ამიტომაც იშლება ქართული ტექსტი უფრო მეტ ნაწილად.
-3. **ლექსიკონი (vocabulary)** — tokenizer-ის ფაილი. `o200k_base`-ში ~200 000 ხაზია, თითო ხაზზე: ბაიტების მიმდევრობა (base64-ით ჩაწერილი) და მისი ID. მაგ. `IHRhYmxl 3293` ნიშნავს: ბაიტები `20 74 61 62 6C 65` (" table") = ID **3293**. `4YOT 3797` — ეს „დ“-ს სამი ბაიტია.
-4. **მოდელში შედის მხოლოდ რიცხვები** — `int[] { 6904, 261, 3293, 395, 1920 }`. პასუხსაც მოდელი რიცხვებად აბრუნებს, tokenizer კი მათ ისევ ტექსტად აქცევს.
+1. **ტექსტი** — მაგ. `Book a table for two`.
+2. **ნაჭრები** — tokenizer ტექსტს ტოკენებად ჭრის: `Book` · ` a` · ` table` · ` for` · ` two`. ტოკენში ხშირად წინა ჰარიც შედის.
+3. **ლექსიკონი** — tokenizer-ს აქვს ცხრილი, სადაც ყოველ ნაჭერს თავისი ნომერი (ID) აქვს. GPT-4o-ს ლექსიკონში ~200 000 ნაჭერია; ` table` = **3293**.
+4. **მოდელში შედის მხოლოდ რიცხვები** — `[6904, 261, 3293, 395, 1920]`. პასუხსაც მოდელი რიცხვებად აბრუნებს, tokenizer კი მათ ისევ ტექსტად აქცევს.
 
-**როგორ „იცის“ მოდელმა, რას ნიშნავს 3293?** მოდელის შიგნით თითო ID-ს შეესაბამება **ვექტორი** — ასობით რიცხვი, რომელიც ვარჯიშისას ისე „დალაგდა“, რომ მსგავსი მნიშვნელობის ტოკენები ახლოს არიან. ამ იდეას ლექცია 9-ზე (embeddings) დავუბრუნდებით — RAG სწორედ მასზე დგას.
+**როგორ „იცის“ მოდელმა, რას ნიშნავს 3293?** მოდელის შიგნით თითო ნომერს შეესაბამება **ვექტორი** — ასობით რიცხვი, რომელიც წვრთნისას ისე „დალაგდა“, რომ მსგავსი მნიშვნელობის ტოკენები ახლოს არიან. ამ იდეას ლექცია 9-ზე (embeddings) დავუბრუნდებით — RAG სწორედ მასზე დგას.
 
 ```terms
-UTF-8 — ტექსტის ბაიტებად ჩაწერის სტანდარტი; ქართული ასო 3 ბაიტს იკავებს
-vocabulary (ლექსიკონი) — tokenizer-ის ცხრილი: ბაიტების მიმდევრობა → ID
-base64 — ბაიტების ტექსტად ჩაწერის ხერხი (ფაილში ასე ინახება)
+tokenizer — პროგრამა, რომელიც ტექსტს ტოკენებად ჭრის და ნომრებად აქცევს (და პირიქით)
+vocabulary (ლექსიკონი) — tokenizer-ის ცხრილი: ნაჭერი → ნომერი (ID)
 ```
   </aside>
 </section>
 
 <section class="slide" data-section="2 · როგორ მუშაობს">
-  <div class="kicker"><span class="game">🎮 ლაივ ტოკენაიზერი</span></div>
+  <div class="kicker"><span class="game">🎮 ახლა თქვენ</span></div>
   <h2>ჩაწერეთ <span class="c-asp">ნებისმიერი</span> ტექსტი</h2>
-  <div class="lt" data-livetok>
-    <div class="lt-top">
-      <textarea class="lt-in" rows="2" spellcheck="false">მინდა ხვალ საღამოს 8 საათზე ოთხი ადამიანისთვის მაგიდა დავჯავშნო.</textarea>
-      <div class="lt-side">
-        <div class="lt-seg"><button type="button" data-enc="o200k" class="on">GPT-4o</button><button type="button" data-enc="cl100k">GPT-4 (ძველი)</button></div>
-        <div class="lt-pre"><button type="button" data-t="I'd like to book a table for four people tomorrow at 8 pm.">🇬🇧</button><button type="button" data-t="მინდა ხვალ საღამოს 8 საათზე ოთხი ადამიანისთვის მაგიდა დავჯავშნო.">🇬🇪</button><button type="button" data-t="var dish = await _db.Dishes.FindAsync(id);">C#</button><button type="button" data-t="🍕🍔🥗 ✅">😀</button></div>
-      </div>
+  <div class="grid2" style="grid-template-columns:1fr 1fr;gap:36px;align-items:start">
+    <div class="card accent" style="--a:var(--net)">
+      <h3><span class="ico">🌐</span>გადადით საიტზე</h3>
+      <a href="https://tiktokenizer.vercel.app/" target="_blank" rel="noopener" class="mono" style="display:block;font-size:30px;font-weight:700;color:var(--net);margin:8px 0 6px;text-decoration:none">tiktokenizer.vercel.app ↗</a>
+      <p class="small" style="margin:0">უფასოა, რეგისტრაცია არ სჭირდება, ტელეფონიდანაც იხსნება</p>
+      <ol class="clean small" style="margin-top:14px">
+        <li>მარცხნივ მოდელად აირჩიეთ <b class="mono">gpt-4o</b></li>
+        <li>ჩაწერეთ ქართული წინადადება — დაითვალეთ ტოკენები</li>
+        <li>გადართეთ <b class="mono">gpt-4</b>-ზე (ძველი) — შეადარეთ</li>
+      </ol>
     </div>
-    <div class="lt-stats"><span><b data-s="tok">–</b> ტოკენი</span><span><b data-s="chr">–</b> სიმბოლო</span><span><b data-s="byt">–</b> UTF-8 ბაიტი</span><span><b data-s="ratio">–</b> სიმბოლო / ტოკენი</span></div>
-    <div class="lt-out toks"></div>
-    <div class="lt-ids mono"></div>
-    <div class="lt-load">⏳ tokenizer იტვირთება…</div>
+    <div>
+      <div class="card accent" style="--a:var(--asp)"><h3><span class="ico">🔍</span>სცადეთ</h3><ul class="clean small">
+        <li>ერთი და იგივე წინადადება 🇬🇧 და 🇬🇪</li>
+        <li>გრძელი სიტყვა: „ვეგეტარიანელი“</li>
+        <li>C# კოდი: <code class="i">var dish = await _db.Dishes.FindAsync(id);</code></li>
+        <li>emoji: 🍕🥗✅</li></ul></div>
+      <div class="callout ask mt">🙋 რომელი გაგიკვირდათ ყველაზე მეტად?</div>
+    </div>
   </div>
   <aside class="study">
-### 🎮 ლაივ ტოკენაიზერი
+### 🎮 სცადე თვითონ: Tiktokenizer
 
-ამ სლაიდზე შეგიძლია ჩაწერო **ნებისმიერი ტექსტი** და მაშინვე ნახო, როგორ იშლება ის ტოკენებად: ფერადი ნაჭრები, თითოს ID, რაოდენობა, ბაიტები. ნაჭერი, რომელიც ქართული ასოს მხოლოდ ნაწილს (1–2 ბაიტს) შეიცავს, ნაჩვენებია ბაიტებით, მაგ. `‹E1 83›`.
+გახსენი **[tiktokenizer.vercel.app](https://tiktokenizer.vercel.app/)** — უფასო საიტი, რომელიც ნებისმიერ ტექსტს ტოკენებად ყოფს: ფერადი ნაჭრები, თითოს ნომერი (ID) და ჯამური რაოდენობა.
 
-აქ ორი ნამდვილი tokenizer-ია:
+1. მარცხნივ მოდელად აირჩიე **gpt-4o** (ახალი tokenizer, `o200k_base`).
+2. ჩაწერე ქართული წინადადება და დაითვალე ტოკენები.
+3. გადართე **gpt-4**-ზე (ძველი, `cl100k_base`) და შეადარე: ძველ tokenizer-ზე ქართული ტექსტი რამდენჯერმე მეტი ტოკენია, ანუ რამდენჯერმე ძვირი იყო.
 
-- **GPT-4o** (`o200k_base`) — ახალი, ~200 000 ტოკენიანი ლექსიკონით.
-- **GPT-4** (`cl100k_base`) — ძველი, ~100 000 ტოკენიანი.
-
-**სცადე:** ქართული წინადადება ორივეზე. ძველ tokenizer-ზე ქართული **ხუთჯერ** უფრო მეტი ტოკენი გამოდის (21 vs 117) — ანუ იგივე ტექსტი ხუთჯერ ძვირი იყო. ახალ tokenizer-ებში ქართული ბევრად გაუმჯობესდა, მაგრამ ინგლისურზე მაინც ძვირია.
-
-ასევე სცადე: C# კოდი, emoji, შენი სახელი, გრძელი სიტყვა („ვეგეტარიანელი“).
+ასევე სცადე: იგივე წინადადება ინგლისურად, C# კოდი, emoji, შენი სახელი, გრძელი სიტყვა („ვეგეტარიანელი“).
 
 ```tip
-პრეზენტაცია საჯაროა — ეს სლაიდი სახლშიც შეგიძლია გახსნა და საშინაოში ტოკენების დასათვლელად გამოიყენო.
+Gemini-ს საკუთარი tokenizer აქვს, ამიტომ მისი რიცხვები ცოტა განსხვავდება — ტენდენცია იგივეა. ზუსტ რაოდენობას Gemini-ს API თვითონ აბრუნებს (`usage`), ამას ლექცია 2-ზე ვნახავთ. იგივე საიტი საშინაოშიც დაგჭირდება.
 ```
   </aside>
 </section>
@@ -1316,7 +1301,7 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
 პირველი გამოძახება RestaurantApi-დან Gemini-მდე, და Prompt Engineering: როგორ მივცეთ მოდელს მკაფიო ინსტრუქცია და მივიღოთ პასუხი პირდაპირ C# ობიექტად. **სახლში აიღე Gemini API key** (იხ. საშინაო).
 
 ```prompt გამოცდა მთელ ლექციაზე
-ვსწავლობ AI-ს .NET-ში. პირველ ლექციაზე გავიარეთ: რა არის LLM, ტოკენები და tokenizer (როგორ ინახება: UTF-8 ბაიტები, ლექსიკონი, ID-ები), next-token prediction, hallucination, context window და stateless მოდელი, Temperature / Top-P / Max Tokens, finish_reason, reasoning მოდელები, პროვაიდერები (cloud vs ლოკალური, Gemini) და ფასის დათვლა input/output ტოკენებით.
+ვსწავლობ AI-ს .NET-ში. პირველ ლექციაზე გავიარეთ: რა არის LLM, ტოკენები და tokenizer (ნაჭრები, ლექსიკონი, ID-ები), next-token prediction, hallucination, context window და stateless მოდელი, Temperature / Top-P / Max Tokens, finish_reason, reasoning მოდელები, პროვაიდერები (cloud vs ლოკალური, Gemini) და ფასის დათვლა input/output ტოკენებით.
 დამისვი 8 კითხვა სათითაოდ, მარტივიდან რთულისკენ, მათ შორის 2 პრაქტიკული სიტუაცია რესტორნის API-ზე. ყოველ ჩემს პასუხზე მითხარი, სწორია თუ არა და რატომ, მერე დასვი შემდეგი. ბოლოს მითხარი, რა უნდა გავიმეორო. კომუნიკაცია ქართულად.
 ```
   </aside>
@@ -1325,44 +1310,8 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
 <lecture-homework/>
 
 <script>
-/* ლექცია 1-ის ინტერაქტიული სლაიდები: ლაივ ტოკენაიზერი, Temperature/Top-P, ხარჯის კალკულატორი */
+/* ლექცია 1-ის ინტერაქტიული სლაიდები: Temperature/Top-P, ხარჯის კალკულატორი */
 (() => {
-  // ---------- ლაივ ტოკენაიზერი ----------
-  let tokLoad = null;
-  const loadTok = () => tokLoad ||= new Promise((ok, fail) => {
-    const s = document.createElement('script');
-    s.src = '../../assets/tokenizer.js'; s.onload = ok; s.onerror = fail; document.head.appendChild(s);
-  });
-  const strict = new TextDecoder('utf-8', { fatal: true });
-  const hex = b => [...b].map(x => x.toString(16).toUpperCase().padStart(2, '0')).join(' ');
-  const escH = t => t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  function initTok(w) {
-    if (w.dataset.ready) return; w.dataset.ready = 1;
-    const inp = w.querySelector('.lt-in'), out = w.querySelector('.lt-out'), ids = w.querySelector('.lt-ids');
-    const st = k => w.querySelector(`[data-s="${k}"]`);
-    let enc = 'o200k';
-    const run = () => {
-      if (!window.LiveTok) return;
-      const t = window.LiveTok.get(enc), text = inp.value, arr = t.encode(text);
-      out.innerHTML = arr.map(id => {
-        const b = t.textMap.get(id); let s;
-        try { s = strict.decode(b); } catch { return `<span class="tk raw">‹${hex(b)}›<small>${id}</small></span>`; }
-        return `<span class="tk">${escH(s).replace(/\n/g, '↵')}<small>${id}</small></span>`;
-      }).join('');
-      ids.textContent = 'int[] { ' + arr.join(', ') + ' }';
-      st('tok').textContent = arr.length; st('chr').textContent = [...text].length;
-      st('byt').textContent = new TextEncoder().encode(text).length;
-      st('ratio').textContent = arr.length ? ([...text].length / arr.length).toFixed(1) : '–';
-    };
-    w.classList.add('loading');
-    loadTok().then(() => { w.classList.remove('loading'); run(); }, () => { w.querySelector('.lt-load').textContent = '⚠ tokenizer ვერ ჩაიტვირთა'; });
-    inp.addEventListener('input', run);
-    w.querySelectorAll('[data-enc]').forEach(b => b.addEventListener('click', () => {
-      enc = b.dataset.enc; w.querySelectorAll('[data-enc]').forEach(x => x.classList.toggle('on', x === b)); run();
-    }));
-    w.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => { inp.value = b.dataset.t; run(); }));
-  }
-
   // ---------- Temperature / Top-P ----------
   const CAND = [['დავჯავშნო', .44], ['ოთხისთვის', .23], ['ფანჯარასთან', .14], ['8-ზე', .10], ['ტერასაზე', .06], ['მინდა', .02], ['ბანანი', .0001]];
   function initTemp(w) {
@@ -1425,7 +1374,6 @@ RestaurantApi-ში LLM რამდენიმე სხვადასხვ
   }
 
   const init = s => {
-    s.querySelectorAll('[data-livetok]').forEach(initTok);
     s.querySelectorAll('[data-temp]').forEach(initTemp);
     s.querySelectorAll('[data-cost]').forEach(initCost);
   };
