@@ -31,12 +31,18 @@ ENGINE = ROOT / 'engine'
 # LECTURES_OUT=dist → separate output folder (Vercel); default: repo root (GitHub Pages serves main/root)
 OUT = (ROOT / os.environ['LECTURES_OUT']).resolve() if os.environ.get('LECTURES_OUT') else ROOT
 GENERATED = '.generated'   # list of folders build.py created — only these are ever deleted
-CSS = (ENGINE / 'engine.css').read_text() + '\n' + (ENGINE / 'theme-light.css').read_text()
+CSS = (ENGINE / 'engine.css').read_text() + '\n' + (ENGINE / 'theme-light.css').read_text() + '\n' + (ENGINE / 'theme-dark.css').read_text()
 JS = (ENGINE / 'engine.js').read_text()
 TOKEN_CSS = '\n'.join(l for l in (ENGINE / 'theme-light.css').read_text().split('\n') if l.startswith('.code .'))
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
          '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600;700;800'
          '&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">')
+THEME_HEAD = ('<script>(()=>{const d=document.documentElement,K="lectures:theme";'
+              'try{d.dataset.theme=localStorage.getItem(K)||"light"}catch(e){d.dataset.theme="light"}'
+              'window.toggleTheme=()=>{const t=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=t;try{localStorage.setItem(K,t)}catch(e){}};'
+              'document.addEventListener("click",e=>{const b=e.target.closest(".themebtn");if(b){b.blur();toggleTheme()}});'
+              'addEventListener("storage",e=>{if(e.key===K)d.dataset.theme=e.newValue||"light"})})()</script>')
+PAGE_THEME = (ENGINE / 'page-theme.css').read_text()
 esc = html.escape
 
 # ---------- access code ----------
@@ -352,14 +358,87 @@ padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .25s}
 #studybtn{position:fixed;right:16px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:#fff;
 background:var(--net);border:0;border-radius:10px;padding:7px 13px;cursor:pointer;opacity:.9;box-shadow:0 4px 14px rgba(109,40,217,.25)}
 #studybtn:hover{opacity:1}#studybtn kbd{font:600 11px var(--mono);background:rgba(255,255,255,.22);border-radius:5px;padding:1px 6px}
-body[data-study] #help{right:250px}
+body[data-study] #help{right:340px}
 #lectbtn{position:fixed;right:170px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:var(--ink2);
-background:#fff;border:1px solid var(--line2);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.85}
-#lectbtn:hover{opacity:1}#lectbtn kbd{font:600 11px var(--mono);background:var(--bg2);border-radius:5px;padding:1px 6px}'''
+background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.85}
+#lectbtn:hover,#themebtn:hover,#langbtn:hover{opacity:1}
+#themebtn,#langbtn{position:fixed;top:12px;z-index:41;font:700 14px var(--font);color:var(--ink2);background:var(--card);border:1px solid var(--line2);
+border-radius:10px;padding:7px 10px;cursor:pointer;opacity:.85;line-height:1.25}
+#themebtn{right:232px}#langbtn{right:284px;font-family:var(--mono)}
+body:not([data-study]) #themebtn{right:16px}body:not([data-study]) #langbtn{right:68px}
+.themebtn .d{display:none}html[data-theme=dark] .themebtn .l{display:none}html[data-theme=dark] .themebtn .d{display:inline}
+:fullscreen #themebtn,:fullscreen #langbtn{opacity:0}:fullscreen #themebtn:hover,:fullscreen #langbtn:hover{opacity:1}#lectbtn kbd{font:600 11px var(--mono);background:var(--bg2);border-radius:5px;padding:1px 6px}'''
 
 def heading(sl):
     h = re.search(r'<h[12][^>]*>(.*?)</h[12]>', sl, re.S)
     return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', ' ', h.group(1)))).strip() if h else ''
+
+# ---------- EN version of a deck ----------
+# deck.en.json: {"ქართული ფრაგმენტი": "English", …, "_html": [[from, to], …], "_slides": {"7": {"ფრაგმენტი": "…"}}}
+# ფრაგმენტი = ტეგებს შორის ტექსტი (trim), data-section/title/… ატრიბუტი ან სკრიპტის სტრიქონი. აკლია → build აჩვენებს.
+GEO = re.compile(r'[Ⴀ-ჿ]')
+
+def translate_deck(src, ldir):
+    f = ldir / 'deck.en.json'
+    if not f.exists():
+        return None
+    tmap = json.loads(f.read_text())
+    html_over, per_slide = tmap.pop('_html', []), tmap.pop('_slides', {})
+    tmap.pop('_note', None)
+    missing = []
+    def tr(t, m):
+        key = t.strip()
+        if not GEO.search(key): return t
+        v = m.get(key, tmap.get(key))
+        if v is None:
+            missing.append(key); return t
+        lead, trail = t[:len(t) - len(t.lstrip())], t[len(t.rstrip()):]
+        if v[:1] in '.,:;!?)': lead = ''   # „ ხედავს.“ → „.“ — წინა ჰარი პუნქტუაციის წინ არ რჩება
+        return lead + v + trail
+    def tr_markup(part, m):
+        part = re.sub(r'>([^<]+)<', lambda x: '>' + tr(x.group(1), m) + '<', part)
+        return re.sub(r'((?:data-section|title|placeholder|aria-label|data-t|data-l)=")([^"]*)(")', lambda x: x.group(1) + tr(x.group(2), m) + x.group(3), part)
+    for a, b in html_over:
+        src = src.replace(a, b)
+    out, n = [], 0
+    for chunk in re.split(r'(<script.*?</script>|<style.*?</style>|<section class="slide.*?</section>)', src, flags=re.S):
+        if chunk.startswith('<style'):
+            out.append(chunk)
+        elif chunk.startswith('<script'):
+            out.append(re.sub(r"'([^'\n]*)'", lambda x: "'" + tr(x.group(1), {}) + "'", chunk))
+        elif chunk.startswith('<section'):
+            n += 1
+            out.append(tr_markup(chunk, per_slide.get(str(n), {})))
+        else:
+            out.append(tr_markup(chunk, {}))
+    if missing:
+        print(f'  ⚠ EN: {len(set(missing))} ფრაგმენტს თარგმანი აკლია ({ldir.name}/deck.en.json):')
+        for k in list(dict.fromkeys(missing))[:12]: print('     ', k[:90])
+    return ''.join(out)
+
+def deck_page(src, title, has_study, has_lect, lang, has_en):
+    en = lang == 'en'
+    other = ('index.html', 'KA', 'ქართული ვერსია') if en else ('index.en.html', 'EN', 'English version')
+    lang_btn = f'<button id="langbtn" type="button" data-href="{other[0]}" title="{other[2]}">{other[1]}</button>' if has_en else ''
+    study_btn = (f'<button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 {"Notes" if en else "კონსპექტი"} <kbd>P</kbd></button>'
+                 if has_study else '')
+    lect_btn = '<button id="lectbtn" type="button" title="ლექტორის გვერდი — გეგმა, კითხვები, ამოხსნები">🎓 <kbd>L</kbd></button>' if has_lect else ''
+    return f'''<!doctype html>
+<html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{esc(title)}</title>
+{FONTS}{THEME_HEAD}
+<style>{CSS}
+{HOME_CSS}</style></head>
+<body{' data-study="1"' if has_study else ''}>
+<a id="home" href="../../" title="{"All lectures" if en else "ყველა ლექცია"}">← {"Lectures" if en else "ლექციები"}</a><button id="themebtn" class="themebtn" type="button" title="{"Light / dark theme" if en else "ღია / მუქი თემა"} (T)"><span class="l">🌙</span><span class="d">☀️</span></button>{lang_btn}{study_btn}{lect_btn}
+<div id="stage"><div id="deck">
+{src}
+<div id="hud"><span class="sec"></span><span class="dots"></span><span class="num"></span></div><div id="bar"></div>
+</div></div>
+<div id="overview"></div>
+<div id="help">← → · F</div>
+<script>{JS}</script>
+</body></html>'''
 
 def build_lecture(course, cdir, ldir, meta, prev):
     src, problems = expand((ldir / 'deck.html').read_text(), meta, ldir, prev)
@@ -385,22 +464,13 @@ def build_lecture(course, cdir, ldir, meta, prev):
     has_study = any(s['html'] for s in study)
 
     out.mkdir(parents=True, exist_ok=True)
-    write_page(out / 'index.html', f'''<!doctype html>
-<html lang="ka"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc(title)}</title>
-{FONTS}
-<style>{CSS}
-{HOME_CSS}</style></head>
-<body{' data-study="1"' if has_study else ''}>
-<a id="home" href="../../" title="ყველა ლექცია">← ლექციები</a>{'<button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 კონსპექტი <kbd>P</kbd></button>' if has_study else ''}{'<button id="lectbtn" type="button" title="ლექტორის გვერდი — გეგმა, კითხვები, ამოხსნები">🎓 <kbd>L</kbd></button>' if (ldir / 'lecturer.md').exists() else ''}
-<div id="stage"><div id="deck">
-{src}
-<div id="hud"><span class="sec"></span><span class="dots"></span><span class="num"></span></div><div id="bar"></div>
-</div></div>
-<div id="overview"></div>
-<div id="help">← → · F</div>
-<script>{JS}</script>
-</body></html>''')
+    has_lect = (ldir / 'lecturer.md').exists()
+    en_src = translate_deck(src, ldir)
+    write_page(out / 'index.html', deck_page(src, title, has_study, has_lect, 'ka', bool(en_src)))
+    if en_src:
+        write_page(out / 'index.en.html', deck_page(en_src, title, has_study, has_lect, 'en', True))
+    else:
+        (out / 'index.en.html').unlink(missing_ok=True)
     for stale in ('script.html', 'study.html', 'lecturer.html'):
         (out / stale).unlink(missing_ok=True)
 
@@ -547,7 +617,7 @@ def write_lecturer(out, course, meta, num, deck_title, ldir):
     for k, v in {'{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num),
                  '{{DECK_TITLE_JSON}}': json.dumps(deck_title, ensure_ascii=False), '{{NAV}}': ''.join(nav), '{{BODY}}': '\n'.join(body),
                  '{{INTRO}}': md_inline(intro) if intro else '', '{{TIMELINE}}': timeline, '{{TOTAL}}': str(total),
-                 '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS}.items():
+                 '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS + THEME_HEAD, '{{PAGE_THEME}}': PAGE_THEME}.items():
         page = page.replace(k, v)
     write_locked(out / 'lecturer.html', page, code, 'lectures:lecturer', 'ლექტორის გვერდი')
     return True
@@ -664,7 +734,7 @@ def write_study(out, course, meta, num, deck_title, study, materials, ldir, n_sl
     mats = ''.join(f'<a href="materials/{esc(m)}" download>📎 {esc(m)}</a>' for m in materials)
     for k, v in {'{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num), '{{TOTAL}}': str(total),
                  '{{DECK_TITLE_JSON}}': json.dumps(deck_title, ensure_ascii=False), '{{NAV}}': ''.join(nav), '{{QUICK}}': quick,
-                 '{{BODY}}': '\n'.join(body) + extra, '{{RESOURCES}}': resources, '{{MATERIALS}}': mats, '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS}.items():
+                 '{{BODY}}': '\n'.join(body) + extra, '{{RESOURCES}}': resources, '{{MATERIALS}}': mats, '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS + THEME_HEAD, '{{PAGE_THEME}}': PAGE_THEME}.items():
         page = page.replace(k, v)
     write_page(out / 'study.html', page)
 
@@ -698,7 +768,7 @@ def main(filters):
         catalog.append({'slug': cdir.name, 'title': course['title'], 'order': course.get('order', 99), 'lectures': lectures})
     catalog.sort(key=lambda c: c['order'])
     if not filters:
-        page = (ENGINE / 'index.html').read_text().replace('/*CATALOG*/[]', json.dumps(catalog, ensure_ascii=False))
+        page = (ENGINE / 'index.html').read_text().replace('/*CATALOG*/[]', json.dumps(catalog, ensure_ascii=False)).replace('<!--THEME-->', THEME_HEAD + '<style>' + PAGE_THEME + '</style>')
         write_page(OUT / 'index.html', page)
         (OUT / '.nojekyll').write_text('')
         marker.write_text('\n'.join([c['slug'] for c in catalog] + ['assets']) + '\n')

@@ -1,0 +1,31 @@
+/* კონსპექტის / ლექტორის / მთავარი გვერდის საერთო ფერები — light და dark */
+:root{
+  --surf:#fdfcf9; --soft:#f6f1e8; --soft2:#ebe5d8;
+  --acc-line:#ddd2fb; --ok-soft:#f3fbf5; --ok-line:#cfe9d6; --ok-ink:#166534;
+  --bad-soft:#fef2f2; --bad-line:#fca5a5; --bad-ink:#991b1b;
+  --warn-soft:#fff8eb; --warn-line:#f6dfb5; --warn-ink:#7c3d06;
+  --info-soft:#eef5ff; --info-line:#cfe0fb; --teal-soft:#e6f6f4; --teal-line:#bfe7e2;
+  --code-ink:#5b21b6; --yellow:#a16207; --deep:#1e2132; --deep2:#2a2e45; --on:#fff;
+}
+html[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#16181d; --card:#1e2128; --ink:#e6e2da; --ink2:#bebab1; --muted:#8a8e98; --line:#2d313b; --line2:#3c414d;
+  --accent:#ab9ff2; --accent-soft:#272439; --teal:#72bfb3; --green:#8fc8a1; --amber:#dfa96e; --red:#e68b8b; --blue:#8aa9e6;
+  --g-prep:#8aa9e6; --g-flow:#ab9ff2; --g-after:#72bfb3; --g-mat:#8a93a6; --g-ready:#8fc8a1;
+  --surf:#1b1e24; --soft:#252932; --soft2:#2b2f39;
+  --acc-line:#433b66; --ok-soft:#1d2a23; --ok-line:#33503d; --ok-ink:#b2dcbf;
+  --bad-soft:#2c2025; --bad-line:#5a3540; --bad-ink:#f0b4b4;
+  --warn-soft:#2b2720; --warn-line:#574a2e; --warn-ink:#ecc78f;
+  --info-soft:#1f2635; --info-line:#35466a; --teal-soft:#1b2b2a; --teal-line:#2f4f4a;
+  --code-ink:#cfc6ff; --yellow:#d8c27e; --deep:#252a36; --deep2:#2c3240; --on:#16181d;
+}
+html[data-theme=dark] .code .k,html[data-theme=dark] .code .kd,html[data-theme=dark] .code .kn,html[data-theme=dark] .code .kr,html[data-theme=dark] .code .kc,html[data-theme=dark] .code .na{color:#c4a7f0}
+html[data-theme=dark] .code .kt,html[data-theme=dark] .code .nf,html[data-theme=dark] .code .fm{color:#8fb3ec}
+html[data-theme=dark] .code .s,html[data-theme=dark] .code .s1,html[data-theme=dark] .code .s2,html[data-theme=dark] .code .sa,html[data-theme=dark] .code .se,html[data-theme=dark] .code .si,html[data-theme=dark] .code .sd{color:#a9d39a}
+html[data-theme=dark] .code .c,html[data-theme=dark] .code .c1,html[data-theme=dark] .code .cm,html[data-theme=dark] .code .cp,html[data-theme=dark] .code .ch{color:#727784}
+html[data-theme=dark] .code .m,html[data-theme=dark] .code .mi,html[data-theme=dark] .code .mf,html[data-theme=dark] .code .mh{color:#e3a77c}
+html[data-theme=dark] .code .nc,html[data-theme=dark] .code .nn,html[data-theme=dark] .code .nt,html[data-theme=dark] .code .nd{color:#dfbf7e}
+html[data-theme=dark] .code .nb{color:#7cc4c9}
+html[data-theme=dark] .code .o,html[data-theme=dark] .code .p,html[data-theme=dark] .code .go,html[data-theme=dark] .code .nv,html[data-theme=dark] .code .nx{color:#a7abb6}
+.themebtn{font:700 15px var(--sans,system-ui);border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 10px;cursor:pointer;line-height:1}
+.themebtn .d{display:none}html[data-theme=dark] .themebtn .l{display:none}html[data-theme=dark] .themebtn .d{display:inline}

@@ -1,8 +1,10 @@
 <!doctype html>
 <html lang="ka"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ლექციები</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("lectures:theme")||"light"}catch(e){}</script>
 <style>
-:root{--bg:#fbf8f3;--card:#fff;--ink:#1e2132;--muted:#7b8096;--line:#e6dfd2;--accent:#6d28d9;--red:#dc2626}
+:root{--bg:#fbf8f3;--card:#fff;--ink:#1e2132;--muted:#7b8096;--line:#e6dfd2;--accent:#6d28d9;--red:#dc2626;--ring:#f3effe}
+html[data-theme=dark]{color-scheme:dark;--bg:#16181d;--card:#1e2128;--ink:#e6e2da;--muted:#8a8e98;--line:#2d313b;--accent:#ab9ff2;--red:#e68b8b;--ring:#272439}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{display:grid;place-items:center;background:var(--bg);color:var(--ink);font:16px/1.5 "Noto Sans Georgian","DejaVu Sans",system-ui,sans-serif}
@@ -12,8 +14,8 @@ body{display:grid;place-items:center;background:var(--bg);color:var(--ink);font:
 h1{font-size:24px;margin:12px 0 4px}
 p{color:var(--muted);margin:0 0 20px;font-size:15px}
 input{width:100%;font:600 18px ui-monospace,"JetBrains Mono",monospace;letter-spacing:.06em;text-align:center;padding:12px 14px;border:1px solid var(--line);border-radius:12px;outline:none;background:var(--bg);color:var(--ink)}
-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #f3effe}
-button{width:100%;margin-top:12px;font:700 16px inherit;font-family:inherit;padding:12px;border:0;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+button{width:100%;margin-top:12px;font:700 16px inherit;font-family:inherit;padding:12px;border:0;border-radius:12px;background:var(--accent);color:var(--card);cursor:pointer}
 button:disabled{opacity:.6;cursor:wait}
 .err{color:var(--red);font-size:14px;min-height:21px;margin-top:10px}
 .shake{animation:shake .4s}

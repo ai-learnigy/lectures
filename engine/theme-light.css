@@ -23,8 +23,8 @@
 #hud .sec{color:var(--net)}
 #hud .dots{color:var(--line2)} #hud .dots b{color:var(--net)}
 #help{color:var(--muted)}
-#overview{background:rgba(251,248,243,.97)}
-#overview button{background:#fff;color:var(--ink2);box-shadow:var(--shadow)}
+#overview{background:color-mix(in srgb,var(--bg) 97%,transparent)}
+#overview button{background:var(--card);color:var(--ink2);box-shadow:var(--shadow)}
 #overview button:hover,#overview button.cur{color:var(--ink)}
 
 /* typography */
@@ -33,19 +33,19 @@ code.i{background:rgba(109,40,217,.08);color:#5b21b6}
 ul.clean li::before{border-radius:4px}
 
 /* cards */
-.card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.card{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
 .card.accent{border-color:color-mix(in srgb,var(--a,var(--net)) 30%,var(--line));border-top:5px solid var(--a,var(--net));
   box-shadow:0 1px 2px rgba(30,33,50,.05),0 16px 34px -18px color-mix(in srgb,var(--a,var(--net)) 55%,transparent)}
-.card .ico{background:color-mix(in srgb,var(--a,var(--net)) 12%,#fff)}
-.pill{background:#fff;border-color:var(--line2)}
-.pill.on{background:color-mix(in srgb,var(--a,var(--net)) 10%,#fff);border-color:color-mix(in srgb,var(--a,var(--net)) 55%,#fff)}
-.tag{background:color-mix(in srgb,var(--a,var(--net)) 14%,#fff)}
-.chip{background:#fff;border-color:var(--line2)}
-table.t{background:#fff;box-shadow:var(--shadow)}
+.card .ico{background:color-mix(in srgb,var(--a,var(--net)) 12%,var(--card))}
+.pill{background:var(--card);border-color:var(--line2)}
+.pill.on{background:color-mix(in srgb,var(--a,var(--net)) 10%,var(--card));border-color:color-mix(in srgb,var(--a,var(--net)) 55%,var(--card))}
+.tag{background:color-mix(in srgb,var(--a,var(--net)) 14%,var(--card))}
+.chip{background:var(--card);border-color:var(--line2)}
+table.t{background:var(--card);box-shadow:var(--shadow)}
 table.t th{background:var(--bg2)}
-.method-card{background:color-mix(in srgb,var(--a) 7%,#fff);border-color:color-mix(in srgb,var(--a) 40%,#fff);box-shadow:var(--shadow)}
-.callout{background:color-mix(in srgb,var(--a,var(--net)) 7%,#fff)}
-.era{background:color-mix(in srgb,var(--a) 7%,#fff)}
+.method-card{background:color-mix(in srgb,var(--a) 7%,var(--card));border-color:color-mix(in srgb,var(--a) 40%,var(--card));box-shadow:var(--shadow)}
+.callout{background:color-mix(in srgb,var(--a,var(--net)) 7%,var(--card))}
+.era{background:color-mix(in srgb,var(--a) 7%,var(--card))}
 
 /* status boxes */
 .problem{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
@@ -54,7 +54,7 @@ table.t th{background:var(--bg2)}
 .year{opacity:.45}
 
 /* code — light editor look; terminal stays dark like a real terminal */
-.code{background:#fff;color:var(--ink);border-color:var(--line);box-shadow:var(--shadow)}
+.code{background:var(--card);color:var(--ink);border-color:var(--line);box-shadow:var(--shadow)}
 .code .ttl{background:var(--bg2);color:var(--muted)}
 .code .ln.hl{background:rgba(109,40,217,.07);box-shadow:inset 3px 0 0 var(--net)}
 .code .ln.dim{opacity:.42}
@@ -72,8 +72,8 @@ table.t th{background:var(--bg2)}
 .term{border-color:#2a2e45;box-shadow:var(--shadow)}
 
 /* svg */
-svg .box{fill:#fff;stroke:var(--line2)}
-svg .td{fill:#fff}
+svg .box{fill:var(--card);stroke:var(--line2)}
+svg .td{fill:var(--card)}
 
 /* lecturer notes panel + presenter window stay dark (laptop only) */
 #notes{color:#c3c7e6}

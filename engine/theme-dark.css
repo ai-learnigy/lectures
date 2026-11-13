@@ -1,0 +1,50 @@
+/* ===== Dark "quiet night" theme =====
+   Soft, low-glare: graphite background (not pure black), warm off-white text,
+   desaturated pastel accents — the same colour meanings as the light theme. */
+html[data-theme=dark]{
+  --bg:#16181d; --bg2:#1d2027; --bg3:#232730; --card:#1e2128; --line:#2d313b; --line2:#3c414d;
+  --ink:#e6e2da; --ink2:#bebab1; --muted:#8a8e98;
+  --net:#ab9ff2; --net2:#8f82e3;
+  --asp:#dfa96e; --wf:#8aa9e6; --mvc:#8fc8a1; --core:#72bfb3; --api:#8aa9e6; --red:#e68b8b; --pink:#e29bba; --yel:#d8c27e;
+  --on:#16181d;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 30px -16px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+html[data-theme=dark] #deck{background:
+  radial-gradient(900px 600px at 92% -8%,rgba(171,159,242,.06),transparent 60%),
+  radial-gradient(800px 560px at -6% 108%,rgba(223,169,110,.045),transparent 60%),
+  var(--bg)}
+html[data-theme=dark] #deck::before{background-image:radial-gradient(rgba(230,226,218,.05) 1.3px,transparent 1.4px)}
+html[data-theme=dark] #overview button:hover,html[data-theme=dark] #overview button.cur{color:var(--ink)}
+html[data-theme=dark] code.i{background:rgba(171,159,242,.13);color:#cfc6ff}
+html[data-theme=dark] .grad{background:linear-gradient(90deg,var(--net),var(--api));-webkit-background-clip:text;background-clip:text}
+html[data-theme=dark] .problem{background:#2c2025;border-color:#5a3540;color:#f0b4b4}
+html[data-theme=dark] .solve{background:#1d2a23;border-color:#35523f;color:#b2dcbf}
+html[data-theme=dark] .divider .big-num{-webkit-text-stroke:2px rgba(171,159,242,.14)}
+html[data-theme=dark] .code{background:#1a1d23}
+html[data-theme=dark] .code .ln.hl{background:rgba(171,159,242,.08)}
+html[data-theme=dark] .code .k,html[data-theme=dark] .code .kd,html[data-theme=dark] .code .kn,html[data-theme=dark] .code .kr,html[data-theme=dark] .code .kc,html[data-theme=dark] .code .na{color:#c4a7f0}
+html[data-theme=dark] .code .kt,html[data-theme=dark] .code .nf,html[data-theme=dark] .code .fm{color:#8fb3ec}
+html[data-theme=dark] .code .s,html[data-theme=dark] .code .s1,html[data-theme=dark] .code .s2,html[data-theme=dark] .code .sa,html[data-theme=dark] .code .se,html[data-theme=dark] .code .si,html[data-theme=dark] .code .sd{color:#a9d39a}
+html[data-theme=dark] .code .c,html[data-theme=dark] .code .c1,html[data-theme=dark] .code .cm,html[data-theme=dark] .code .cp,html[data-theme=dark] .code .ch{color:#727784}
+html[data-theme=dark] .code .m,html[data-theme=dark] .code .mi,html[data-theme=dark] .code .mf,html[data-theme=dark] .code .mh{color:#e3a77c}
+html[data-theme=dark] .code .nc,html[data-theme=dark] .code .nn,html[data-theme=dark] .code .nt,html[data-theme=dark] .code .nd{color:#dfbf7e}
+html[data-theme=dark] .code .nb{color:#7cc4c9}
+html[data-theme=dark] .code .o,html[data-theme=dark] .code .p,html[data-theme=dark] .code .go{color:#959aa6}
+/* inline SVG: light fills → dark surfaces */
+html[data-theme=dark] svg [fill="#ffffff"],html[data-theme=dark] svg [fill="#fff"]{fill:var(--card)}
+html[data-theme=dark] svg [fill="#f1ece3"],html[data-theme=dark] svg [fill="#fbf8f3"]{fill:var(--bg2)}
+html[data-theme=dark] svg [fill="#f3effe"],html[data-theme=dark] svg [fill="#ede7fd"]{fill:#272439}
+html[data-theme=dark] svg [fill="#fef5e4"]{fill:#2c2720}
+html[data-theme=dark] svg [fill="#eaf8ef"]{fill:#1f2b24}
+html[data-theme=dark] svg [fill="#eaf2fe"],html[data-theme=dark] svg [fill="#dbeafe"]{fill:#1f2635}
+html[data-theme=dark] svg [stroke="#cfc6b6"],html[data-theme=dark] svg [stroke="#e6dfd2"]{stroke:var(--line2)}
+html[data-theme=dark] svg [fill="#6d28d9"]{fill:var(--net)} html[data-theme=dark] svg [stroke="#6d28d9"]{stroke:var(--net)}
+html[data-theme=dark] svg [fill="#d97706"]{fill:var(--asp)} html[data-theme=dark] svg [stroke="#d97706"]{stroke:var(--asp)}
+html[data-theme=dark] svg [fill="#16a34a"]{fill:var(--mvc)} html[data-theme=dark] svg [stroke="#16a34a"]{stroke:var(--mvc)}
+html[data-theme=dark] svg [fill="#dc2626"]{fill:var(--red)} html[data-theme=dark] svg [stroke="#dc2626"]{stroke:var(--red)}
+html[data-theme=dark] svg [fill="#2563eb"]{fill:var(--api)} html[data-theme=dark] svg [stroke="#2563eb"]{stroke:var(--api)}
+html[data-theme=dark] [style*="background:#fef2f2"]{background:#2c2025!important;border-color:#5a3540!important}
+html[data-theme=dark] .tp-picks span.odd{background:#2c2025;color:#f0b4b4}
+html[data-theme=dark] .json .k{color:#c4a7f0} html[data-theme=dark] .json .s{color:#a9d39a} html[data-theme=dark] .json .n{color:#e3a77c}
+html[data-theme=dark] .cc-in input{background:var(--bg2)}
