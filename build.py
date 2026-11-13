@@ -358,13 +358,13 @@ padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .25s}
 #studybtn{position:fixed;right:16px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:#fff;
 background:var(--net);border:0;border-radius:10px;padding:7px 13px;cursor:pointer;opacity:.9;box-shadow:0 4px 14px rgba(109,40,217,.25)}
 #studybtn:hover{opacity:1}#studybtn kbd{font:600 11px var(--mono);background:rgba(255,255,255,.22);border-radius:5px;padding:1px 6px}
-body[data-study] #help{right:340px}
+body[data-study] #help{right:280px}
 #lectbtn{position:fixed;right:170px;top:12px;z-index:41;display:flex;align-items:center;gap:6px;font:700 14px var(--font);color:var(--ink2);
 background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:7px 11px;cursor:pointer;opacity:.85}
 #lectbtn:hover,#themebtn:hover,#langbtn:hover{opacity:1}
 #themebtn,#langbtn{position:fixed;top:12px;z-index:41;font:700 14px var(--font);color:var(--ink2);background:var(--card);border:1px solid var(--line2);
 border-radius:10px;padding:7px 10px;cursor:pointer;opacity:.85;line-height:1.25}
-#themebtn{right:232px}#langbtn{right:284px;font-family:var(--mono)}
+#themebtn{right:170px}#langbtn{right:222px;font-family:var(--mono)}
 body:not([data-study]) #themebtn{right:16px}body:not([data-study]) #langbtn{right:68px}
 .themebtn .d{display:none}html[data-theme=dark] .themebtn .l{display:none}html[data-theme=dark] .themebtn .d{display:inline}
 :fullscreen #themebtn,:fullscreen #langbtn{opacity:0}:fullscreen #themebtn:hover,:fullscreen #langbtn:hover{opacity:1}#lectbtn kbd{font:600 11px var(--mono);background:var(--bg2);border-radius:5px;padding:1px 6px}'''
@@ -422,15 +422,14 @@ def deck_page(src, title, has_study, has_lect, lang, has_en):
     lang_btn = f'<button id="langbtn" type="button" data-href="{other[0]}" title="{other[2]}">{other[1]}</button>' if has_en else ''
     study_btn = (f'<button id="studybtn" type="button" title="კონსპექტი ცალკე ჩანართში — სლაიდებს მიჰყვება">📖 {"Notes" if en else "კონსპექტი"} <kbd>P</kbd></button>'
                  if has_study else '')
-    lect_btn = '<button id="lectbtn" type="button" title="ლექტორის გვერდი — გეგმა, კითხვები, ამოხსნები">🎓 <kbd>L</kbd></button>' if has_lect else ''
     return f'''<!doctype html>
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title>
 {FONTS}{THEME_HEAD}
 <style>{CSS}
 {HOME_CSS}</style></head>
-<body{' data-study="1"' if has_study else ''}>
-<a id="home" href="../../" title="{"All lectures" if en else "ყველა ლექცია"}">← {"Lectures" if en else "ლექციები"}</a><button id="themebtn" class="themebtn" type="button" title="{"Light / dark theme" if en else "ღია / მუქი თემა"} (T)"><span class="l">🌙</span><span class="d">☀️</span></button>{lang_btn}{study_btn}{lect_btn}
+<body{' data-study="1"' if has_study else ''}{' data-lect="1"' if has_lect else ''}>
+<a id="home" href="../../" title="{"All lectures" if en else "ყველა ლექცია"}">← {"Lectures" if en else "ლექციები"}</a><button id="themebtn" class="themebtn" type="button" title="{"Light / dark theme" if en else "ღია / მუქი თემა"} (T)"><span class="l">🌙</span><span class="d">☀️</span></button>{lang_btn}{study_btn}
 <div id="stage"><div id="deck">
 {src}
 <div id="hud"><span class="sec"></span><span class="dots"></span><span class="num"></span></div><div id="bar"></div>

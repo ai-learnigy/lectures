@@ -126,7 +126,6 @@
   };
   document.getElementById('studybtn')?.addEventListener('click', e => { e.currentTarget.blur(); openStudy(); });
   const openLecturer = () => window.open('lecturer.html', 'lecturer-' + document.title);
-  document.getElementById('lectbtn')?.addEventListener('click', e => { e.currentTarget.blur(); openLecturer(); });
   // ka ⇄ en: იგივე სლაიდზე გადასვლა
   document.getElementById('langbtn')?.addEventListener('click', e => { location.href = e.currentTarget.dataset.href + location.hash; });
 
@@ -145,7 +144,8 @@
     else if (code === 'KeyF') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
     else if (code === 'KeyA') { k = groups[i].length; render(true); }
     else if (code === 'KeyP' && document.body.dataset.study) { e.preventDefault(); openStudy(); }
-    else if (code === 'KeyL' && document.getElementById('lectbtn')) { e.preventDefault(); openLecturer(); }
+    else if (code === 'KeyL' && document.body.dataset.lect)   // ლექტორის გვერდი: ღილაკი არ ჩანს, მხოლოდ L
+     { e.preventDefault(); openLecturer(); }
     else if (code === 'KeyT' && window.toggleTheme) { e.preventDefault(); toggleTheme(); }
   });
   addEventListener('hashchange', () => { const oi = i, ok = k; parseHash(); if (oi !== i || ok !== k) render(true); });
