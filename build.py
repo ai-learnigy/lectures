@@ -375,7 +375,7 @@ def build_lecture(course, cdir, ldir, meta, prev):
     for i, sl in enumerate(slides, 1):
         m = re.search(r'<aside class="study">(.*?)</aside>', sl, re.S)
         sec = re.search(r'data-section="([^"]*)"', sl)
-        study.append({'n': i, 'title': heading(sl), 'section': sec.group(1) if sec else '', 'html': md(m.group(1)) if m else None})
+        study.append({'n': i, 'title': heading(sl), 'section': sec.group(1) if sec else '', 'html': md(m.group(1)) if m else None, 'raw': m.group(1) if m else ''})
         clean = re.sub(r'<aside class="(?:study|notes)">.*?</aside>', '', sl, flags=re.S)
         src = src.replace(sl, clean, 1)
     src = re.sub(r'<aside class="notes">.*?</aside>', '', src, flags=re.S)   # old lecturer notes are never published
@@ -414,9 +414,6 @@ def build_lecture(course, cdir, ldir, meta, prev):
     print(f'  {cdir.name}/{ldir.name}: {len(slides)} slides' + (f', study {sum(1 for s in study if s["html"])} blocks' if has_study else ''))
     return {'num': num, 'slug': ldir.name, 'title': meta['title'], 'slides': len(slides), 'materials': materials, 'study': has_study,
             'classwork': (ldir / 'classwork.md').exists(), 'homework': (ldir / 'homework.md').exists(), 'quiz': len(meta.get('quiz', [])), 'lecturer': has_lecturer}, []
-
-STUDY_NOTE = ('წაიკითხე ლექციის შემდეგ, ან პრეზენტაციასთან ერთად: პრეზენტაციაში დააჭირე <kbd>P</kbd> და ეს გვერდი სლაიდებს გაჰყვება. '
-              'კოდი და AI-ს პრომპტები კოპირდება ერთი დაჭერით.')
 
 # ლექტორის გვერდი. lecturer.md:
 #   ## სათაური                       ზოგადი ნაწილი (მიმოხილვა, ადგილი მოდულში, შეფასება…)
@@ -556,73 +553,118 @@ def write_lecturer(out, course, meta, num, deck_title, ldir):
     return True
 
 def render_resources(meta, ldir, materials, n_slides, n_quiz):
-    """კონსპექტის თავში: ლექციის ყველა რესურსი ერთ ადგილას"""
-    cw, hw = md_doc(ldir / 'classwork.md'), md_doc(ldir / 'homework.md')
-    cards = [('index.html', '▶ პრეზენტაცია', f'{n_slides} სლაიდი')]
-    if cw: cards.append(('#classwork', '📝 კლასის დავალება', cw['title']))
-    if hw: cards.append(('#homework', '🏠 საშინაო დავალება', hw['title']))
-    if n_quiz: cards.append(('#quiz', '✅ შეამოწმე ცოდნა', f'{n_quiz} კითხვა · ქულით'))
-    grid = ''.join(f'<a class="rc" href="{h}"><b>{t}</b><span>{esc(d)}</span></a>' for h, t, d in cards)
+    """კონსპექტის თავში: გარე ბმულები და მასალები (დავალებებს და ტესტს „5 წუთში“ აჩვენებს)"""
     files = ''.join(f'<a class="rf" href="materials/{esc(m)}" download>📎 {esc(m)}</a>' for m in materials)
     links = ''.join(f'<li><a href="{esc(r["url"])}" target="_blank" rel="noopener">{esc(r["title"])}</a>'
                     f'{" — " + md_inline(r["note"]) if r.get("note") else ""}</li>' for r in meta.get('resources', []))
-    return (f'<section class="res" id="resources"><h2>📚 ლექციის რესურსები</h2><div class="rgrid">{grid}</div>'
-            + (f'<div class="rsub">📎 მასალები ჩამოსატვირთად</div><div class="rfiles">{files}</div>' if files else '')
-            + (f'<div class="rsub">🔗 სასარგებლო ბმულები</div><ul class="rlinks">{links}</ul>' if links else '')
-            + '</section>')
-
-def render_quiz(quiz):
-    """lecture.json → quiz: [{"q", "options": [...], "answer": index, "explain", "slide"?}] → ინტერაქტიული ტესტი"""
-    if not quiz:
+    if not files and not links:
         return ''
+    return (f'<section class="res" id="resources"><h3>🔗 სასარგებლო ბმულები</h3>'
+            + (f'<ul class="rlinks">{links}</ul>' if links else '')
+            + (f'<div class="rfiles">{files}</div>' if files else '') + '</section>')
+
+def render_quiz_items(quiz):
+    """lecture.json → quiz: [{"q", "options": [...], "answer": index, "explain", "slide"?}] → ინტერაქტიული ტესტი"""
     items = []
     for n, x in enumerate(quiz, 1):
         opts = ''.join(f'<button type="button" class="opt" data-i="{i}">{md_inline(o)}</button>' for i, o in enumerate(x['options']))
         back = f' <a class="chip" href="#s-{x["slide"]}">გაიმეორე · სლაიდი {x["slide"]}</a>' if x.get('slide') else ''
-        items.append(f'<div class="qq" data-answer="{x["answer"]}"><div class="qt"><span class="qn">{n}</span>{md_inline(x["q"])}</div>'
+        items.append(f'<div class="qq" data-answer="{x["answer"]}"><div class="qt"><span class="qn">{n}</span><div>{md_inline(x["q"])}</div></div>'
                      f'<div class="opts">{opts}</div><div class="qe"><span class="verdict"></span> {md_inline(x.get("explain", ""))}{back}</div></div>')
-    return (f'<h2 class="sec" id="quiz">შეამოწმე ცოდნა</h2><section class="quiz"><p class="qi">აირჩიე პასუხი — მაშინვე ნახავ, სწორია თუ არა და რატომ. '
-            f'ბოლოს გეცოდინება, რა გაიმეორო.</p><div class="qscore"><span id="qs">0</span> / {len(quiz)} სწორი · <span id="qd">0</span> / {len(quiz)} პასუხი'
-            f'<button type="button" class="btn qreset">თავიდან</button></div>{"".join(items)}<div class="qsum" id="qsum"></div></section>')
+    return (f'<div class="qscore"><span id="qs">0</span> / {len(quiz)} სწორი · <span id="qd">0</span> / {len(quiz)} პასუხი'
+            f'<button type="button" class="btn qreset">თავიდან</button></div>{"".join(items)}<div class="qsum" id="qsum"></div>')
+
+# კონსპექტი თავებად. lecture.json → "study" (არააუცილებელი):
+#   "summary":  ["…"]                     „⚡ 5 წუთში“ — მთავარი აზრები (თუ არ არის — outcomes)
+#   "skip":     ["დღის თემა", …]           data-section-ები, რომლებიც მხოლოდ ლექციისთვისაა
+#   "chapters": {"<data-section>": {"title", "goal", "icon"}}
+STUDY_ICONS = {'მოდული': '🧭', 'პრაქტიკა': '✍️', 'შეჯამება': '🏁', 'საშინაო': '🏠'}
+
+def read_minutes(text):
+    return max(1, round(len(re.findall(r'\w+', re.sub(r'```.*?```', '', text, flags=re.S))) / 130))
+
+def glossary(raws):
+    seen, rows = set(), []
+    for raw in raws:
+        for m in FENCE.finditer(raw):
+            if m.group(1) != 'terms': continue
+            for line in m.group(3).split('\n'):
+                if '—' not in line: continue
+                t, d = (x.strip() for x in line.split('—', 1))
+                if t.lower() not in seen:
+                    seen.add(t.lower()); rows.append((t, d))
+    return rows
 
 def write_study(out, course, meta, num, deck_title, study, materials, ldir, n_slides):
-    blocks = []   # [{slides:[n..], title, section, html}]
-    pending = []
+    cfg = meta.get('study', {})
+    skip = set(cfg.get('skip', []))
+    blocks, pending = [], []   # [{slides, title, section, html, raw}] — სლაიდები ტექსტის გარეშე წინა ბლოკს მიჰყვება
     for s in study:
         if s['html']:
             title, body = s['title'], s['html']
             m = re.match(r'\s*<h([23])>(.*?)</h\1>', body, re.S)   # study text's own heading wins over the slide title
             if m:
                 title, body = html.unescape(re.sub(r'<[^>]+>', '', m.group(2))), body[m.end():]
-            blocks.append({'slides': pending + [s['n']], 'title': title, 'section': s['section'], 'html': body}); pending = []
+            blocks.append({'slides': pending + [s['n']], 'title': title, 'section': s['section'], 'html': body, 'raw': s['raw']}); pending = []
         elif blocks:
             blocks[-1]['slides'].append(s['n'])
         else:
             pending.append(s['n'])
-    body, toc, cur_sec, seen = [], [], None, set()
+    chapters = []
     for b in blocks:
-        if b['section'] != cur_sec:
-            cur_sec = b['section']
-            sid = f'sec-{len(toc) + 1}'
-            toc.append(f'<a href="#{sid}">{esc(cur_sec)}</a>')
-            body.append(f'<h2 class="sec" id="{sid}">{esc(cur_sec)}</h2>')
-        anchors = ''.join(f'<span class="anchor" id="s-{n}"></span>' for n in b['slides'])
-        for sec_name, aid in (('პრაქტიკა', 'classwork'), ('საშინაო', 'homework')):
-            if b['section'] == sec_name and aid not in seen:
-                seen.add(aid); anchors += f'<span class="anchor" id="{aid}"></span>'
-        first = b['slides'][0]
-        body.append(f'<article class="blk" data-slides="{",".join(map(str, b["slides"]))}">{anchors}'
-                    f'<div class="bh"><h3>{esc(b["title"])}</h3><a class="chip" href="index.html#/{first}" data-go="{first}" title="პრეზენტაციაში გახსნა">სლაიდი {first}</a></div>'
-                    f'{b["html"]}</article>')
-    mats = ''.join(f'<a href="materials/{esc(m)}" download>📎 {esc(m)}</a>' for m in materials)
+        if b['section'] in skip: continue
+        if not chapters or chapters[-1]['section'] != b['section']:
+            chapters.append({'section': b['section'], 'blocks': []})
+        chapters[-1]['blocks'].append(b)
+    body, nav, total = [], [], 0
+    for n, c in enumerate(chapters, 1):
+        sec = c['section']; info = cfg.get('chapters', {}).get(sec, {})
+        mnum = re.match(r'^(\d+)\s*·\s*(.+)$', sec)
+        badge = mnum.group(1) if mnum else info.get('icon', STUDY_ICONS.get(sec, '•'))
+        title = info.get('title') or (mnum.group(2) if mnum else sec)
+        mins = read_minutes(''.join(b['raw'] for b in c['blocks'])); total += mins
+        cid = f'c-{n}'
+        anchors = ''.join(f'<span class="anchor" id="{a}"></span>' for k, a in (('პრაქტიკა', 'classwork'), ('საშინაო', 'homework')) if sec == k)
+        arts = []
+        for b in c['blocks']:
+            first = b['slides'][0]
+            sl = ''.join(f'<span class="anchor" id="s-{x}"></span>' for x in b['slides'])
+            kind = ' check' if 'შეამოწმე' in b['title'] else ' lead' if b['title'].startswith('ნაწილი') else ''   # „ნაწილი N“ = თავის შესავალი
+            arts.append(f'<article class="blk{kind}" data-slides="{",".join(map(str, b["slides"]))}">{sl}'
+                        f'<div class="bh"><h3>{esc(b["title"])}</h3><a class="chip" href="index.html#/{first}" data-go="{first}" target="_blank" title="ეს ნაწილი პრეზენტაციაში">სლაიდი {first}</a></div>'
+                        f'{b["html"]}</article>')
+        goal = f'<p class="goal">🎯 <b>ამის შემდეგ:</b> {md_inline(info["goal"])}</p>' if info.get('goal') else ''
+        body.append(f'<section class="chap" id="{cid}" data-num="{1 if mnum else 0}">{anchors}<header class="chh"><span class="cn{"" if mnum else " e"}">{badge}</span>'
+                    f'<div class="cht"><div class="ck">{"თავი " + mnum.group(1) + " · " if mnum else ""}~{mins} წთ კითხვა</div><h2>{esc(title)}</h2>{goal}</div>'
+                    f'<button type="button" class="read">☐ წავიკითხე</button></header><div class="cbody">{"".join(arts)}</div></section>')
+        nav.append(f'<a href="#{cid}"><span class="nn{"" if mnum else " e"}">{badge}</span><span class="nt">{esc(title)}</span><span class="nm">{mins}′</span></a>')
     quiz = meta.get('quiz', [])
+    terms = glossary(b['raw'] for b in blocks)
+    extra = ''
     if quiz:
-        toc.append('<a href="#quiz">✅ შეამოწმე ცოდნა</a>')
+        nav.append('<a href="#quiz" class="x"><span class="nn e">✅</span><span class="nt">შეამოწმე ცოდნა</span><span class="nm">' + str(len(quiz)) + '</span></a>')
+        extra += f'<section class="chap fin" id="quiz-wrap"><header class="chh"><span class="cn e">✅</span><div class="cht"><div class="ck">ტესტი · ქულით</div><h2 id="quiz">შეამოწმე ცოდნა</h2>' \
+                 f'<p class="goal">აირჩიე პასუხი — მაშინვე ნახავ, სწორია თუ არა და რატომ. ბოლოს გეცოდინება, რა გაიმეორო.</p></div></header><div class="cbody">{render_quiz_items(quiz)}</div></section>'
+    if terms:
+        nav.append('<a href="#glossary" class="x"><span class="nn e">📘</span><span class="nt">ტერმინები</span><span class="nm">' + str(len(terms)) + '</span></a>')
+        dl = ''.join(f'<dt>{md_inline(t)}</dt><dd>{md_inline(d)}</dd>' for t, d in terms)
+        extra += f'<section class="chap fin" id="glossary"><header class="chh"><span class="cn e">📘</span><div class="cht"><div class="ck">ლექციის ყველა ტერმინი</div><h2>ტერმინები</h2></div></header><div class="cbody"><div class="terms"><dl>{dl}</dl></div></div></section>'
+    # ⚡ 5 წუთში
+    summary = cfg.get('summary') or meta.get('outcomes', [])
+    ch_num = [c for c in chapters if re.match(r'^\d', c['section'])]
+    path = [f'<li><a href="#c-1">წაიკითხე თავები</a> — სულ ~{total} წთ. ყოველი თავის ბოლოს არის „შეამოწმე თავი“</li>']
+    if quiz: path.append(f'<li><a href="#quiz">გაიარე ტესტი</a> — {len(quiz)} კითხვა, ქულით</li>')
+    if (ldir / 'classwork.md').exists(): path.append('<li><a href="#classwork">გააკეთე კლასის დავალება</a> სახლში</li>')
+    if (ldir / 'homework.md').exists(): path.append('<li><a href="#homework">საშინაო დავალება</a> — შემდეგ ლექციაზე განვიხილავთ</li>')
+    quick = (f'<section class="quick"><div class="qk"><h2>⚡ 5 წუთში</h2><p class="qs">თუ მხოლოდ ეს დაგამახსოვრდა, ლექციის მთავარი იცი:</p>'
+             f'<ol class="take">{"".join(f"<li>{md_inline(x)}</li>" for x in summary)}</ol></div>'
+             f'<div class="qp"><h3>📍 ლექცია გააცდინე?</h3><ol class="path">{"".join(path)}</ol></div></section>')
     resources = render_resources(meta, ldir, materials, n_slides, len(quiz))
     page = (ENGINE / 'study.html').read_text()
-    for k, v in {'{{KIND}}': '📖 კონსპექტი', '{{HERO_NOTE}}': STUDY_NOTE, '{{TOP_LINK}}': '','{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num),
-                 '{{DECK_TITLE_JSON}}': json.dumps(deck_title, ensure_ascii=False), '{{TOC}}': ''.join(toc),
-                 '{{BODY}}': '\n'.join(body) + render_quiz(quiz), '{{RESOURCES}}': resources, '{{MATERIALS}}': mats, '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS}.items():
+    mats = ''.join(f'<a href="materials/{esc(m)}" download>📎 {esc(m)}</a>' for m in materials)
+    for k, v in {'{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num), '{{TOTAL}}': str(total),
+                 '{{DECK_TITLE_JSON}}': json.dumps(deck_title, ensure_ascii=False), '{{NAV}}': ''.join(nav), '{{QUICK}}': quick,
+                 '{{BODY}}': '\n'.join(body) + extra, '{{RESOURCES}}': resources, '{{MATERIALS}}': mats, '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS}.items():
         page = page.replace(k, v)
     write_page(out / 'study.html', page)
 
