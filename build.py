@@ -491,7 +491,8 @@ def build_lecture(course, cdir, ldir, meta, prev):
 # lecture.json → "lecturer_quiz": [{"q", "options", "answer", "explain"}] — „✅ მზად ხარ?“
 LECT_KINDS = {'🎯': 'main', '🧠': 'deep', '🗣': 'how', '🙋': 'ask', '⚠': 'myth', '💡': 'ex', '❓': 'faq', '💻': 'code',
               '📋': 'cheat', '✅': 'prep', '📌': 'must', '✂': 'cut', '⬅': 'prev', '➡': 'next', '🚫': 'no', '🏁': 'wrap',
-              '📏': 'rubric', '🔁': 'next'}
+              '📏': 'rubric', '🔁': 'next', '📖': 'learn', '🎬': 'flow', '🎙': 'mono', '📚': 'src', '🔬': 'deeper'}
+LEARN_KINDS = ('learn', 'deeper', 'src')   # „📖 ისწავლე“ რეჟიმი — თემის სრული ახსნა ლექტორისთვის
 
 def lect_kind(h):
     h = h.replace('️', '')
@@ -522,6 +523,15 @@ def render_lecturer_quiz(quiz):
     return (f'<div class="qscore"><span id="qs">0</span> / {len(quiz)} სწორი · <span id="qd">0</span> / {len(quiz)} პასუხი'
             f'<button type="button" class="btn qreset">თავიდან</button></div>{"".join(items)}<div class="qsum" id="qsum"></div>')
 
+def render_explain(items):
+    """lecture.json → lecturer_explain: [{"task", "points": [...]}] — „ახსენი ხმამაღლა“ (Feynman-ის შემოწმება)"""
+    if not items: return ''
+    cards = ''.join(f'<div class="xp"><div class="xq"><span class="qn">{n}</span><div>{md_inline(x["task"])}</div></div>'
+                    f'<details><summary>რა უნდა ახსენო — შეამოწმე თავი</summary><ul>{"".join(f"<li>{md_inline(p)}</li>" for p in x["points"])}</ul></details></div>'
+                    for n, x in enumerate(items, 1))
+    return ('<h3 class="xh">🎙️ ახსენი ხმამაღლა</h3><p class="pintro">ტაიმერი ჩართე და თითოეული ახსენი ხმამაღლა, თითქოს კლასის წინ დგახარ. '
+            'მერე გახსენი და შეამოწმე, ყველა პუნქტი თქვი თუ არა. თუ ჩაიჭერი, შესაბამის თემაში „📖 ისწავლე“ გადაიკითხე.</p>' + cards)
+
 def write_lecturer(out, course, meta, num, deck_title, ldir):
     """lecturer.md (+ დავალებები, კითხვები, ტესტის პასუხები, „მზად ხარ?“) → lecturer.html, ცალკე კოდით"""
     src = ldir / 'lecturer.md'
@@ -537,15 +547,23 @@ def write_lecturer(out, course, meta, num, deck_title, ldir):
     parts = []   # {id, num, title, mins, slides, group, html}
     for i in range(1, len(chunks), 2):
         n, title, mins, slides = lect_heading(chunks[i].strip())
-        subs = []
+        subs, learn_raw = [], []
         for h, b in lect_split(chunks[i + 1]):
             if not b.strip(): continue
             if h is None:
                 subs.append(f'<div class="pintro">{md(b)}</div>')
             else:
                 k = lect_kind(h)
-                subs.append(f'<div class="sub k-{k}"><div class="sl">{esc(h)}</div><div class="sb">{md(b)}</div></div>')
-        parts.append({'num': n, 'title': title, 'mins': mins, 'slides': slides, 'html': ''.join(subs)})
+                body = md(b)
+                if k == 'flow':   # „#### 17 · სათაური · 3 წთ“ → სლაიდის ღილაკი
+                    body = re.sub(r'<h4>(\d+) · (.*?)</h4>', lambda m: f'<h4 class="fs"><a class="ps" href="index.html#/{m.group(1)}" target="_blank" data-go="{m.group(1)}">▶ {m.group(1)}</a> {m.group(2)}</h4>', body)
+                if k == 'deeper':
+                    subs.append(f'<details class="sub k-{k}"><summary class="sl">{esc(h)} <small>· დააჭირე გასახსნელად</small></summary><div class="sb">{body}</div></details>')
+                else:
+                    subs.append(f'<div class="sub k-{k}"><div class="sl">{esc(h)}</div><div class="sb">{body}</div></div>')
+                if k in LEARN_KINDS: learn_raw.append(b)
+        parts.append({'num': n, 'title': title, 'mins': mins, 'slides': slides, 'html': ''.join(subs),
+                      'lmin': read_minutes(''.join(learn_raw), 85) if learn_raw else None})
     timed = [i for i, p in enumerate(parts) if p['mins']]
     first, last = (timed[0], timed[-1]) if timed else (len(parts), -1)
     for i, p in enumerate(parts):
@@ -565,7 +583,8 @@ def write_lecturer(out, course, meta, num, deck_title, ldir):
     if meta.get('lecturer_quiz'):
         parts.append({'num': None, 'title': '✅ მზად ხარ?', 'mins': None, 'slides': None, 'group': 'ready',
                       'html': '<div class="pintro"><p>ეს კითხვები შენთვისაა. თუ ყველას ზუსტად უპასუხე და ახსნაც გეთანხმება, ლექციისთვის მზად ხარ. '
-                              'შეცდომის შემთხვევაში ახსნას წაიკითხე და შესაბამისი თემა გადახედე.</p></div>' + render_lecturer_quiz(meta['lecturer_quiz'])})
+                              'შეცდომის შემთხვევაში ახსნას წაიკითხე და შესაბამისი თემა გადახედე.</p></div>' + render_lecturer_quiz(meta['lecturer_quiz'])
+                              + render_explain(meta.get('lecturer_explain', []))})
     groups = {'prep': ('📚', 'მომზადება'), 'flow': ('🎬', 'ლექციის მსვლელობა'), 'after': ('🏠', 'ლექციის შემდეგ'),
               'mat': ('📎', 'მასალა: დავალებები და პასუხები'), 'ready': ('✅', 'მზად ხარ?')}
     # დრო: დაწყების წუთები
@@ -595,8 +614,10 @@ def write_lecturer(out, course, meta, num, deck_title, ldir):
             a, b = p['slides']
             meta_bits.append(f'<a class="ps" href="index.html#/{a}" target="_blank" data-go="{a}">▶ სლაიდ{"ები " + str(a) + "–" + str(b) if b != a else "ი " + str(a)}</a>')
         done = '<button type="button" class="done" title="მონიშნე, როცა ამ ნაწილს მოემზადები">☐ მომზადებული ვარ</button>' if p['group'] in ('prep', 'flow', 'after') else ''
+        if p.get('lmin'):
+            meta_bits.append(f'<button type="button" class="tolearn" data-to="{"p-" + str(i)}">📖 ისწავლე · ~{p["lmin"]} წთ</button>')
         attrs = f' data-g="{p["group"]}"' + (f' data-start="{p["start"]}" data-min="{p["mins"]}"' if p['mins'] else '') + \
-                (f' data-from="{p["slides"][0]}" data-to="{p["slides"][1]}"' if p['slides'] else '') + (' data-cheat' if 'k-cheat' in p['html'] else '')
+                (f' data-from="{p["slides"][0]}" data-to="{p["slides"][1]}"' if p['slides'] else '') + (' data-cheat' if 'k-cheat' in p['html'] else '') + (' data-learn' if p.get('lmin') or p['group'] == 'ready' else '')
         fold = p['group'] == 'mat'
         head = (f'<header class="ph"><span class="pn{"" if p["num"] else " e"}">{badge or "•"}</span><div class="pht"><h2>{esc(p["title"])}</h2>'
                 f'<div class="pm">{"".join(meta_bits)}</div></div>{done}</header>')
@@ -604,7 +625,7 @@ def write_lecturer(out, course, meta, num, deck_title, ldir):
             body.append(f'<section class="part" id="{pid}"{attrs}><details><summary>{head}</summary><div class="pbody">{p["html"]}</div></details></section>')
         else:
             body.append(f'<section class="part" id="{pid}"{attrs}>{head}<div class="pbody">{p["html"]}</div></section>')
-        nav.append(f'<a href="#{pid}" data-g="{p["group"]}"><span class="nn{"" if p["num"] else " e"}">{badge or "·"}</span><span class="nt">{esc(p["title"])}</span>'
+        nav.append(f'<a href="#{pid}" data-g="{p["group"]}"{" data-learn" if p.get("lmin") or p["group"] == "ready" else ""}><span class="nn{"" if p["num"] else " e"}">{badge or "·"}</span><span class="nt">{esc(p["title"])}</span>'
                    f'{"<span class=nm>" + str(p["mins"]) + "′</span>" if p["mins"] else ""}</a>')
         if p['mins']:
             short = title.split(':')[0]
@@ -616,6 +637,7 @@ def write_lecturer(out, course, meta, num, deck_title, ldir):
     for k, v in {'{{TITLE}}': esc(meta['title']), '{{COURSE}}': esc(course['title']), '{{NUM}}': str(num),
                  '{{DECK_TITLE_JSON}}': json.dumps(deck_title, ensure_ascii=False), '{{NAV}}': ''.join(nav), '{{BODY}}': '\n'.join(body),
                  '{{INTRO}}': md_inline(intro) if intro else '', '{{TIMELINE}}': timeline, '{{TOTAL}}': str(total),
+                 '{{LEARN_TOTAL}}': str(sum(p.get('lmin') or 0 for p in parts)),
                  '{{TOKEN_CSS}}': TOKEN_CSS, '{{FONTS}}': FONTS + THEME_HEAD, '{{PAGE_THEME}}': PAGE_THEME}.items():
         page = page.replace(k, v)
     write_locked(out / 'lecturer.html', page, code, 'lectures:lecturer', 'ლექტორის გვერდი')
@@ -649,8 +671,8 @@ def render_quiz_items(quiz):
 #   "chapters": {"<data-section>": {"title", "goal", "icon"}}
 STUDY_ICONS = {'მოდული': '🧭', 'პრაქტიკა': '✍️', 'შეჯამება': '🏁', 'საშინაო': '🏠'}
 
-def read_minutes(text):
-    return max(1, round(len(re.findall(r'\w+', re.sub(r'```.*?```', '', text, flags=re.S))) / 130))
+def read_minutes(text, wpm=130):
+    return max(1, round(len(re.findall(r'\w+', re.sub(r'```.*?```', '', text, flags=re.S))) / wpm))
 
 def glossary(raws):
     seen, rows = set(), []

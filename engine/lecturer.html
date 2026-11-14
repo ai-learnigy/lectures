@@ -181,6 +181,39 @@ pre.code .ln{display:block;padding:0 16px;white-space:pre}
 .qq.no .verdict::before{content:"✗ არა.";color:var(--red);font-weight:700}
 .qsum{display:none;margin-top:14px;padding:14px 16px;border-radius:14px;border:1px solid var(--ok-line);background:var(--ok-soft);font-size:17px}
 .qsum.on{display:block}
+/* ---------- 📖 learn mode: the lecturer's textbook ---------- */
+.k-learn{--c:var(--blue);--b:var(--card);border-color:var(--line);padding:16px 22px 14px}
+.k-learn .sb{font-size:17.5px;line-height:1.85}
+.k-learn .sb h4{font-size:19px;margin:24px 0 4px;color:var(--ink)}
+.k-learn .sb h4:first-child{margin-top:8px}
+.k-learn .sb blockquote,.k-mono .sb blockquote{margin:12px 0;padding:8px 16px;border-left:4px solid var(--c);background:var(--soft);border-radius:0 10px 10px 0}
+details.k-deeper{--c:var(--accent);--b:var(--accent-soft);padding:10px 16px}
+details.k-deeper summary{cursor:pointer;list-style:none}details.k-deeper summary::-webkit-details-marker{display:none}
+details.k-deeper summary small{font-weight:500;color:var(--muted)}
+details.k-deeper[open] summary small{display:none}
+.k-src{--c:var(--muted);--b:var(--surf)}
+.k-flow{--c:var(--accent);--b:var(--card);border-color:var(--line)}
+.k-flow .sb h4.fs{display:flex;align-items:center;gap:10px;font-size:17px;margin:18px 0 4px;padding-top:12px;border-top:1px dashed var(--line2)}
+.k-flow .sb h4.fs:first-child{border-top:0;padding-top:0;margin-top:6px}
+.k-flow .sb h4.fs .ps{flex:none}
+.k-flow .sb ul{list-style:none;padding-left:0;margin:4px 0}.k-flow .sb li{margin:3px 0}
+.k-mono{--c:var(--teal);--b:var(--teal-soft)}
+.k-mono .sb{font-style:italic;color:var(--ink2)}
+.tolearn{font:700 12.5px var(--mono);border-radius:999px;padding:2px 10px;cursor:pointer;background:var(--info-soft);color:var(--blue);border:1px solid var(--info-line)}
+.tolearn:hover{border-color:var(--blue)}
+.learnhint{display:none;margin:0 0 14px;padding:12px 16px;border-radius:14px;background:var(--info-soft);border:1px solid var(--info-line);color:var(--ink2);font-size:16px}
+.xh{margin:28px 0 4px;font-size:20px}
+.xp{border:1px solid var(--line);border-radius:14px;background:var(--surf);padding:12px 16px;margin:10px 0}
+.xq{display:flex;gap:10px;font-weight:700}
+.xp details{margin:8px 0 0 36px}.xp summary{cursor:pointer;color:var(--green);font-weight:700;font-size:15px}
+.xp ul{margin:6px 0;padding-left:20px;color:var(--ink2)}
+body[data-mode=learn] .learnhint{display:block}
+body[data-mode=learn] .part:not([data-learn]),body[data-mode=learn] .grp,body[data-mode=learn] .tl,
+body[data-mode=learn] nav.side .ng,body[data-mode=learn] nav.side a:not([data-learn]),body[data-mode=learn] .tolearn,
+body[data-mode=learn] .part[data-g=flow] .pbody>:not(.k-learn):not(.k-deeper):not(.k-src){display:none}
+body[data-mode=learn] .part{margin-top:26px}
+body[data-mode=prep] .k-learn,body[data-mode=prep] .k-deeper,body[data-mode=prep] .k-src,
+body[data-mode=live] .tolearn{display:none}
 /* ---------- 📋 lecture mode: only the cheat sheet of the flow ---------- */
 body[data-mode=live] .part:not([data-g=flow]),body[data-mode=live] .grp:not([data-g=flow]),
 body[data-mode=live] nav.side .ng:not([data-g=flow]),body[data-mode=live] nav.side a:not([data-g=flow]),
@@ -218,7 +251,8 @@ body[data-mode=live] .part{margin-bottom:14px}
   <a class="back" href="../../">← ლექციები</a>
   <div class="ttl"><small>🎓 {{COURSE}} · {{NUM}}</small>{{TITLE}}</div>
   <div class="mode" role="tablist">
-    <button type="button" data-m="prep" title="სახლში: სრული მასალა">📚 მომზადება</button>
+    <button type="button" data-m="learn" title="ჯერ ისწავლე თემა: სრული ახსნა">📖 ისწავლე</button>
+    <button type="button" data-m="prep" title="როგორ ჩაატარო: მსვლელობა, კითხვები, შეცდომები">🎯 მოემზადე</button>
     <button type="button" data-m="live" title="ლექციაზე: მხოლოდ მოკლე გეგმა">📋 ლექციაზე</button>
   </div>
   <span class="follow" id="follow" title="პრეზენტაცია ღიაა — მიმდინარე თემა ინიშნება"><span class="dot"></span>სლაიდი <b id="fslide">–</b></span>
@@ -230,7 +264,7 @@ body[data-mode=live] .part{margin-bottom:14px}
 </div>
 <div class="wrap">
   <nav class="side"><details id="navd"><summary>სარჩევი</summary>
-    <div class="prog"><div class="pl"><span>მომზადება</span><span><b id="pk">0</b> / <span id="pn">0</span></span></div><div class="bar"><i id="pbar"></i></div></div>
+    <div class="prog"><div class="pl"><span id="pl">მომზადება</span><span><b id="pk">0</b> / <span id="pn">0</span></span></div><div class="bar"><i id="pbar"></i></div></div>
     {{NAV}}
   </details></nav>
   <main>
@@ -238,6 +272,7 @@ body[data-mode=live] .part{margin-bottom:14px}
       <div class="k">🎓 ლექტორისთვის · {{COURSE}} · ლექცია {{NUM}}</div>
       <h1>{{TITLE}}</h1>
       <p>{{INTRO}}</p>
+      <div class="learnhint">📖 <b>ისწავლე</b> — თითო თემის სრული ახსნა შენთვის, სტუდენტზე ერთი დონით ღრმად. სულ ~{{LEARN_TOTAL}} წუთი კითხვა. როცა თემა გაიგე, მონიშნე „✓ ვისწავლე“, ბოლოს კი გაიარე „✅ მზად ხარ?“. მერე გადადი „🎯 მოემზადე“ რეჟიმზე: იქ წერია, როგორ ჩაატარო.</div>
       {{TIMELINE}}
     </header>
     {{BODY}}
@@ -256,22 +291,31 @@ function setMode(m) {
   document.body.dataset.mode = m; store('mode', m);
   $$('.mode button').forEach(b => b.classList.toggle('on', b.dataset.m === m));
 }
-$$('.mode button').forEach(b => b.onclick = () => { setMode(b.dataset.m); scrollTo({ top: 0, behavior: 'instant' }); });
-setMode(store('mode') || 'prep');
+$$('.mode button').forEach(b => b.onclick = () => { setMode(b.dataset.m); paintOk(); scrollTo({ top: 0, behavior: 'instant' }); });
+document.addEventListener('click', e => {   // 📖 ისწავლე · N წთ → learn mode at this topic
+  const t = e.target.closest('.tolearn'); if (!t) return;
+  setMode('learn'); paintOk(); document.getElementById(t.dataset.to)?.scrollIntoView({ block: 'start' });
+});
+setMode(store('mode') || 'learn');
 
 // prepared ✓ per part + checklist items
 const prepParts = parts.filter(p => p.querySelector('.done'));
-let ok = store('ok') || [];
+const learnMode = () => document.body.dataset.mode === 'learn';
+const doneKey = () => learnMode() ? 'learned' : 'ok';
+let state = { ok: store('ok') || [], learned: store('learned') || [] };
 function paintOk() {
-  prepParts.forEach(p => { const on = ok.includes(p.id); p.classList.toggle('ok', on); linkOf(p)?.classList.toggle('ok', on);
-    p.querySelector('.done').textContent = on ? '✓ მომზადებული ვარ' : '☐ მომზადებული ვარ'; });
-  const n = prepParts.filter(p => ok.includes(p.id)).length;
-  $('#pk').textContent = n; $('#pn').textContent = prepParts.length; $('#pbar').style.width = (100 * n / (prepParts.length || 1)) + '%';
+  const k = doneKey(), list = state[k], label = learnMode() ? 'ვისწავლე' : 'მომზადებული ვარ';
+  const scope = learnMode() ? prepParts.filter(p => p.hasAttribute('data-learn')) : prepParts;
+  prepParts.forEach(p => { const on = list.includes(p.id); p.classList.toggle('ok', on); linkOf(p)?.classList.toggle('ok', on);
+    p.querySelector('.done').textContent = (on ? '✓ ' : '☐ ') + label; });
+  const n = scope.filter(p => list.includes(p.id)).length;
+  $('#pk').textContent = n; $('#pn').textContent = scope.length; $('#pbar').style.width = (100 * n / (scope.length || 1)) + '%';
+  $('#pl').textContent = learnMode() ? 'ნასწავლი' : 'მომზადება';
 }
 document.addEventListener('click', e => {
   const d = e.target.closest('.done'); if (!d) return;
-  e.preventDefault(); const id = d.closest('.part').id;
-  ok = ok.includes(id) ? ok.filter(x => x !== id) : [...ok, id]; store('ok', ok); paintOk();
+  e.preventDefault(); const id = d.closest('.part').id, k = doneKey();
+  state[k] = state[k].includes(id) ? state[k].filter(x => x !== id) : [...state[k], id]; store(k, state[k]); paintOk();
 });
 paintOk();
 const checks = $$('.k-prep li'); let ck = store('checks') || [];
