@@ -658,46 +658,96 @@
 "7": {
 "მოდელს": "We"
 },
-"17": {
+"18": {
 "კითხულობს,": "or"
 },
-"19": {
+"20": {
 "მხოლოდ რიცხვებს": "sees only numbers",
 "ნომერი": "number"
 },
-"25": {
+"26": {
 "მოდელს": "Does the model"
 },
-"27": {
+"28": {
 "რომელ ტოკენს აირჩევს": "which token the model picks",
 "მოდელი": ""
 },
-"32": {
+"33": {
 "„ფიქრის“ ტოკენებს": "“Thinking” tokens are",
 "ვიხდით": "paid for",
 "(როგორც output), ხშირად ვერც ვხედავთ": "(as output), often without us seeing them"
 },
-"36": {
+"37": {
 "ტოკენზე": "per token",
 "რატომ": "why"
 },
-"37": {
+"38": {
 "ტოკენზე": "per token",
 "აკეთებს": "on it"
 },
-"38": {
+"39": {
 "რამდენი": "how much",
 "გამოვა? მერე აქ შევამოწმებთ": "do you get? Then we'll check here",
 "🙋 ჯერ ფურცელზე: A და B მოდელით": "🙋 On paper first: with models A and B,"
 },
-"41": {
+"42": {
 "ბაზიდან": "from the database"
 },
-"43": {
+"44": {
 "შემდეგი ტოკენი": "Next token"
 },
-"44": {
+"45": {
 "აიღე და": "— get it and set"
+},
+"17": {
+"შემდეგ?": "?"
 }
-}
+},
+"ტერმინები · ერთი-მეორეში ჩადგმული": "Terms · nested inside each other",
+"🙋 ChatGPT — ეს AI-ია, Machine Learning-ია თუ LLM?": "🙋 ChatGPT — is it AI, Machine Learning or an LLM?",
+"ხელოვნური ინტელექტი": "artificial intelligence",
+"ნებისმიერი პროგრამა, რომელიც „ჭკვიანურ“ საქმეს აკეთებს —": "any program that does something “smart” —",
+"თუნდაც if/else-ით": "even with if/else",
+"♟️ ჭადრაკის პროგრამა, ნავიგატორის მარშრუტი": "♟️ a chess program, a navigation route",
+"მანქანური სწავლება": "machine learning",
+"წესებს პროგრამისტი არ წერს — პროგრამა თვითონ": "the programmer doesn't write the rules — the program",
+"პოულობს მაგალითებიდან": "finds them from examples",
+"📧 spam ფილტრი: ათასობით მონიშნული წერილი → ისწავლა": "📧 spam filter: thousands of labelled emails → it learned",
+"ღრმა სწავლება": "deep learning",
+"მრავალშრიანი ნეირონული ქსელით": "with a multi-layer neural network",
+"— სწავლობს რთულს: სურათს, ხმას, ენას": "— learns complex things: images, sound, language",
+"📱 ტელეფონი სახით იხსნება, ხმის ამოცნობა": "📱 face unlock, speech recognition",
+"გენერაციული AI": "generative AI",
+"არა მხოლოდ ცნობს ან ახარისხებს —": "doesn't just recognise or sort —",
+"ახალს ქმნის": "it creates new things",
+"🎨 სურათი აღწერით, მუსიკა, ტექსტი, კოდი": "🎨 images from a description, music, text, code",
+"დიდი ენობრივი მოდელი": "large language model",
+"GenAI ტექსტისთვის:": "GenAI for text:",
+"ტექსტი შედის → ტექსტი გამოდის": "text in → text out",
+"ამ კურსის თემა": "the topic of this course",
+"სამივეა": "all three",
+": LLM ⊂ GenAI ⊂ Deep Learning ⊂ ML ⊂ AI. ყოველი შიგნითა წრე გარეთას ნაწილია. ჩვენ ყველაზე შიგნითა წრეს —": ": LLM ⊂ GenAI ⊂ Deep Learning ⊂ ML ⊂ AI. Every inner circle is part of the outer one. We use the innermost circle —",
+"LLM-ს": "the LLM",
+"— მზა სახით ვიყენებთ": "— ready-made",
+"ჯერ მთელი სურათი — მერე ნაწილ-ნაწილ: ტოკენები · შემდეგი ტოკენი · context window": "The big picture first — then piece by piece: tokens · next token · context window",
+"ჯერ მთელი სურათი": "The big picture first",
+"რა ხდება": "What happens after",
+"„Send“-ის": "“Send”",
+"🙋 ChatGPT-ში წერთ კითხვას და აჭერთ „Send“-ს. რა ხდება პასუხამდე? 1 წუთი — გამოიცანით": "🙋 You type a question in ChatGPT and press “Send”. What happens before the answer? 1 minute — guess",
+"ერთხელ, წინასწარ — ვარჯიში:": "Once, in advance — training:",
+"მოდელმა ტრილიონობით სიტყვა „წაიკითხა“ და ისწავლა, რომელი სიტყვა რას მოსდევს. ჩვენ ამას არ ვაკეთებთ — მზა მოდელს ვიყენებთ": "the model “read” trillions of words and learned which word follows which. We don't do this — we use a ready model",
+"ტექსტი ნაჭრებად იჭრება": "The text is cut into pieces",
+"ითვლის: რა მოვა შემდეგ?": "It calculates: what comes next?",
+"ალბათობები": "probabilities",
+"ირჩევს ერთს და უმატებს": "It picks one and appends it",
+"Temperature — ნაწილი 3": "Temperature — part 3",
+"იმეორებს, სანამ არ დაასრულებს": "It repeats until it's done",
+"ერთი ნაჭერი": "one piece",
+"ერთ ჯერზე ✍️": "at a time ✍️",
+"ამიტომ ჩანს პასუხი ნელ-ნელა": "that's why the answer appears gradually",
+"სულ ესაა! როგორც ტელეფონის კლავიატურა, რომელიც": "That's all! Like a phone keyboard that suggests the",
+"შემდეგ სიტყვას": "next word",
+"გთავაზობს — ოღონდ ძალიან, ძალიან ბევრი წაკითხულით. ახლა ნაბიჯებს": "— only one that has read a huge amount. Now let's",
+"ჩავშლით": "break the steps down",
+": ტოკენი → შემდეგი ტოკენი → რატომ ცდება → რას ხედავს ერთ მოთხოვნაში": ": token → next token → why it makes mistakes → what it sees in one request"
 }

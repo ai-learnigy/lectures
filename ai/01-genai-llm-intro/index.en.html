@@ -270,12 +270,17 @@ body.presenter{overflow:auto;background:#0a0c16}
 }
 
 /* stage */
-#deck{background:
-  radial-gradient(900px 600px at 92% -8%,rgba(109,40,217,.07),transparent 60%),
-  radial-gradient(800px 560px at -6% 108%,rgba(217,119,6,.07),transparent 60%),
-  var(--bg)}
-#deck::before{background-image:radial-gradient(rgba(30,33,50,.075) 1.3px,transparent 1.4px);background-size:30px 30px;
-  mask-image:radial-gradient(ellipse at center,#000 25%,transparent 85%)}
+/* ფონი: უჯრედები (რვეულის ფურცელი) მთელ ეკრანზე — სლაიდის „ყუთი“ აღარ ჩანს */
+#stage{--grid:rgba(30,33,50,.055);--grid2:rgba(30,33,50,.085);background:
+  radial-gradient(1100px 700px at 95% -10%,rgba(109,40,217,.06),transparent 60%),
+  radial-gradient(1000px 650px at -8% 110%,rgba(217,119,6,.055),transparent 60%),
+  linear-gradient(var(--grid2) 1px,transparent 1px) 0 0/160px 160px,
+  linear-gradient(90deg,var(--grid2) 1px,transparent 1px) 0 0/160px 160px,
+  linear-gradient(var(--grid) 1px,transparent 1px) 0 0/32px 32px,
+  linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/32px 32px,
+  var(--bg);background-position:center}
+#deck{background:transparent}
+#deck::before{display:none}
 
 /* chrome */
 #hud .sec{color:var(--net)}
@@ -352,11 +357,14 @@ html[data-theme=dark]{
   --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 30px -16px rgba(0,0,0,.7);
   color-scheme:dark;
 }
-html[data-theme=dark] #deck{background:
-  radial-gradient(900px 600px at 92% -8%,rgba(171,159,242,.06),transparent 60%),
-  radial-gradient(800px 560px at -6% 108%,rgba(223,169,110,.045),transparent 60%),
-  var(--bg)}
-html[data-theme=dark] #deck::before{background-image:radial-gradient(rgba(230,226,218,.05) 1.3px,transparent 1.4px)}
+html[data-theme=dark] #stage{--grid:rgba(230,226,218,.035);--grid2:rgba(230,226,218,.06);background:
+  radial-gradient(1100px 700px at 95% -10%,rgba(171,159,242,.06),transparent 60%),
+  radial-gradient(1000px 650px at -8% 110%,rgba(223,169,110,.04),transparent 60%),
+  linear-gradient(var(--grid2) 1px,transparent 1px) 0 0/160px 160px,
+  linear-gradient(90deg,var(--grid2) 1px,transparent 1px) 0 0/160px 160px,
+  linear-gradient(var(--grid) 1px,transparent 1px) 0 0/32px 32px,
+  linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/32px 32px,
+  var(--bg);background-position:center}
 html[data-theme=dark] #overview button:hover,html[data-theme=dark] #overview button.cur{color:var(--ink)}
 html[data-theme=dark] code.i{background:rgba(171,159,242,.13);color:#cfc6ff}
 html[data-theme=dark] .grad{background:linear-gradient(90deg,var(--net),var(--api));-webkit-background-clip:text;background-clip:text}
@@ -438,6 +446,22 @@ body:not([data-study]) #themebtn{right:16px}body:not([data-study]) #langbtn{righ
 .json .k{color:#7c3aed}.json .s{color:#15803d}.json .n{color:#c2410c}.json .hl{background:rgba(217,119,6,.16);border-radius:4px;box-shadow:0 0 0 2px rgba(217,119,6,.35)}
 .rs{border-left:5px solid var(--a);background:color-mix(in srgb,var(--a) 6%,var(--card));border-radius:0 12px 12px 0;padding:12px 16px}
 .rs .h{font:600 15px var(--mono);color:var(--muted);margin-bottom:6px}
+.train{display:flex;gap:14px;align-items:center;padding:10px 16px;border-radius:12px;border:1px dashed var(--line2);background:color-mix(in srgb,var(--muted) 6%,var(--card));font-size:19px;color:var(--ink2)}
+.train .ti{font-size:28px}
+.bigpic{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr 40px 1fr;gap:6px;margin-top:20px;align-items:stretch}
+.bigpic .arr{display:grid;place-items:center;font:800 30px var(--mono);color:var(--muted)}
+.bp{position:relative;display:flex;flex-direction:column;gap:10px;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--a);border-radius:14px;padding:16px 16px 14px;box-shadow:var(--shadow)}
+.bp .bn{position:absolute;top:-18px;left:14px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--a);color:var(--on,#fff);font:800 17px var(--mono)}
+.bp h3{margin:8px 0 0;font-size:21px;line-height:1.3}
+.bp .bx{font-size:18px;line-height:1.6;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--a) 8%,var(--card))}
+.bp .bx .tk{font-size:15px}
+.bp .bt{margin-top:auto;font:700 14px var(--mono);color:var(--a)}
+.lvls{display:flex;flex-direction:column;gap:9px}
+.lvl{display:grid;grid-template-columns:200px 1fr;grid-template-rows:auto auto;column-gap:16px;padding:9px 16px;border-radius:12px;background:color-mix(in srgb,var(--a) 8%,var(--card));border-left:5px solid var(--a)}
+.lvl>b{grid-row:span 2;font-size:21px;color:var(--a);line-height:1.2;align-self:center}
+.lvl>b small{display:block;font-size:14px;font-weight:600;color:var(--muted);margin-top:3px}
+.lvl>span{font-size:18.5px;line-height:1.4}
+.lvl>i{font-style:normal;font-size:15.5px;color:var(--muted);margin-top:3px}
 .nest{position:relative;width:640px;height:560px}
 .nest div{position:absolute;border-radius:50%;border:3px solid var(--a);background:color-mix(in srgb,var(--a) 7%,transparent);display:flex;justify-content:center;font-weight:800;color:var(--a)}
 .nest span{margin-top:16px;font-size:22px}
@@ -714,23 +738,26 @@ body:not([data-study]) #themebtn{right:16px}body:not([data-study]) #langbtn{righ
 </section>
 
 <section class="slide" data-section="1 · Why AI">
-  <div class="kicker">Terms</div>
+  <div class="kicker">Terms · nested inside each other</div>
   <h2>AI → ML → Deep Learning → <span class="grad">GenAI → LLM</span></h2>
-  <div class="grid2" style="grid-template-columns:660px 1fr;gap:30px;align-items:center">
-    <div class="nest">
-      <div class="in" style="--a:var(--muted);left:0;top:0;width:640px;height:560px;--d:.1s"><span>Artificial Intelligence</span></div>
-      <div class="in" style="--a:var(--api);left:60px;top:60px;width:520px;height:460px;--d:.3s"><span>Machine Learning</span></div>
-      <div class="in" style="--a:var(--core);left:120px;top:120px;width:400px;height:360px;--d:.5s"><span>Deep Learning</span></div>
-      <div class="in" style="--a:var(--asp);left:180px;top:180px;width:280px;height:260px;--d:.7s"><span>Generative AI</span></div>
-      <div class="in" style="--a:var(--net);left:240px;top:250px;width:160px;height:140px;--d:.9s;align-items:center"><span style="margin:0;font-size:28px">LLM</span></div>
+  <div class="callout ask" style="font-size:22px">🙋 ChatGPT — is it AI, Machine Learning or an LLM?</div>
+  <div class="grid2" style="grid-template-columns:470px 1fr;gap:34px;align-items:center;margin-top:18px">
+    <div class="nest" style="width:470px;height:430px">
+      <div class="in" style="--a:var(--muted);left:0;top:0;width:470px;height:430px;--d:.1s"><span style="font-size:18px">AI</span></div>
+      <div class="in" style="--a:var(--api);left:45px;top:46px;width:380px;height:350px;--d:.25s"><span style="font-size:18px">Machine Learning</span></div>
+      <div class="in" style="--a:var(--core);left:90px;top:92px;width:290px;height:270px;--d:.4s"><span style="font-size:18px">Deep Learning</span></div>
+      <div class="in" style="--a:var(--asp);left:135px;top:138px;width:200px;height:190px;--d:.55s"><span style="font-size:18px">GenAI</span></div>
+      <div class="in" style="--a:var(--net);left:180px;top:190px;width:110px;height:100px;--d:.7s;align-items:center"><span style="margin:0;font-size:22px">LLM</span></div>
     </div>
-    <div class="col" style="gap:12px">
-      <div class="callout" style="--a:var(--api)"><b>ML</b> — the system learns rules <b>from examples</b></div>
-      <div class="callout" style="--a:var(--core)"><b>Deep Learning</b> — ML with neural networks</div>
-      <div class="callout" style="--a:var(--asp)"><b>GenAI</b> — it <b>creates</b> new content: text, images, sound</div>
-      <div class="callout" style="--a:var(--net)"><b>LLM</b> — large language model: text in, <b>text out</b></div>
+    <div class="lvls">
+      <div class="lvl step" style="--a:var(--muted)"><b>AI<small>artificial intelligence</small></b><span>any program that does something “smart” — <b>even with if/else</b></span><i>♟️ a chess program, a navigation route</i></div>
+      <div class="lvl step" style="--a:var(--api)"><b>Machine Learning<small>machine learning</small></b><span>the programmer doesn't write the rules — the program <b>finds them from examples</b></span><i>📧 spam filter: thousands of labelled emails → it learned</i></div>
+      <div class="lvl step" style="--a:var(--core)"><b>Deep Learning<small>deep learning</small></b><span>ML <b>with a multi-layer neural network</b> — learns complex things: images, sound, language</span><i>📱 face unlock, speech recognition</i></div>
+      <div class="lvl step" style="--a:var(--asp)"><b>GenAI<small>generative AI</small></b><span>doesn't just recognise or sort — <b>it creates new things</b></span><i>🎨 images from a description, music, text, code</i></div>
+      <div class="lvl step" style="--a:var(--net)"><b>LLM<small>large language model</small></b><span>GenAI for text: <b>text in → text out</b></span><i>💬 ChatGPT, Gemini, Claude — <b>the topic of this course</b></i></div>
     </div>
   </div>
+  <div class="callout step mt" style="--a:var(--mvc);font-size:21px">ChatGPT — <b>all three</b>: LLM ⊂ GenAI ⊂ Deep Learning ⊂ ML ⊂ AI. Every inner circle is part of the outer one. We use the innermost circle — <b>the LLM</b> — ready-made</div>
   
 </section>
 
@@ -771,9 +798,27 @@ body:not([data-study]) #themebtn{right:16px}body:not([data-study]) #langbtn{righ
   <div class="vcenter">
     <div class="kicker in">Part 2</div>
     <h1 class="in" style="--d:.1s">What's inside an<br><span class="grad">LLM?</span></h1>
-    <p class="lead mt in" style="--d:.3s">tokens · next-token prediction · context window</p>
+    <p class="lead mt in" style="--d:.3s">The big picture first — then piece by piece: tokens · next token · context window</p>
   </div>
   <div class="big-num">02</div>
+  
+</section>
+
+<section class="slide" data-section="2 · How it works">
+  <div class="kicker">The big picture first</div>
+  <h2>What happens after <span class="grad">“Send”</span>?</h2>
+  <div class="callout ask" style="font-size:22px">🙋 You type a question in ChatGPT and press “Send”. What happens before the answer? 1 minute — guess</div>
+  <div class="train mt"><span class="ti">📚</span><div><b>Once, in advance — training:</b> the model “read” trillions of words and learned which word follows which. We don't do this — we use a ready model</div></div>
+  <div class="bigpic">
+    <div class="bp step" style="--a:var(--asp)"><div class="bn">1</div><h3>The text is cut into pieces</h3><div class="bx">Book a table for<br>→ <span class="tk">Book</span><span class="tk"> a</span><span class="tk"> table</span><span class="tk"> for</span></div><div class="bt">Tokens</div></div>
+    <div class="arr">→</div>
+    <div class="bp step" style="--a:var(--net)"><div class="bn">2</div><h3>It calculates: what comes next?</h3><div class="bx mono">two&nbsp;&nbsp;&nbsp;62%<br>four&nbsp;&nbsp;21%<br>pizza 0.1%</div><div class="bt">probabilities</div></div>
+    <div class="arr">→</div>
+    <div class="bp step" style="--a:var(--mvc)"><div class="bn">3</div><h3>It picks one and appends it</h3><div class="bx">Book a table for <b>two</b></div><div class="bt">Temperature — part 3</div></div>
+    <div class="arr">↻</div>
+    <div class="bp step" style="--a:var(--api)"><div class="bn">4</div><h3>It repeats until it's done</h3><div class="bx">one piece<br>at a time ✍️</div><div class="bt">that's why the answer appears gradually</div></div>
+  </div>
+  <div class="callout step mt" data-with style="--a:var(--mvc);font-size:21px">That's all! Like a phone keyboard that suggests the <b>next word</b> — only one that has read a huge amount. Now let's <b>break the steps down</b>: token → next token → why it makes mistakes → what it sees in one request</div>
   
 </section>
 
